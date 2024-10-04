@@ -1,0 +1,145 @@
+[gd_scene load_steps=4 format=3 uid="uid://cgb2h85f8c5fw"]
+
+[ext_resource type="Script" path="res://Simulation/Scene/Simulation.cs" id="1_xqs0w"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_x0rx7"]
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_ytfvw"]
+font_size = 20
+font_color = Color(0.0972, 0.81, 0.23976, 1)
+
+[node name="Simulation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xqs0w")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 183.0
+offset_top = 97.0
+offset_right = 986.0
+offset_bottom = 539.0
+
+[node name="TitleLabel" type="Label" parent="Panel"]
+layout_mode = 2
+offset_left = 73.0
+offset_top = 23.0
+offset_right = 744.0
+offset_bottom = 46.0
+text = "Wybierz parametry startowe symulacji"
+label_settings = SubResource("LabelSettings_x0rx7")
+horizontal_alignment = 1
+
+[node name="PropertyRow1" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -159.5
+offset_top = -111.0
+offset_right = 160.5
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CreatureNumLabel" type="Label" parent="Panel/PropertyRow1"]
+layout_mode = 2
+text = "Liczba osobników: "
+
+[node name="CreatureNumSpinBox" type="SpinBox" parent="Panel/PropertyRow1"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 1.0
+value = 1.0
+alignment = 1
+
+[node name="PropertyRow2" type="HBoxContainer" parent="Panel"]
+layout_mode = 2
+offset_left = 242.0
+offset_top = 164.0
+offset_right = 681.0
+offset_bottom = 195.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MapSizeLabel" type="Label" parent="Panel/PropertyRow2"]
+layout_mode = 2
+text = "Rozmiar mapy:"
+
+[node name="MapSize" type="HBoxContainer" parent="Panel/PropertyRow2"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="XMapSizeSpinBox" type="SpinBox" parent="Panel/PropertyRow2/MapSize"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 2.0
+max_value = 40.0
+value = 2.0
+alignment = 1
+
+[node name="XLabel" type="Label" parent="Panel/PropertyRow2/MapSize"]
+layout_mode = 2
+text = "X"
+
+[node name="YMapSizeSpinBox" type="SpinBox" parent="Panel/PropertyRow2/MapSize"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 2.0
+max_value = 40.0
+value = 2.0
+alignment = 1
+
+[node name="SuccessLabel" type="Label" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -65.5
+offset_top = 81.0
+offset_right = 76.5
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Symulacja się udała! Wynik zapisał się do results.json"
+label_settings = SubResource("LabelSettings_ytfvw")
+horizontal_alignment = 1
+
+[node name="ButtonsBoxContainer" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -144.0
+offset_top = 151.0
+offset_right = 144.0
+offset_bottom = 191.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StartButton" type="Button" parent="Panel/ButtonsBoxContainer"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Start"
+
+[node name="BackButton" type="Button" parent="Panel/ButtonsBoxContainer"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Powrót"

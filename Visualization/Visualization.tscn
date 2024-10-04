@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://birdpk8ymh3dc"]
+
+[ext_resource type="Script" path="res://Visualization/Visualization.cs" id="1_j601l"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7a5pq"]
+size = Vector3(10, 0.5, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pjdl"]
+albedo_color = Color(0.47, 1, 0.505333, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vc10d"]
+material = SubResource("StandardMaterial3D_2pjdl")
+size = Vector3(10, 0.5, 10)
+
+[sub_resource type="Environment" id="Environment_ehc82"]
+ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1t4oh"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_qli4l"]
+font_size = 30
+
+[node name="Visualization" type="Node3D"]
+script = ExtResource("1_j601l")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_7a5pq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_vc10d")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0124789, 0.999922, 0, -0.999922, 0.0124789, 0.335033, 6.35423, 0.0917982)
+projection = 1
+fov = 70.0
+size = 18.4915
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ehc82")
+camera_attributes = SubResource("CameraAttributesPractical_1t4oh")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.882332, 0.470627, 0, -0.470627, 0.882332, 0, 4.18326, 10.1856)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 869.0
+offset_top = 536.0
+offset_right = 909.0
+offset_bottom = 559.0
+text = "asdqwe"
+label_settings = SubResource("LabelSettings_qli4l")
