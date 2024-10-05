@@ -18,6 +18,7 @@ namespace ProjectEvolution.Visualization
         {
             _state = state;
             _chromosome = chromosome;
+            _previousPosition = _nextPosition = spawnPosition;
             InitializeStaticBodyNode();
             MoveTo(spawnPosition);
         }

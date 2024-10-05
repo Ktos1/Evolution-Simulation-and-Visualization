@@ -1,8 +1,7 @@
 ﻿using ProjectEvolution.Utility;
 using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
-using System.Threading;
+using System.Linq;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
@@ -19,7 +18,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         public SimulationController(Map map)
         {
             Map = map;
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 30; i++)
             {
                 _creatures.Add(new Creature(this));
             }
@@ -29,12 +28,13 @@ namespace ProjectEvolution.Simulation.Algorithm
         public bool StartSimulation(int years)
         {
             //years* YearDuration *DELTA_TIME   ,   += DELTA_TIME
-            for (int i = 0; i < 600; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 foreach (var creature in _creatures)
                 {
                     creature.Process();
                 }
+                _creatures.ForEach(creature => creature.Update());
                 UpdateCreatureList();
                 SavePopulationToJson();
             }
@@ -43,10 +43,20 @@ namespace ProjectEvolution.Simulation.Algorithm
             return true;
         }
 
-#nullable enable
-        public T? IsItInRange<T> (Creature seeker, float range) where T : MapObject
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">
+        /// Type of the object sought.
+        /// </typeparam>
+        /// <param name="seeker"></param>
+        /// <param name="range"></param>
+        /// <returns>
+        /// An array of T-type objects sorted ascending by the distance to the <paramref name="seeker"/>
+        /// </returns>
+        public T[] ObjectsInRange<T> (Creature seeker, float range) where T : MapObject
         {
-            T? bestObject = null;
+            var objectsInRange = new List<(float distance, T _object)>();
 
             float bestDistance = range + 1;
 
@@ -57,17 +67,21 @@ namespace ProjectEvolution.Simulation.Algorithm
                     var distance = (seeker.Position - creature.Position).Length();
                     if (distance < range && distance != 0)
                     {
-                        if (distance < bestDistance)
-                        {
-                            bestObject = creature as T;
-                            bestDistance = distance;
-                        }
+                        objectsInRange.Add((distance, creature as T));
                     }
                 }
             }
-            return bestObject;
+            var sortedResult = objectsInRange.OrderBy((pair) => pair.distance).ToList();
+            var resultArray = new T[sortedResult.Count()];
+
+            for (int i = 0; i < resultArray.Length; i++)
+            {
+                resultArray[i] = sortedResult[i]._object;
+            }
+
+            return resultArray;
         }
-#nullable disable
+
         public void OnCreatureDeath(Creature diedCreature)
         {
             _deadCreatures.Add(diedCreature);
