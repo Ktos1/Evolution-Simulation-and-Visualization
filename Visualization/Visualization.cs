@@ -8,9 +8,9 @@ using ProjectEvolution.CommonStuff;
 public partial class Visualization : Node3D
 {
     private double _deltaCount = 0;
-    private List<Creature> _creatures = new List<Creature>();
+    private List<VCreature> _creatures = new List<VCreature>();
 
-    List<Creature> _deadCreatures = new List<Creature>();
+    List<VCreature> _deadCreatures = new List<VCreature>();
 
     public override void _Ready()
     {
@@ -67,9 +67,9 @@ public partial class Visualization : Node3D
         _deadCreatures.Clear();
     }
 
-    private void AddNewCreature(Vector2 spawnPosition, CreatureStates state, Chromosome chromosome)
+    private void AddNewCreature(Vector2 spawnPosition, CreatureStates state, VChromosome chromosome)
     {
-        _creatures.Add(new Creature(spawnPosition, state, chromosome));
+        _creatures.Add(new VCreature(spawnPosition, state, chromosome));
         CallDeferred("add_child", _creatures.Last().StaticBody);
     }
 

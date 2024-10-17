@@ -10,17 +10,17 @@ namespace ProjectEvolution.Simulation.Algorithm
         private const int YearDuration = 500; // in delta time
         public const float DELTA_TIME = 0.0333f; // 1/30 
         public readonly Map Map;
-        private List<Creature> _creatures = new List<Creature>();
+        private List<SCreature> _creatures = new List<SCreature>();
 
-        List<Creature> _deadCreatures = new List<Creature>();
-        List<Creature> _bornCreatures = new List<Creature>();
+        List<SCreature> _deadCreatures = new List<SCreature>();
+        List<SCreature> _bornCreatures = new List<SCreature>();
 
         public SimulationController(Map map)
         {
             Map = map;
             for (int i = 0; i < 30; i++)
             {
-                _creatures.Add(new Creature(this));
+                _creatures.Add(new SCreature(this));
             }
             SavePopulationToJson();
         }
@@ -54,13 +54,13 @@ namespace ProjectEvolution.Simulation.Algorithm
         /// <returns>
         /// An array of T-type objects sorted ascending by the distance to the <paramref name="seeker"/>
         /// </returns>
-        public T[] ObjectsInRange<T> (Creature seeker, float range) where T : MapObject
+        public T[] ObjectsInRange<T> (SCreature seeker, float range) where T : MapObject
         {
             var objectsInRange = new List<(float distance, T _object)>();
 
             float bestDistance = range + 1;
 
-            if (typeof(T) == typeof(Creature))
+            if (typeof(T) == typeof(SCreature))
             {
                 foreach (var creature in _creatures)
                 {
@@ -82,12 +82,12 @@ namespace ProjectEvolution.Simulation.Algorithm
             return resultArray;
         }
 
-        public void OnCreatureDeath(Creature diedCreature)
+        public void OnCreatureDeath(SCreature diedCreature)
         {
             _deadCreatures.Add(diedCreature);
         }
 
-        public void OnCreatureBirth(Creature bornCreature)
+        public void OnCreatureBirth(SCreature bornCreature)
         {
             _bornCreatures.Add(bornCreature);
         }

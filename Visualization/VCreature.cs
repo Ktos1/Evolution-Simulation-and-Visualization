@@ -3,18 +3,18 @@ using ProjectEvolution.CommonStuff;
 
 namespace ProjectEvolution.Visualization
 {
-    internal class Creature
+    internal class VCreature
     {
         private StaticBody3D _staticBody;
 
         private Vector2 _previousPosition;
         private Vector2 _nextPosition;
         private CreatureStates _state;
-        private Chromosome _chromosome;
+        private VChromosome _chromosome;
 
         public StaticBody3D StaticBody => _staticBody;
 
-        public Creature(Vector2 spawnPosition, CreatureStates state, Chromosome chromosome)
+        public VCreature(Vector2 spawnPosition, CreatureStates state, VChromosome chromosome)
         {
             _state = state;
             _chromosome = chromosome;

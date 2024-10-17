@@ -1,22 +1,52 @@
-﻿namespace ProjectEvolution.CommonStuff
+﻿using ProjectEvolution.Simulation.Algorithm;
+using ProjectEvolution.Visualization;
+using System;
+
+namespace ProjectEvolution.CommonStuff
 {
-    internal class Chromosome
+    internal abstract class Chromosome<T> where T: Gene
     {
-        protected float[] _genes;
+        protected static Random _randGen = new Random();
+        protected T[] _genes;
 
-        public float[] Genes => _genes;
+        public T[] Genes => _genes;
 
-        protected Chromosome()
+        public T TurningFrequencyGene
         {
-            _genes = new float[0];
+            get => _genes[0];
+            protected set => _genes[0] = value;
         }
 
-        public Chromosome(float[] genes)
+        public T TurningAngleGene
         {
-            if (genes != null)
+            get => _genes[1];
+            protected set => _genes[1] = value;
+        }
+
+        public Chromosome()
+        {
+            _genes = new T[2];
+            if (typeof(T) == typeof(SGene))
             {
-                _genes = genes;
+                for (var i = 0; i < _genes.Length; i++)
+                {
+                    _genes[i] = new SGene() as T;
+                }
             }
+            else
+            {
+                for (var i = 0; i < _genes.Length; i++)
+                {
+                    _genes[i] = new VGene() as T;
+                }
+            }
+            SetGenesLimitations();
+        }
+
+        protected void SetGenesLimitations()
+        {
+            TurningFrequencyGene.SetLimitations(0f, 100f);
+            TurningAngleGene.SetLimitations(0, 180f);
         }
     }
 }

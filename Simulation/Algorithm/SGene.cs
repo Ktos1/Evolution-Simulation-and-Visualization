@@ -1,0 +1,21 @@
+﻿using MathNet.Numerics.Distributions;
+using ProjectEvolution.CommonStuff;
+
+namespace ProjectEvolution.Simulation.Algorithm
+{
+    internal class SGene : Gene
+    {
+        public SGene() { }
+
+        public SGene(float minValue, float maxValue, float value)
+            : base(minValue, maxValue, value) { }
+
+        public void Mutate()
+        {
+            var range = MaxValue - MinValue;
+            var stddev = range * SimulationSettings.MutationStdDev * 0.01;
+            var diff = (float)Normal.Sample(_randGen, 0, stddev);
+            Value += diff;
+        }
+    }
+}

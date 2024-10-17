@@ -4,14 +4,14 @@ using ProjectEvolution.CommonStuff;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
-    public class Creature : MapObject
+    public class SCreature : MapObject
     {
         private static Random rand = new Random();
         private SimulationController _controller;
 
         private CreatureStates _state;
         private MapObject _focusObject;
-        private MutableChromosome _chromosome;
+        private SChromosome _chromosome;
 
         private CreatureStates _newState;
         private MapObject _newFocusObject;
@@ -35,14 +35,14 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public bool IsGivingBirth { get; set; }
 
-        public Creature(SimulationController controller)
+        public SCreature(SimulationController controller)
         {
             _position = _newPosition = new Vector2(rand.NextSingle() * 10 - 5, rand.NextSingle() * 10 - 5);
             _movementDirection = (new Vector2(rand.NextSingle() * 2 - 1, rand.NextSingle() * 2 - 1)).Normalized();
             _speed = 2f;
             _controller = controller;
             _sightRange = 1;
-            _chromosome = new MutableChromosome();
+            _chromosome = new SChromosome();
             _lifeDuration = rand.Next(250, 350);
             _newBorn = true;
 
@@ -52,7 +52,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             _state = _newState = CreatureStates.SeekingForPartner;
         }
 
-        public Creature(Vector2 position, SimulationController controller) : this(controller)
+        public SCreature(Vector2 position, SimulationController controller) : this(controller)
         {
             _position = _newPosition = position;
         }
@@ -76,7 +76,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
                     case CreatureStates.SeekingForPartner:
                     {
-                        Creature[] creaturesInRange = _controller.ObjectsInRange<Creature>(this, _sightRange);
+                        SCreature[] creaturesInRange = _controller.ObjectsInRange<SCreature>(this, _sightRange);
                         var isPartnerFounded = false;
                         if (creaturesInRange is not null)
                         {
@@ -102,7 +102,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
                     case CreatureStates.MovingToPartner:
                         {
-                            var partner = (Creature)_focusObject;
+                            var partner = (SCreature)_focusObject;
                             if (partner.State == CreatureStates.SeekingForPartner ||
                                 partner.FocusObject == this &&
                                 partner.State == CreatureStates.MovingToPartner)
@@ -121,7 +121,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
                     case CreatureStates.Reproducing:
                         {
-                            var partner = (Creature)_focusObject;
+                            var partner = (SCreature)_focusObject;
                             if (partner.State != CreatureStates.Reproducing)
                             {
                                 ChooseWhatToDo();
@@ -191,7 +191,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             if (_newBorn)
             {
                 _newBorn = false;
-                return (_position, _state, _chromosome.Genes);
+                return (_position, _state, _chromosome.GetGenesValues());
             }
             else
             {
@@ -199,10 +199,10 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
         }
 
-        private void GiveBirth(Creature partner)
+        private void GiveBirth(SCreature partner)
         {
             var childPosition = (partner.Position - _position) / 2 + _position;
-            _controller.OnCreatureBirth(new Creature(childPosition, _controller));
+            _controller.OnCreatureBirth(new SCreature(childPosition, _controller));
         }
 
         private void Die()

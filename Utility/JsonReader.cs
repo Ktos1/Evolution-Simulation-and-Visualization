@@ -1,5 +1,6 @@
 ﻿using Godot;
 using ProjectEvolution.CommonStuff;
+using ProjectEvolution.Visualization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,12 +23,12 @@ namespace ProjectEvolution.Utility
                 var ticks = root.GetProperty("ticks").EnumerateArray();
                 var ticksLength = ticks.Count();
 
-                var result = new(Vector2 position, CreatureStates state, Chromosome chromosome)[ticksLength][];
+                var result = new(Vector2 position, CreatureStates state, VChromosome chromosome)[ticksLength][];
                 int i = 0, j = 0;
                 foreach (var tick in ticks)
                 {
                     var tickArray = tick.EnumerateArray();
-                    var creaturesTickData = new (Vector2 position, CreatureStates state, Chromosome chromosome)[tickArray.Count()];
+                    var creaturesTickData = new (Vector2 position, CreatureStates state, VChromosome chromosome)[tickArray.Count()];
 
                     j = 0;
                     foreach (var creature in tickArray)
@@ -49,7 +50,7 @@ namespace ProjectEvolution.Utility
                             }
                             genes = genesList.ToArray();
 
-                            creaturesTickData[j] = new(position, state, new Chromosome(genes));
+                            creaturesTickData[j] = new(position, state, new VChromosome(genes));
                         }
                         else
                         {
@@ -64,10 +65,10 @@ namespace ProjectEvolution.Utility
             }
         }
 
-        public static (Vector2 position, CreatureStates state, Chromosome chromosome)[] NextTick()
+        public static (Vector2 position, CreatureStates state, VChromosome chromosome)[] NextTick()
         {
             _ticksEnumerator.MoveNext();
-            return (ValueTuple<Vector2, CreatureStates, Chromosome>[])_ticksEnumerator.Current;
+            return (ValueTuple<Vector2, CreatureStates, VChromosome>[])_ticksEnumerator.Current;
         }
     }
 }

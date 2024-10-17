@@ -12,7 +12,11 @@ namespace ProjectEvolution.Utility
         private static JsonArray _ticksArray;
         private static JsonArray _tickArray;
 
-        public static string jsonString => _jsonData.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+        //private static JsonSerializerOptions serializerOptions = new JsonSerializerOptions { WriteIndented = true };
+
+        // TODO: in the future change this ToString() to the Serialize() on a JsonSerializer class
+        // in order to make a json file without white characters. You can use the serializerOptions above.
+        public static string jsonString => _jsonData.ToString();
 
         static JsonWriter()
         {
@@ -43,7 +47,8 @@ namespace ProjectEvolution.Utility
                 genesJson.Add(gene);
             }
             var creatureJson = GetCreatureJSONObject(position, currentState);
-            creatureJson.Add("C", genesJson);
+            creatureJson["C"] = genesJson;
+
             _tickArray.Add(creatureJson);
         }
 
