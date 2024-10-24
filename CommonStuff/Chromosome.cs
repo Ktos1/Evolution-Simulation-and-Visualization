@@ -45,8 +45,8 @@ namespace ProjectEvolution.CommonStuff
 
         protected void SetGenesLimitations()
         {
-            TurningFrequencyGene.SetLimitations(0f, 100f);
-            TurningAngleGene.SetLimitations(0, 180f);
+            TurningFrequencyGene.SetLimitations(0, 100);
+            TurningAngleGene.SetLimitations(0, 180);
         }
     }
 }

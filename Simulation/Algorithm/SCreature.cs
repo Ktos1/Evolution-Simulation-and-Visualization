@@ -1,12 +1,13 @@
 ﻿using System;
 using Godot;
+using MathNet.Numerics.Distributions;
 using ProjectEvolution.CommonStuff;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
     public class SCreature : MapObject
     {
-        private static Random rand = new Random();
+        private static Random _randGen = new Random();
         private SimulationController _controller;
 
         private CreatureStates _state;
@@ -37,13 +38,13 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public SCreature(SimulationController controller)
         {
-            _position = _newPosition = new Vector2(rand.NextSingle() * 10 - 5, rand.NextSingle() * 10 - 5);
-            _movementDirection = (new Vector2(rand.NextSingle() * 2 - 1, rand.NextSingle() * 2 - 1)).Normalized();
+            _position = _newPosition = new Vector2(_randGen.NextSingle() * 10 - 5, _randGen.NextSingle() * 10 - 5);
+            _movementDirection = (new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1)).Normalized();
             _speed = 2f;
             _controller = controller;
             _sightRange = 1;
             _chromosome = new SChromosome();
-            _lifeDuration = rand.Next(250, 350);
+            _lifeDuration = _randGen.Next(250, 350);
             _newBorn = true;
 
             var tiles = _controller.Map.Tiles;
@@ -220,8 +221,20 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private void RandomMove()
         {
-            var rotateAngle = (rand.NextSingle() * 10 - 5) * (MathF.PI / 180);
-            _movementDirection.Rotated(rotateAngle);
+            if (_randGen.NextSingle() < _chromosome.TurningFrequencyGene.Value * 0.001)
+            {
+                var sign = _randGen.Next(2);
+                if (_randGen.Next(2) == 0)
+                {
+                    sign = -1;
+                }
+                else
+                {
+                    sign = 1;
+                }
+                var rotateAngle = sign * (float)Normal.Sample(_chromosome.TurningAngleGene.Value, 2.5) * (MathF.PI / 180);
+                _movementDirection = _movementDirection.Rotated(rotateAngle);
+            }
             Move();
         }
 
