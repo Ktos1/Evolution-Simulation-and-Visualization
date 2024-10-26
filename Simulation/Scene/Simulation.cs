@@ -4,6 +4,10 @@ using ProjectEvolution.Simulation.Algorithm;
 
 public partial class Simulation : Control
 {
+    [Export(PropertyHint.NodeType)] private SpinBox _creturesNum;
+    [Export(PropertyHint.NodeType)] private SpinBox _xMapSize;
+    [Export(PropertyHint.NodeType)] private SpinBox _yMapSize;
+    [Export(PropertyHint.NodeType)] private SpinBox _simulationDuration;
 
     public override void _Ready()
     {
@@ -13,8 +17,8 @@ public partial class Simulation : Control
 
     private void OnStartButtonPress()
     {
-        SimulationController simulationControler = new SimulationController(new Map(10, 10));
-        if (simulationControler.StartSimulation(1))
+        var simulationControler = new SimulationController(new Map((int)_xMapSize.Value, (int)_yMapSize.Value), (int)_creturesNum.Value);
+        if (simulationControler.StartSimulation((int)_simulationDuration.Value))
         {
             GetNode<Label>("Panel/SuccessLabel").Visible = true;
         }
