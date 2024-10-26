@@ -27,7 +27,7 @@ namespace ProjectEvolution.Visualization
         {
             if (_previousPosition != _nextPosition)
             {
-                MoveTo(_previousPosition.Lerp(_nextPosition, deltaCount / VisualizationSettings.SecondsBetweenTicks));
+                MoveTo(_previousPosition.Lerp(_nextPosition, deltaCount / CommonSettings.TICK_DURATION));
             }
         }
 
@@ -70,7 +70,7 @@ namespace ProjectEvolution.Visualization
 
             var timer = new Timer();
             _staticBody.AddChild(timer);
-            timer.WaitTime = VisualizationSettings.SecondsBetweenTicks * 60;
+            timer.WaitTime = CommonSettings.TICK_DURATION * 60;
             timer.OneShot = true;
             timer.Start();
             await _staticBody.ToSignal(timer, "timeout");

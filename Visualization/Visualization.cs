@@ -20,10 +20,10 @@ public partial class Visualization : Node3D
     public override void _Process(double delta)
     {
         _deltaCount += delta;
-        if (_deltaCount > VisualizationSettings.SecondsBetweenTicks)
+        if (_deltaCount > CommonSettings.TICK_DURATION)
         {
             UpdateCreatures();
-            _deltaCount -= VisualizationSettings.SecondsBetweenTicks;
+            _deltaCount -= CommonSettings.TICK_DURATION;
         }
         ProcessCreatures();
     }
