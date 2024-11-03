@@ -49,7 +49,7 @@ namespace ProjectEvolution.Visualization
             var movementVector = newPosition - oldPosition2D;
 
             Rotate(movementVector.Angle());
-            _staticBody.Position = new Vector3(newPosition.X, 0, newPosition.Y);
+            _staticBody.Position = new Vector3(newPosition.X, 0.75f, newPosition.Y);
         }
 
         private void InitializeStaticBodyNode()

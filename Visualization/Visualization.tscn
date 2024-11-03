@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://birdpk8ymh3dc"]
+[gd_scene load_steps=9 format=3 uid="uid://birdpk8ymh3dc"]
 
 [ext_resource type="Script" path="res://Visualization/Visualization.cs" id="1_j601l"]
+[ext_resource type="Script" path="res://Visualization/Camera3d.cs" id="2_gigcp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7a5pq"]
 size = Vector3(10, 0.5, 10)
@@ -24,18 +25,13 @@ font_size = 30
 script = ExtResource("1_j601l")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("BoxShape3D_7a5pq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("BoxMesh_vc10d")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.0124789, 0.999922, 0, -0.999922, 0.0124789, 0.335033, 6.35423, 0.0917982)
-projection = 1
-fov = 70.0
-size = 18.4915
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ehc82")
@@ -51,3 +47,9 @@ offset_right = 909.0
 offset_bottom = 559.0
 text = "asdqwe"
 label_settings = SubResource("LabelSettings_qli4l")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0516394, 5.62533, 9.30721)
+fov = 80.0
+size = 18.4915
+script = ExtResource("2_gigcp")
