@@ -49,7 +49,7 @@ text = "asdqwe"
 label_settings = SubResource("LabelSettings_qli4l")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0516394, 5.62533, 9.30721)
+transform = Transform3D(1, 0, 0, 0, 0.851489, 0.524372, 0, -0.524372, 0.851489, 0, 3.99806, 5.3482)
 fov = 80.0
 size = 18.4915
 script = ExtResource("2_gigcp")
