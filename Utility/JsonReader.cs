@@ -1,8 +1,6 @@
 ﻿using Godot;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Visualization;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +10,15 @@ namespace ProjectEvolution.Utility
 {
     internal static class JsonReader
     {
-        private static IEnumerator _ticksEnumerator;
+        private static int _currentTickNumber = -1;
+        private static (Vector2 position, CreatureStates state, VChromosome chromosome)[][] _ticks;
+
+        public static int TotalTicksNumber { get; private set; }
+        public static int CurrentTickNumber
+        {
+            get { return  _currentTickNumber; }
+            set { _currentTickNumber = (value <= 0) ? 0 : value - 1; }
+        }
 
         static JsonReader()
         {
@@ -20,12 +26,12 @@ namespace ProjectEvolution.Utility
             using (JsonDocument document = JsonDocument.Parse(jsonString))
             {
                 JsonElement root = document.RootElement;
-                var ticks = root.GetProperty("ticks").EnumerateArray();
-                var ticksLength = ticks.Count();
+                var rawTicks = root.GetProperty("ticks").EnumerateArray();
+                TotalTicksNumber = rawTicks.Count();
 
-                var result = new(Vector2 position, CreatureStates state, VChromosome chromosome)[ticksLength][];
+                _ticks = new(Vector2 position, CreatureStates state, VChromosome chromosome)[TotalTicksNumber][];
                 int i = 0, j = 0;
-                foreach (var tick in ticks)
+                foreach (var tick in rawTicks)
                 {
                     var tickArray = tick.EnumerateArray();
                     var creaturesTickData = new (Vector2 position, CreatureStates state, VChromosome chromosome)[tickArray.Count()];
@@ -58,17 +64,16 @@ namespace ProjectEvolution.Utility
                         }
                         j++;
                     }
-                    result[i] = creaturesTickData;
+                    _ticks[i] = creaturesTickData;
                     i++;
                 }
-                _ticksEnumerator = result.GetEnumerator();
             }
         }
 
         public static (Vector2 position, CreatureStates state, VChromosome chromosome)[] NextTick()
         {
-            _ticksEnumerator.MoveNext();
-            return (ValueTuple<Vector2, CreatureStates, VChromosome>[])_ticksEnumerator.Current;
+            _currentTickNumber++;
+            return _ticks[CurrentTickNumber];
         }
     }
 }
