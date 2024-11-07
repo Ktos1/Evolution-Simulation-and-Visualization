@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://Visualization/Visualization.cs" id="1_j601l"]
 [ext_resource type="Script" path="res://Visualization/Camera3d.cs" id="2_gigcp"]
+[ext_resource type="Script" path="res://Visualization/TimeSliderPanel.cs" id="3_latmy"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7a5pq"]
 size = Vector3(10, 0.5, 10)
@@ -18,11 +19,10 @@ ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1t4oh"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_qli4l"]
-font_size = 30
-
-[node name="Visualization" type="Node3D"]
+[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSlider", "_startStopButton")]
 script = ExtResource("1_j601l")
+_timeSlider = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/TimeSlider")
+_startStopButton = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/StartStopButton")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
@@ -40,16 +40,70 @@ camera_attributes = SubResource("CameraAttributesPractical_1t4oh")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.882332, 0.470627, 0, -0.470627, 0.882332, 0, 4.18326, 10.1856)
 
-[node name="Label" type="Label" parent="."]
-offset_left = 869.0
-offset_top = 536.0
-offset_right = 909.0
-offset_bottom = 559.0
-text = "asdqwe"
-label_settings = SubResource("LabelSettings_qli4l")
-
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.851489, 0.524372, 0, -0.524372, 0.851489, 0, 3.99806, 5.3482)
 fov = 80.0
 size = 18.4915
 script = ExtResource("2_gigcp")
+
+[node name="TimeSliderPanel" type="Panel" parent="." node_paths=PackedStringArray("_slidingButton", "_actualTimeLabel", "_totalTimeLabel", "_timeSlider")]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.041
+anchor_right = 0.5
+anchor_bottom = 1.041
+offset_left = -439.0
+offset_top = -26.568
+offset_right = 439.0
+offset_bottom = 25.432
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("3_latmy")
+_slidingButton = NodePath("SlidingButton")
+_actualTimeLabel = NodePath("MarginContainer/HBoxContainer/ActualTimeLabel")
+_totalTimeLabel = NodePath("MarginContainer/HBoxContainer/TotalTimeLabel")
+_timeSlider = NodePath("MarginContainer/HBoxContainer/TimeSlider")
+
+[node name="SlidingButton" type="Button" parent="TimeSliderPanel"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = -47.0
+offset_right = 51.0
+offset_bottom = 3.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TimeSliderPanel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TimeSliderPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="StartStopButton" type="Button" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+toggle_mode = true
+
+[node name="ActualTimeLabel" type="Label" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "00:00:00"
+
+[node name="TimeSlider" type="HSlider" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+scrollable = false
+
+[node name="TotalTimeLabel" type="Label" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "00:00:00"

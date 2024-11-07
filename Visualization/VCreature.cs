@@ -42,6 +42,11 @@ namespace ProjectEvolution.Visualization
             }
         }
 
+        public void Delete()
+        {
+            _staticBody.QueueFree();
+        }
+
         private void MoveTo (Vector2 newPosition)
         {
             var oldPosition3D = _staticBody.Position;

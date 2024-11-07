@@ -17,7 +17,6 @@ namespace ProjectEvolution.Utility
             {
                 result[i] = vectors[i].Lerp(to[i], weight);
             }
-
             return result;
         }
     }

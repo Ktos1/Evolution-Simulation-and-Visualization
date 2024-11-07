@@ -7,25 +7,36 @@ using ProjectEvolution.CommonStuff;
 
 public partial class Visualization : Node3D
 {
+    [Export] private HSlider _timeSlider;
+    [Export] private Button _startStopButton;
+
     private double _deltaCount = 0;
     private List<VCreature> _creatures = new List<VCreature>();
+    private List<VCreature> _deadCreatures = new List<VCreature>();
 
-    List<VCreature> _deadCreatures = new List<VCreature>();
+    private bool _isTimeSliderDragging = false;
+    private bool _isStartStopButtonToggled = false;
 
     public override void _Ready()
     {
         InitializeCreatures();
+        _timeSlider.DragStarted += OnTimeSliderDragStarted;
+        _timeSlider.DragEnded += OnTimeSliderDragEnded;
+        _startStopButton.Toggled += OnStartStopButtonToggled;
     }
 
     public override void _Process(double delta)
     {
-        _deltaCount += delta;
-        if (_deltaCount > CommonSettings.TICK_DURATION)
+        if (!_isTimeSliderDragging && !_isStartStopButtonToggled)
         {
-            UpdateCreatures();
-            _deltaCount -= CommonSettings.TICK_DURATION;
+            _deltaCount += delta;
+            if (_deltaCount > CommonSettings.TICK_DURATION)
+            {
+                UpdateCreatures();
+                _deltaCount -= CommonSettings.TICK_DURATION;
+            }
+            ProcessCreatures(_deltaCount);
         }
-        ProcessCreatures();
     }
 
     private void InitializeCreatures()
@@ -73,10 +84,59 @@ public partial class Visualization : Node3D
         CallDeferred("add_child", _creatures.Last().StaticBody);
     }
 
-    private void ProcessCreatures()
+    /// <summary>
+    /// Processes creatures without loading new tick data. It uses the linear interpolation to make creature
+    /// movement more smooth.
+    /// </summary>
+    /// <param name="timeCounterBetweenTicks">
+    /// Current time counted from last tick data loading. It is used to the interpolation.
+    /// </param>
+    private void ProcessCreatures(double timeCounterBetweenTicks)
     {
-        _creatures.ForEach((creature) => creature.Process((float)_deltaCount));
+        _creatures.ForEach((creature) => creature.Process((float)timeCounterBetweenTicks));
     }
 
+    private void LoadOnTick(int tickNumber)
+    {
+        foreach (var creature in _creatures)
+        {
+            creature.Delete();
+        }
+        _creatures.Clear();
+        _deadCreatures.Clear();
+        _deltaCount = 0;
+        JsonReader.CurrentTickNumber = tickNumber;
 
+        var creaturesData = JsonReader.NextTick();
+        for (int i = 0; i < creaturesData.Length; i++)
+        {
+            var(position, state, chromosome) = creaturesData[i];
+            AddNewCreature(position, state, chromosome);
+        }
+    }
+
+    private void OnTimeSliderDragStarted()
+    {
+        _deltaCount = 0;
+        _isTimeSliderDragging = true;
+        _timeSlider.ValueChanged += OnTimeSliderValueChanged;
+    }
+
+    private void OnTimeSliderDragEnded(bool valueChanged)
+    {
+        _isTimeSliderDragging = false;
+        _timeSlider.ValueChanged -= OnTimeSliderValueChanged;
+    }
+
+    private void OnTimeSliderValueChanged(double value)
+    {
+        LoadOnTick(value == 0 ? 0 : (int)value - 1);
+        UpdateCreatures();
+        ProcessCreatures(CommonSettings.TICK_DURATION);
+    }
+
+    private void OnStartStopButtonToggled(bool value)
+    {
+        _isStartStopButtonToggled = value;
+    }
 }
