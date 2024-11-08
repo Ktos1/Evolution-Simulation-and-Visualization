@@ -19,7 +19,7 @@ public partial class TimeSliderPanel : Panel
     {
         _slidingButton.Pressed += OnSliderButtonPressed;
         _totalTimeLabel.Text = $"{GetTimeFromTicks(_totalTicksNumber)}";
-        _timeSlider.MaxValue = _totalTicksNumber;
+        _timeSlider.MaxValue = _totalTicksNumber - 1;
     }
 
     public override void _Process(double delta)

@@ -73,6 +73,7 @@ namespace ProjectEvolution.Utility
         public static (Vector2 position, CreatureStates state, VChromosome chromosome)[] NextTick()
         {
             _currentTickNumber++;
+            if (_currentTickNumber >= _ticks.Length) return null;
             return _ticks[CurrentTickNumber];
         }
     }

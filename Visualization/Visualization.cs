@@ -52,6 +52,11 @@ public partial class Visualization : Node3D
     private void UpdateCreatures()
     {
         var creaturesData = JsonReader.NextTick();
+        if (creaturesData is null)
+        {
+            _startStopButton.ButtonPressed = true;
+            return;
+        }
         for (int i = 0; i < creaturesData.Length; i++)
         {
             if (i < _creatures.Count)
