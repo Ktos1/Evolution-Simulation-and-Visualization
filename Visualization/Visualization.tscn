@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://birdpk8ymh3dc"]
+[gd_scene load_steps=10 format=3 uid="uid://birdpk8ymh3dc"]
 
 [ext_resource type="Script" path="res://Visualization/Visualization.cs" id="1_j601l"]
 [ext_resource type="Script" path="res://Visualization/Camera3d.cs" id="2_gigcp"]
 [ext_resource type="Script" path="res://Visualization/TimeSliderPanel.cs" id="3_latmy"]
+[ext_resource type="Script" path="res://Visualization/MenuPanel.cs" id="4_pi3kf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7a5pq"]
 size = Vector3(10, 0.5, 10)
@@ -66,10 +67,11 @@ _timeSlider = NodePath("MarginContainer/HBoxContainer/TimeSlider")
 
 [node name="SlidingButton" type="Button" parent="TimeSliderPanel"]
 layout_mode = 0
-offset_left = 1.0
+offset_left = 60.0
 offset_top = -47.0
-offset_right = 51.0
+offset_right = 110.0
 offset_bottom = 3.0
+toggle_mode = true
 
 [node name="MarginContainer" type="MarginContainer" parent="TimeSliderPanel"]
 layout_mode = 1
@@ -107,3 +109,45 @@ scrollable = false
 [node name="TotalTimeLabel" type="Label" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "00:00:00"
+
+[node name="MenuPanel" type="Panel" parent="." node_paths=PackedStringArray("_menuButton", "_exitButton", "_slidingButton")]
+anchors_preset = -1
+offset_left = -310.0
+offset_top = 120.0
+offset_bottom = 320.0
+script = ExtResource("4_pi3kf")
+_menuButton = NodePath("VBoxContainer/MenuButton")
+_exitButton = NodePath("VBoxContainer/ExitButton")
+_slidingButton = NodePath("SlidingButton")
+
+[node name="SlidingButton" type="Button" parent="MenuPanel"]
+offset_left = 306.0
+offset_top = 18.0
+offset_right = 356.0
+offset_bottom = 68.0
+toggle_mode = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -75.0
+offset_right = 100.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="MenuButton" type="Button" parent="MenuPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Wyjdź do menu"
+
+[node name="ExitButton" type="Button" parent="MenuPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Wyjdź do pulpitu"

@@ -10,14 +10,13 @@ public partial class TimeSliderPanel : Panel
     [Export] private Label _totalTimeLabel;
     [Export] private HSlider _timeSlider;
 
-    private bool _isSlidedOut = false;
     private int _totalTicksNumber = JsonReader.TotalTicksNumber;
     private int _currentTickNumber => JsonReader.CurrentTickNumber;
 
 
     public override void _Ready()
     {
-        _slidingButton.Pressed += OnSliderButtonPressed;
+        _slidingButton.Toggled += OnSlidingButtonToggled;
         _totalTimeLabel.Text = $"{GetTimeFromTicks(_totalTicksNumber)}";
         _timeSlider.MaxValue = _totalTicksNumber - 1;
     }
@@ -28,18 +27,10 @@ public partial class TimeSliderPanel : Panel
         _timeSlider.Value = _currentTickNumber;
     }
 
-    private void OnSliderButtonPressed()
+    private void OnSlidingButtonToggled(bool newState)
     {
-        if (!_isSlidedOut)
-        {
-            Position += new Vector2(0, -52);
-            _isSlidedOut = true;
-        }
-        else
-        {
-            Position += new Vector2(0, 52);
-            _isSlidedOut = false;
-        }
+        if (newState) Position += new Vector2(0, -52);
+        else Position += new Vector2(0, 52);
     }
 
     private string GetTimeFromTicks(int ticks)
