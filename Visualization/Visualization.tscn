@@ -1,9 +1,9 @@
 [gd_scene load_steps=10 format=3 uid="uid://birdpk8ymh3dc"]
 
 [ext_resource type="Script" path="res://Visualization/Visualization.cs" id="1_j601l"]
-[ext_resource type="Script" path="res://Visualization/Camera3d.cs" id="2_gigcp"]
-[ext_resource type="Script" path="res://Visualization/TimeSliderPanel.cs" id="3_latmy"]
-[ext_resource type="Script" path="res://Visualization/MenuPanel.cs" id="4_pi3kf"]
+[ext_resource type="Script" path="res://Visualization/SceneElementsScripts/Camera3d.cs" id="2_gigcp"]
+[ext_resource type="Script" path="res://Visualization/SceneElementsScripts/TimeSliderPanel.cs" id="3_latmy"]
+[ext_resource type="Script" path="res://Visualization/SceneElementsScripts/MenuPanel.cs" id="4_pi3kf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7a5pq"]
 size = Vector3(10, 0.5, 10)
@@ -111,7 +111,6 @@ layout_mode = 2
 text = "00:00:00"
 
 [node name="MenuPanel" type="Panel" parent="." node_paths=PackedStringArray("_menuButton", "_exitButton", "_slidingButton")]
-anchors_preset = -1
 offset_left = -310.0
 offset_top = 120.0
 offset_bottom = 320.0
@@ -121,6 +120,7 @@ _exitButton = NodePath("VBoxContainer/ExitButton")
 _slidingButton = NodePath("SlidingButton")
 
 [node name="SlidingButton" type="Button" parent="MenuPanel"]
+layout_mode = 0
 offset_left = 306.0
 offset_top = 18.0
 offset_right = 356.0
