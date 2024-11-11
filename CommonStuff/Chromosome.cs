@@ -43,7 +43,7 @@ namespace ProjectEvolution.CommonStuff
             SetGenesLimitations();
         }
 
-        protected void SetGenesLimitations()
+        private void SetGenesLimitations()
         {
             TurningFrequencyGene.SetLimitations(0, 100);
             TurningAngleGene.SetLimitations(0, 180);

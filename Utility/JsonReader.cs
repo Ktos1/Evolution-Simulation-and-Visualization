@@ -17,7 +17,7 @@ namespace ProjectEvolution.Utility
         public static int CurrentTickNumber
         {
             get { return  _currentTickNumber; }
-            set { _currentTickNumber = (value <= 0) ? 0 : value - 1; }
+            set { _currentTickNumber = (value < 0) ? -1 : value - 1; }
         }
 
         static JsonReader()

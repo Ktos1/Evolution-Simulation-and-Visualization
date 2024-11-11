@@ -7,7 +7,7 @@ public partial class MenuPanel : Panel
     [Export] private Button _menuButton;
     [Export] private Button _exitButton;
     [Export] private Button _slidingButton;
-
+    
     public override void _Ready()
     {
         _menuButton.Pressed += OnMenuButtonPressed;

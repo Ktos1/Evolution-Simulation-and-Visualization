@@ -9,6 +9,7 @@ public partial class Visualization : Node3D
 {
     [Export] private HSlider _timeSlider;
     [Export] private Button _startStopButton;
+    [Export] private GenesWindow _genesWindow;
 
     private double _deltaCount = 0;
     private List<VCreature> _creatures = new List<VCreature>();
@@ -36,6 +37,15 @@ public partial class Visualization : Node3D
                 _deltaCount -= CommonSettings.TICK_DURATION;
             }
             ProcessCreatures(_deltaCount);
+        }
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        if (@event.IsActionPressed("pick_object"))
+        {
+            _creatures.ForEach((creature) => creature.Uncheck());
+            _genesWindow.Visible = false;
         }
     }
 
@@ -85,7 +95,9 @@ public partial class Visualization : Node3D
 
     private void AddNewCreature(Vector2 spawnPosition, CreatureStates state, VChromosome chromosome)
     {
-        _creatures.Add(new VCreature(spawnPosition, state, chromosome));
+        var creature = new VCreature(spawnPosition, state, chromosome);
+        creature.ClickedOn += _genesWindow.OnClickedOnCreature;
+        _creatures.Add(creature);
         CallDeferred("add_child", _creatures.Last().StaticBody);
     }
 

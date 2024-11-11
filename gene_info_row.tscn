@@ -1,0 +1,68 @@
+[gd_scene load_steps=5 format=3 uid="uid://cc0xbbpeoy2ig"]
+
+[ext_resource type="Script" path="res://Visualization/GeneInfoRow.cs" id="1_gt2w5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p180g"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ak3gt"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_stkjb"]
+font_size = 12
+
+[node name="GeneInfoRow" type="PanelContainer" node_paths=PackedStringArray("_geneNameLabel", "_geneValueLabel", "_geneValueSlider")]
+offset_right = 300.0
+offset_bottom = 77.0
+size_flags_vertical = 3
+script = ExtResource("1_gt2w5")
+_geneNameLabel = NodePath("VBoxContainer/GeneNameLabel")
+_geneValueLabel = NodePath("VBoxContainer/Control/GeneValueLabel")
+_geneValueSlider = NodePath("VBoxContainer/Control/GeneValueSlider")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="GeneNameLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+text = "jfffhgfghfgfgh"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="GeneValueSlider" type="HSlider" parent="VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -135.0
+offset_top = -25.0
+offset_right = 135.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 1
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_p180g")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_ak3gt")
+value = 5.0
+editable = false
+scrollable = false
+
+[node name="GeneValueLabel" type="Label" parent="VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -146.0
+offset_top = -42.0
+offset_right = -145.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_stkjb")

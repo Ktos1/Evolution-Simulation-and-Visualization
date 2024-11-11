@@ -2,7 +2,7 @@
 
 namespace ProjectEvolution.CommonStuff
 {
-    internal abstract class Gene
+    public abstract class Gene
     {
         protected static Random _randGen = new Random();
 
