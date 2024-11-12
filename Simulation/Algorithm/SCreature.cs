@@ -240,7 +240,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private void Move()
         {
-            var moveDist = SimulationController.DELTA_TIME * _speed;
+            var moveDist = CommonSettings.TICK_DURATION * _speed;
             _newPosition += _movementDirection * moveDist;
 
             if (_newPosition.X > _movementLimitations.Item1 || _newPosition.X < -_movementLimitations.Item1)

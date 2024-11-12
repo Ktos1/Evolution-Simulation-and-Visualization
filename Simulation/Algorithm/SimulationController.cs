@@ -7,18 +7,17 @@ namespace ProjectEvolution.Simulation.Algorithm
 {
     public class SimulationController // eventually this class could be named the World
     {
-        private const int YearDuration = 500; // in delta time
-        public const float DELTA_TIME = 0.0333f; // 1/30 
+        private const int YEAR_DURATION = 500; // in ticks
         public readonly Map Map;
         private List<SCreature> _creatures = new List<SCreature>();
 
         List<SCreature> _deadCreatures = new List<SCreature>();
         List<SCreature> _bornCreatures = new List<SCreature>();
 
-        public SimulationController(Map map)
+        public SimulationController(Map map, int creaturesNum)
         {
             Map = map;
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < creaturesNum; i++)
             {
                 _creatures.Add(new SCreature(this));
             }
@@ -27,15 +26,14 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public bool StartSimulation(int years)
         {
-            //years* YearDuration *DELTA_TIME   ,   += DELTA_TIME
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < years * YEAR_DURATION; i++)
             {
                 foreach (var creature in _creatures)
                 {
                     creature.Process();
                 }
                 _creatures.ForEach(creature => creature.Update());
-                UpdateCreatureList();
+                UpdateCreaturesList();
                 SavePopulationToJson();
             }
 
@@ -92,7 +90,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             _bornCreatures.Add(bornCreature);
         }
 
-        private void UpdateCreatureList()
+        private void UpdateCreaturesList()
         {
             _deadCreatures.ForEach(creature => _creatures.Remove(creature));
             _bornCreatures.ForEach(creature => _creatures.Add(creature));

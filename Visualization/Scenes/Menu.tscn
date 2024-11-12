@@ -1,15 +1,18 @@
 [gd_scene load_steps=2 format=3 uid="uid://bgi0hk0e6pthq"]
 
-[ext_resource type="Script" path="res://Menu.cs" id="1_cgbsy"]
+[ext_resource type="Script" path="res://Visualization/ScenesScripts/Menu.cs" id="1_yswud"]
 
-[node name="Menu" type="Control"]
+[node name="Menu" type="Control" node_paths=PackedStringArray("_simulationButton", "_visualizationButton", "_exitButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_cgbsy")
+script = ExtResource("1_yswud")
+_simulationButton = NodePath("BoxContainer/SimulationButton")
+_visualizationButton = NodePath("BoxContainer/VisualizationButton")
+_exitButton = NodePath("BoxContainer/ExitButton")
 
 [node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 1
