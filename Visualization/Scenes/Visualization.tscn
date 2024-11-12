@@ -1,11 +1,11 @@
 [gd_scene load_steps=13 format=3 uid="uid://birdpk8ymh3dc"]
 
-[ext_resource type="Script" path="res://Visualization/Visualization.cs" id="1_j601l"]
-[ext_resource type="Script" path="res://Visualization/SceneElementsScripts/Camera3d.cs" id="2_gigcp"]
-[ext_resource type="Script" path="res://Visualization/SceneElementsScripts/TimeSliderPanel.cs" id="3_latmy"]
-[ext_resource type="Script" path="res://Visualization/SceneElementsScripts/MenuPanel.cs" id="4_pi3kf"]
-[ext_resource type="Script" path="res://Visualization/SceneElementsScripts/GenesWindow.cs" id="5_p5ghm"]
-[ext_resource type="PackedScene" uid="uid://cc0xbbpeoy2ig" path="res://gene_info_row.tscn" id="6_tnawr"]
+[ext_resource type="Script" path="res://Visualization/ScenesScripts/Visualization.cs" id="1_8ml5k"]
+[ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/Camera3d.cs" id="2_qh4s7"]
+[ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/TimeSliderPanel.cs" id="3_wfpa5"]
+[ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/MenuPanel.cs" id="4_oy4js"]
+[ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/GenesWindow.cs" id="5_i1j78"]
+[ext_resource type="PackedScene" uid="uid://cc0xbbpeoy2ig" path="res://Visualization/SubScenes/GeneInfoRow.tscn" id="6_x4371"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7a5pq"]
 size = Vector3(10, 0.5, 10)
@@ -26,7 +26,7 @@ ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
 font_size = 24
 
 [node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSlider", "_startStopButton", "_genesWindow")]
-script = ExtResource("1_j601l")
+script = ExtResource("1_8ml5k")
 _timeSlider = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/TimeSlider")
 _startStopButton = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/StartStopButton")
 _genesWindow = NodePath("GenesWindow")
@@ -51,7 +51,7 @@ transform = Transform3D(1, 0, 0, 0, 0.882332, 0.470627, 0, -0.470627, 0.882332, 
 transform = Transform3D(1, 0, 0, 0, 0.851489, 0.524372, 0, -0.524372, 0.851489, 0, 3.99806, 5.3482)
 fov = 80.0
 size = 18.4915
-script = ExtResource("2_gigcp")
+script = ExtResource("2_qh4s7")
 
 [node name="TimeSliderPanel" type="Panel" parent="." node_paths=PackedStringArray("_slidingButton", "_actualTimeLabel", "_totalTimeLabel", "_timeSlider")]
 anchors_preset = -1
@@ -65,7 +65,7 @@ offset_right = 439.0
 offset_bottom = 25.432
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("3_latmy")
+script = ExtResource("3_wfpa5")
 _slidingButton = NodePath("SlidingButton")
 _actualTimeLabel = NodePath("MarginContainer/HBoxContainer/ActualTimeLabel")
 _totalTimeLabel = NodePath("MarginContainer/HBoxContainer/TotalTimeLabel")
@@ -120,7 +120,7 @@ text = "00:00:00"
 offset_left = -310.0
 offset_top = 120.0
 offset_bottom = 320.0
-script = ExtResource("4_pi3kf")
+script = ExtResource("4_oy4js")
 _menuButton = NodePath("VBoxContainer/MenuButton")
 _exitButton = NodePath("VBoxContainer/ExitButton")
 _slidingButton = NodePath("SlidingButton")
@@ -166,7 +166,7 @@ anchor_right = 1.0
 offset_left = -320.0
 offset_bottom = 400.0
 grow_horizontal = 0
-script = ExtResource("5_p5ghm")
+script = ExtResource("5_i1j78")
 _genesVBox = NodePath("VBoxContainer/ScrollContainer/MarginContainer/GeneVBox")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GenesWindow"]
@@ -196,5 +196,5 @@ layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="GeneInfoRow" parent="GenesWindow/VBoxContainer/ScrollContainer/MarginContainer/GeneVBox" instance=ExtResource("6_tnawr")]
+[node name="GeneInfoRow" parent="GenesWindow/VBoxContainer/ScrollContainer/MarginContainer/GeneVBox" instance=ExtResource("6_x4371")]
 layout_mode = 2

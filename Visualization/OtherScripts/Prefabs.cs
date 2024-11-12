@@ -5,9 +5,9 @@ namespace ProjectEvolution.Visualization
     internal static class Prefabs
     {
         public static PackedScene Creature { get; } =
-            GD.Load<PackedScene>("res://Visualization/MapObjects/Creature.tscn");
+            GD.Load<PackedScene>("res://Visualization/SubScenes/Creature.tscn");
 
         public static PackedScene GeneInfoRow { get; } =
-            GD.Load<PackedScene>("res://gene_info_row.tscn");
+            GD.Load<PackedScene>("res://Visualization/SubScenes/GeneInfoRow.tscn");
     }
 }

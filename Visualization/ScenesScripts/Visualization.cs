@@ -52,6 +52,7 @@ public partial class Visualization : Node3D
     private void InitializeCreatures()
     {
         var creaturesData = JsonReader.NextTick();
+        _genesWindow.AverageStartGenesValues = CalculateAverageGenesValues(creaturesData.Select((x) => x.chromosome).ToArray());
         foreach (var creature in creaturesData)
         {
             var (position, state, chromosome) = creature;
@@ -130,6 +131,24 @@ public partial class Visualization : Node3D
             var(position, state, chromosome) = creaturesData[i];
             AddNewCreature(position, state, chromosome);
         }
+    }
+
+    private float[] CalculateAverageGenesValues(VChromosome[] chromosomes)
+    {
+        float sum = 0;
+        int genesNumber = chromosomes[0].Genes.Length;
+        var result = new float[genesNumber];
+
+        for (int i = 0; i < genesNumber; i++)
+        {
+            for (int j = 0; j < chromosomes.Length; j++)
+            {
+                sum += chromosomes[j].Genes[i].Value;
+            }
+            result[i] = sum / chromosomes.Length;
+            sum = 0;
+        }
+        return result;
     }
 
     private void OnTimeSliderDragStarted()

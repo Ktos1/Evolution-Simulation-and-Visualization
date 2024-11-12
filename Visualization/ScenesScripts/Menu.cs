@@ -4,14 +4,17 @@ using System.Diagnostics;
 
 public partial class Menu : Control
 {
+    [Export] private Button _simulationButton;
+    [Export] private Button _visualizationButton;
+    [Export] private Button _exitButton;
     public override void _Ready()
     {
         // adding a listener to get a debug output in VS (Trace share listeners to Debug)
         Trace.Listeners.Add(new DefaultTraceListener());
 
-        GetNode<Button>("BoxContainer/SimulationButton").Pressed += OnSimulationButtonPress;
-        GetNode<Button>("BoxContainer/VisualizationButton").Pressed += OnVisualizationButtonPress;
-        GetNode<Button>("BoxContainer/ExitButton").Pressed += OnExitButtonPress;
+        _simulationButton.Pressed += OnSimulationButtonPress;
+        _visualizationButton.Pressed += OnVisualizationButtonPress;
+        _exitButton.Pressed += OnExitButtonPress;
     }
 
     private void OnSimulationButtonPress()

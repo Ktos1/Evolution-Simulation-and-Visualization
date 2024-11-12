@@ -11,9 +11,8 @@ config_version=5
 [application]
 
 config/name="ProjectEvolution"
-run/main_scene="res://Menu.tscn"
+run/main_scene="res://Visualization/Scenes/Menu.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
-config/icon="res://icon.svg"
 
 [dotnet]
 

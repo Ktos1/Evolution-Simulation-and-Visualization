@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cgb2h85f8c5fw"]
 
-[ext_resource type="Script" path="res://Simulation/Scene/Simulation.cs" id="1_xqs0w"]
+[ext_resource type="Script" path="res://Visualization/ScenesScripts/Simulation.cs" id="1_6ij0f"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_x0rx7"]
 font_size = 30
@@ -9,18 +9,20 @@ font_size = 30
 font_size = 20
 font_color = Color(0.0972, 0.81, 0.23976, 1)
 
-[node name="Simulation" type="Control" node_paths=PackedStringArray("_creturesNum", "_xMapSize", "_yMapSize", "_simulationDuration")]
+[node name="Simulation" type="Control" node_paths=PackedStringArray("_creturesNum", "_xMapSize", "_yMapSize", "_simulationDuration", "_startButton", "_backButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_xqs0w")
+script = ExtResource("1_6ij0f")
 _creturesNum = NodePath("Panel/VBoxContainer/PropertyRow1/CreatureNumSpinBox")
 _xMapSize = NodePath("Panel/VBoxContainer/PropertyRow2/MapSize/XMapSizeSpinBox")
 _yMapSize = NodePath("Panel/VBoxContainer/PropertyRow2/MapSize/YMapSizeSpinBox")
 _simulationDuration = NodePath("Panel/VBoxContainer/PropertyRow3/SimDurationSpinBox")
+_startButton = NodePath("Panel/ButtonsBoxContainer/StartButton")
+_backButton = NodePath("Panel/ButtonsBoxContainer/BackButton")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
