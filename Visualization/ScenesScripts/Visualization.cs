@@ -10,6 +10,7 @@ public partial class Visualization : Node3D
     [Export] private HSlider _timeSlider;
     [Export] private Button _startStopButton;
     [Export] private GenesWindow _genesWindow;
+    [Export] private MeshInstance3D _floorMesh;
 
     private double _deltaCount = 0;
     private List<VCreature> _creatures = new List<VCreature>();
@@ -24,6 +25,10 @@ public partial class Visualization : Node3D
         _timeSlider.DragStarted += OnTimeSliderDragStarted;
         _timeSlider.DragEnded += OnTimeSliderDragEnded;
         _startStopButton.Toggled += OnStartStopButtonToggled;
+
+        (int x, int y) = BinReader.SimulationInfo.MapSize;
+        var mesh = _floorMesh.Mesh as BoxMesh;
+        mesh.Size = new Vector3(x, 0.5f, y);
     }
 
     public override void _Process(double delta)

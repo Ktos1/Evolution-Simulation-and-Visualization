@@ -10,10 +10,12 @@ namespace ProjectEvolution.Utility.BinarySerialization
     {
         private static MainDTO _mainDTO;
         private static TickDTO[] _ticksDTOs;
+
         private static int _currentTickNumber = -1;
 
-        public static int TotalTicksNumber { get; private set; }
+        public static SimulationInfoDTO SimulationInfo { get; private set; }
 
+        public static int TotalTicksNumber { get; private set; }
         public static int CurrentTickNumber
         {
             get { return _currentTickNumber; }
@@ -44,6 +46,7 @@ namespace ProjectEvolution.Utility.BinarySerialization
         {
             byte[] blob = File.ReadAllBytes("result.bin");
             _mainDTO = MessagePackSerializer.Deserialize<MainDTO>(blob);
+            SimulationInfo = _mainDTO.SimulationInfo;
             _ticksDTOs = _mainDTO.TicksData;
             TotalTicksNumber = _ticksDTOs.Length;
         }

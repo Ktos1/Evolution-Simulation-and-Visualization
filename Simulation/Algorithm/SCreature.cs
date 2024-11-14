@@ -38,18 +38,23 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public SCreature(SimulationController controller)
         {
-            _position = _newPosition = new Vector2(_randGen.NextSingle() * 10 - 5, _randGen.NextSingle() * 10 - 5);
-            _movementDirection = (new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1)).Normalized();
-            _speed = 2f;
             _controller = controller;
+            var tiles = _controller.Map.Tiles;
+            var mapSizeX = tiles.GetLength(0);
+            var mapSizeY = tiles.GetLength(1);
+
+            _position = _newPosition = new Vector2(
+                _randGen.NextSingle() * mapSizeX - mapSizeX / 2f,
+                _randGen.NextSingle() * mapSizeY - mapSizeY / 2f
+                );
+            _movementDirection = new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1).Normalized();
+            _movementLimitations = new Tuple<float, float>(mapSizeX / 2f, mapSizeY / 2f);
+            _speed = 2f;
+
             _sightRange = 1;
             _chromosome = new SChromosome();
             _lifeDuration = _randGen.Next(250, 350);
             _newBorn = true;
-
-            var tiles = _controller.Map.Tiles;
-
-            _movementLimitations = new Tuple<float, float>(tiles.GetLength(0)/2f, tiles.GetLength(1)/2f);
             _state = _newState = CreatureStates.SeekingForPartner;
         }
 

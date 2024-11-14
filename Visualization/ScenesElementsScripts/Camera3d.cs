@@ -1,4 +1,5 @@
 using Godot;
+using ProjectEvolution.Utility.BinarySerialization;
 
 public partial class Camera3d : Camera3D
 {
@@ -9,8 +10,9 @@ public partial class Camera3d : Camera3D
     private Vector3 _direction = Vector3.Zero;
     private Vector3 _toGlobalDirection = Vector3.Zero;
     private Vector2 _mouseInput = Vector2.Zero;
-    private float _mouseInputFactor = 0.0001f;
     private Vector3 _cameraRotation;
+    private float _mouseInputFactor = 0.0001f;
+    private (float x, float y) _cameraLimitations;
     private bool _isCameraOnFloor = false;
     private bool _isCameraOnCeiling = false;
     private bool _isRotationModeOn = false;
@@ -19,6 +21,8 @@ public partial class Camera3d : Camera3D
     {
         Input.MouseMode = Input.MouseModeEnum.Confined;
         _cameraRotation = Rotation;
+        var mapSize = BinReader.SimulationInfo.MapSize;
+        _cameraLimitations = (mapSize.x / 2f + 5, mapSize.y / 2f + 5);
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -121,15 +125,40 @@ public partial class Camera3d : Camera3D
 
     public override void _Process(double delta)
     {
+        bool positionChanged = false;
+
         if (_direction != Vector3.Zero)
         {
             TranslateObjectLocal(_direction.Normalized() * (float)delta * _cameraMotionSensivity);
+            positionChanged = true;
         }
         if (_toGlobalDirection != Vector3.Zero)
         {
             var globalDirection = Transform.Basis * _toGlobalDirection;
             globalDirection.Y = 0;
-            Transform = Transform.Translated(globalDirection.Normalized() * (float)delta * _cameraMotionSensivity);
+            Transform = Transform.Translated(globalDirection.Normalized()
+                * (float)delta * _cameraMotionSensivity);
+            positionChanged = true;
+        }
+
+        if (positionChanged)
+        {
+            if (Position.X > _cameraLimitations.x)
+            {
+                Position = Position * new Vector3(0, 1, 1) + new Vector3(_cameraLimitations.x, 0, 0);
+            }
+            else if (Position.X < -_cameraLimitations.x)
+            {
+                Position = Position * new Vector3(0, 1, 1) + new Vector3(-_cameraLimitations.x, 0, 0);
+            }
+            if (Position.Z > _cameraLimitations.y)
+            {
+                Position = Position * new Vector3(1, 1, 0) + new Vector3(0, 0, _cameraLimitations.y);
+            }
+            else if (Position.Z < -_cameraLimitations.y)
+            {
+                Position = Position * new Vector3(1, 1, 0) + new Vector3(0, 0, -_cameraLimitations.y);
+            }
         }
     }
 
