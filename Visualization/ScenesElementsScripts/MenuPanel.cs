@@ -1,6 +1,5 @@
 using Godot;
 using ProjectEvolution;
-using ProjectEvolution.Utility;
 using ProjectEvolution.Utility.BinarySerialization;
 
 public partial class MenuPanel : Panel

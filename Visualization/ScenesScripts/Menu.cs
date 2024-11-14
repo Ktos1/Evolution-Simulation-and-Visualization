@@ -1,5 +1,6 @@
 using Godot;
 using ProjectEvolution;
+using ProjectEvolution.Utility.BinarySerialization;
 using System.Diagnostics;
 
 public partial class Menu : Control
@@ -7,6 +8,8 @@ public partial class Menu : Control
     [Export] private Button _simulationButton;
     [Export] private Button _visualizationButton;
     [Export] private Button _exitButton;
+    [Export] private Label _errorLabel;
+
     public override void _Ready()
     {
         // adding a listener to get a debug output in VS (Trace share listeners to Debug)
@@ -23,7 +26,15 @@ public partial class Menu : Control
     }
     private void OnVisualizationButtonPress()
     {
-        GetTree().ChangeSceneToPacked(Scenes.VisualizationScene);
+        try
+        {
+            var temp = BinReader.CurrentTickNumber;
+            GetTree().ChangeSceneToPacked(Scenes.VisualizationScene);
+        }
+        catch (System.Exception)
+        {
+            _errorLabel.Visible = true;
+        }
     }
     private void OnExitButtonPress()
     {
