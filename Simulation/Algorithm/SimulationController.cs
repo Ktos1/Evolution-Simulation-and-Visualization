@@ -1,7 +1,5 @@
-﻿using ProjectEvolution.Utility;
-using ProjectEvolution.Utility.BinarySerialization;
+﻿using ProjectEvolution.Utility.BinarySerialization;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace ProjectEvolution.Simulation.Algorithm
@@ -42,7 +40,6 @@ namespace ProjectEvolution.Simulation.Algorithm
                 SaveTickData();
             }
             _binWriter.SaveToFile();
-            File.WriteAllText("result.json", JsonWriter.jsonString);
             BinReader.LoadNewFile();
             return true;
         }
@@ -112,16 +109,9 @@ namespace ProjectEvolution.Simulation.Algorithm
                 SCreature creature = _creatures[i];
                 var (position, state, genes) = creature.GetSavingData();
                 creaturesDTOs[i] = new CreatureDTO(position, state, genes);
-                if (genes == null)
-                {
-                    JsonWriter.WriteCreature(position, state);
-                }
-                else
-                {
-                    JsonWriter.WriteNewCreature(position, state, genes);
-                }
+
+                // here probably should be a plant data saving to a DTO
             }
-            JsonWriter.NextTick();
             _binWriter.AddTick(new TickDTO(new PlantDTO[0], creaturesDTOs));
         }
     }

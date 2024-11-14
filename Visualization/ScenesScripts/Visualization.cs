@@ -2,7 +2,6 @@ using Godot;
 using System.Linq;
 using System.Collections.Generic;
 using ProjectEvolution.Visualization;
-using ProjectEvolution.Utility;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Utility.BinarySerialization;
 
