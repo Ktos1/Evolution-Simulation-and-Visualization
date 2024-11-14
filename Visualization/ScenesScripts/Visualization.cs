@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ProjectEvolution.Visualization;
 using ProjectEvolution.Utility;
 using ProjectEvolution.CommonStuff;
+using ProjectEvolution.Utility.BinarySerialization;
 
 public partial class Visualization : Node3D
 {
@@ -51,7 +52,7 @@ public partial class Visualization : Node3D
 
     private void InitializeCreatures()
     {
-        var creaturesData = JsonReader.NextTick();
+        var creaturesData = BinReader.NextTick();
         _genesWindow.AverageStartGenesValues = CalculateAverageGenesValues(creaturesData.Select((x) => x.chromosome).ToArray());
         foreach (var creature in creaturesData)
         {
@@ -62,7 +63,7 @@ public partial class Visualization : Node3D
 
     private void UpdateCreatures()
     {
-        var creaturesData = JsonReader.NextTick();
+        var creaturesData = BinReader.NextTick();
         if (creaturesData is null)
         {
             _startStopButton.ButtonPressed = true;
@@ -123,9 +124,9 @@ public partial class Visualization : Node3D
         _creatures.Clear();
         _deadCreatures.Clear();
         _deltaCount = 0;
-        JsonReader.CurrentTickNumber = tickNumber;
+        BinReader.CurrentTickNumber = tickNumber;
 
-        var creaturesData = JsonReader.NextTick();
+        var creaturesData = BinReader.NextTick();
         for (int i = 0; i < creaturesData.Length; i++)
         {
             var(position, state, chromosome) = creaturesData[i];

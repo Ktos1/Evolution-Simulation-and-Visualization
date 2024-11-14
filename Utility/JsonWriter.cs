@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using Godot;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using ProjectEvolution.CommonStuff;
 
@@ -34,12 +32,12 @@ namespace ProjectEvolution.Utility
             _tickArray = (JsonArray)_ticksArray.Last();
         }
 
-        public static void WriteCreature(Vector2 position, CreatureStates currentState)
+        public static void WriteCreature((float, float) position, CreatureStates currentState)
         {
             _tickArray.Add(GetCreatureJSONObject(position, currentState));
         }
 
-        public static void WriteNewCreature (Vector2 position, CreatureStates currentState, float[] genes)
+        public static void WriteNewCreature ((float, float) position, CreatureStates currentState, float[] genes)
         {
             JsonArray genesJson = new JsonArray();
             foreach (var gene in genes)
@@ -52,12 +50,12 @@ namespace ProjectEvolution.Utility
             _tickArray.Add(creatureJson);
         }
 
-        private static JsonObject GetCreatureJSONObject(Vector2 position, CreatureStates currentState)
+        private static JsonObject GetCreatureJSONObject((float x, float y) position, CreatureStates currentState)
         {
             JsonObject creatureJson = new JsonObject
             {
-                ["X"] = position.X,
-                ["Y"] = position.Y,
+                ["X"] = position.x,
+                ["Y"] = position.y,
                 ["S"] = (int)currentState
             };
             return creatureJson;

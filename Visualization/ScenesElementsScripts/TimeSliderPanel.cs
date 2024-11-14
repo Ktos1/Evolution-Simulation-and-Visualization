@@ -1,6 +1,7 @@
 using Godot;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Utility;
+using ProjectEvolution.Utility.BinarySerialization;
 
 
 public partial class TimeSliderPanel : Panel
@@ -10,8 +11,8 @@ public partial class TimeSliderPanel : Panel
     [Export] private Label _totalTimeLabel;
     [Export] private HSlider _timeSlider;
 
-    private int _totalTicksNumber = JsonReader.TotalTicksNumber;
-    private int _currentTickNumber => JsonReader.CurrentTickNumber;
+    private int _totalTicksNumber = BinReader.TotalTicksNumber;
+    private int _currentTickNumber => BinReader.CurrentTickNumber;
 
 
     public override void _Ready()

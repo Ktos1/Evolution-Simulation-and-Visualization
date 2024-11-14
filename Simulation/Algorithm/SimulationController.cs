@@ -1,4 +1,5 @@
 ﻿using ProjectEvolution.Utility;
+using ProjectEvolution.Utility.BinarySerialization;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace ProjectEvolution.Simulation.Algorithm
         List<SCreature> _deadCreatures = new List<SCreature>();
         List<SCreature> _bornCreatures = new List<SCreature>();
 
+        private BinWriter _binWriter;
+
         public SimulationController(Map map, int creaturesNum)
         {
             Map = map;
@@ -21,12 +24,14 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 _creatures.Add(new SCreature(this));
             }
-            SavePopulationToJson();
         }
 
         public bool StartSimulation(int years)
         {
-            for (int i = 0; i < years * YEAR_DURATION; i++)
+            int totalTicksNumber = years * YEAR_DURATION;
+            _binWriter = new BinWriter(totalTicksNumber + 1, new SimulationInfoDTO(Map.Size));
+            SaveTickData();
+            for (int i = 0; i < totalTicksNumber; i++)
             {
                 foreach (var creature in _creatures)
                 {
@@ -34,10 +39,11 @@ namespace ProjectEvolution.Simulation.Algorithm
                 }
                 _creatures.ForEach(creature => creature.Update());
                 UpdateCreaturesList();
-                SavePopulationToJson();
+                SaveTickData();
             }
-
+            _binWriter.SaveToFile();
             File.WriteAllText("result.json", JsonWriter.jsonString);
+            BinReader.LoadNewFile();
             return true;
         }
 
@@ -98,11 +104,14 @@ namespace ProjectEvolution.Simulation.Algorithm
             _bornCreatures.Clear();
         }
 
-        private void SavePopulationToJson()
+        private void SaveTickData()
         {
-            foreach (var creature in _creatures)
+            CreatureDTO[] creaturesDTOs = new CreatureDTO[_creatures.Count];
+            for (int i = 0; i < _creatures.Count; i++)
             {
+                SCreature creature = _creatures[i];
                 var (position, state, genes) = creature.GetSavingData();
+                creaturesDTOs[i] = new CreatureDTO(position, state, genes);
                 if (genes == null)
                 {
                     JsonWriter.WriteCreature(position, state);
@@ -113,6 +122,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                 }
             }
             JsonWriter.NextTick();
+            _binWriter.AddTick(new TickDTO(new PlantDTO[0], creaturesDTOs));
         }
     }
 }

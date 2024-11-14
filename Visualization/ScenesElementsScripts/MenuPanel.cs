@@ -1,6 +1,7 @@
 using Godot;
 using ProjectEvolution;
 using ProjectEvolution.Utility;
+using ProjectEvolution.Utility.BinarySerialization;
 
 public partial class MenuPanel : Panel
 {
@@ -24,7 +25,7 @@ public partial class MenuPanel : Panel
     private void OnMenuButtonPressed()
     {
         GetTree().ChangeSceneToPacked(Scenes.MenuScene);
-        JsonReader.CurrentTickNumber = 0;
+        BinReader.CurrentTickNumber = 0;
     }
     private void OnExitButtonPressed()
     {

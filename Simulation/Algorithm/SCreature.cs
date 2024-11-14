@@ -187,16 +187,17 @@ namespace ProjectEvolution.Simulation.Algorithm
             _newState = CreatureStates.SeekingForPartner;
         }
 
-        public (Vector2, CreatureStates, float[]) GetSavingData()
+        public ((float x, float y), CreatureStates, float[]) GetSavingData()
         {
+            (float x, float y) = _position;
             if (_newBorn)
             {
                 _newBorn = false;
-                return (_position, _state, _chromosome.GetGenesValues());
+                return ((x, y), _state, _chromosome.GetGenesValues());
             }
             else
             {
-                return (_position, _state, null);
+                return ((x, y), _state, null);
             }
         }
 
