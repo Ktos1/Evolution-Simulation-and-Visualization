@@ -5,16 +5,16 @@ using ProjectEvolution.CommonStuff;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
-    public class SCreature : MapObject
+    public partial class SCreature : MapObject
     {
         private static Random _randGen = new Random();
         private SimulationController _controller;
 
-        private CreatureStates _state;
+        private State _state;
         private MapObject _focusObject;
         private SChromosome _chromosome;
 
-        private CreatureStates _newState;
+        private State _newState;
         private MapObject _newFocusObject;
         private Vector2 _newPosition;
 
@@ -29,12 +29,6 @@ namespace ProjectEvolution.Simulation.Algorithm
         private int _lifeTime = 0;
         private bool _newBorn;
         private bool _isGivingBirth;
-
-        public CreatureStates State => _state;
-
-        public MapObject FocusObject => _focusObject;
-
-        public bool IsGivingBirth { get; set; }
 
         public SCreature(SimulationController controller)
         {
@@ -55,7 +49,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             _chromosome = new SChromosome();
             _lifeDuration = _randGen.Next(250, 350);
             _newBorn = true;
-            _state = _newState = CreatureStates.SeekingForPartner;
+            _state = _newState = new SeekingForPartnerState(this);
         }
 
         public SCreature(Vector2 position, SimulationController controller) : this(controller)
@@ -71,96 +65,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
             else
             {
-                switch (_state)
-                {
-                    case CreatureStates.RandomMoves:
-                        RandomMove();
-                        break;
-
-                    case CreatureStates.Stop:
-                        break;
-
-                    case CreatureStates.SeekingForPartner:
-                    {
-                        SCreature[] creaturesInRange = _controller.ObjectsInRange<SCreature>(this, _sightRange);
-                        var isPartnerFounded = false;
-                        if (creaturesInRange is not null)
-                        {
-                            foreach (var creatureInRange in creaturesInRange)
-                            {
-                                if (creatureInRange.State == CreatureStates.SeekingForPartner ||
-                                creatureInRange.FocusObject == this &&
-                                creatureInRange.State == CreatureStates.MovingToPartner)
-                                {
-                                    _newFocusObject = creatureInRange;
-                                    _newState = CreatureStates.MovingToPartner;
-                                    isPartnerFounded = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!isPartnerFounded)
-                        {
-                            RandomMove();
-                        }
-                        break;
-                    }
-
-                    case CreatureStates.MovingToPartner:
-                        {
-                            var partner = (SCreature)_focusObject;
-                            if (partner.State == CreatureStates.SeekingForPartner ||
-                                partner.FocusObject == this &&
-                                partner.State == CreatureStates.MovingToPartner)
-                            {
-                                if (MoveToFocusedObject() < 0.3f)
-                                {
-                                    Reproduce();
-                                }
-                            }
-                            else
-                            {
-                                SeekForPartner();
-                            }
-                            break;
-                        }
-
-                    case CreatureStates.Reproducing:
-                        {
-                            var partner = (SCreature)_focusObject;
-                            if (partner.State != CreatureStates.Reproducing)
-                            {
-                                ChooseWhatToDo();
-                            }
-                            else if (_stateDuration == 0)
-                            {
-                                if (!partner.IsGivingBirth)
-                                {
-                                    IsGivingBirth = true;
-                                    GiveBirth(partner);
-                                    ChooseWhatToDo();
-                                }
-                                else
-                                {
-                                    partner.IsGivingBirth = false;
-                                    ChooseWhatToDo();
-                                }
-                                Die();
-                            }
-                            else
-                            {
-                                _stateDuration--;
-                            }
-                            break;
-                        }
-
-                    case CreatureStates.Died:
-                        _controller.OnCreatureDeath(this);
-                        break;
-
-                    default:
-                        break;
-                }
+                _state.Process();
             }
             _lifeTime++;
         }
@@ -181,28 +86,29 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private void Reproduce()
         {
-            _newState = CreatureStates.Reproducing;
+            _newState = new ReproducingState(this);
             _stateDuration = SimulationSettings.ReproductionTime;
-            IsGivingBirth = false;
+            _isGivingBirth = false;
         }
 
         private void SeekForPartner()
         {
             _newFocusObject = null;
-            _newState = CreatureStates.SeekingForPartner;
+            _newState = new SeekingForPartnerState(this);
         }
 
         public ((float x, float y), CreatureStates, float[]) GetSavingData()
         {
             (float x, float y) = _position;
+            var state = _state.ConvertToEnum();
             if (_newBorn)
             {
                 _newBorn = false;
-                return ((x, y), _state, _chromosome.GetGenesValues());
+                return ((x, y), state, _chromosome.GetGenesValues());
             }
             else
             {
-                return ((x, y), _state, null);
+                return ((x, y), state, null);
             }
         }
 
@@ -214,7 +120,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private void Die()
         {
-            _newState = CreatureStates.Died;
+            _newState = new DiedState(this);
             _lifeTime -= 2;
         }
 
@@ -229,15 +135,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         {
             if (_randGen.NextSingle() < _chromosome.TurningFrequencyGene.Value * 0.001)
             {
-                var sign = _randGen.Next(2);
-                if (_randGen.Next(2) == 0)
-                {
-                    sign = -1;
-                }
-                else
-                {
-                    sign = 1;
-                }
+                var sign = (_randGen.Next(2) == 0) ? -1 : 1;
                 var rotateAngle = sign * (float)Normal.Sample(_chromosome.TurningAngleGene.Value, 2.5) * (MathF.PI / 180);
                 _movementDirection = _movementDirection.Rotated(rotateAngle);
             }
