@@ -15,12 +15,12 @@
                 {
                     if (_creature.MoveToFocusedObject() < 0.3f)
                     {
-                        _creature.Reproduce();
+                        _creature._newState = new ReproducingState(_creature);
                     }
                 }
                 else
                 {
-                    _creature.SeekForPartner();
+                    _creature._newState = new SeekingForPartnerState(_creature);
                 }
             }
         }

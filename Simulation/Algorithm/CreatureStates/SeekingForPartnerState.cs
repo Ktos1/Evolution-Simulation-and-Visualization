@@ -4,7 +4,10 @@
     {
         private class SeekingForPartnerState : State
         {
-            public SeekingForPartnerState(SCreature sCreature) : base(sCreature) { }
+            public SeekingForPartnerState(SCreature sCreature) : base(sCreature)
+            {
+                _creature._newFocusObject = null;
+            }
 
             public override void Process()
             {

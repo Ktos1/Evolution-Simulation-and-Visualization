@@ -24,7 +24,6 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private float _sightRange;
 
-        private int _stateDuration;
         private int _lifeDuration;
         private int _lifeTime = 0;
         private bool _newBorn;
@@ -59,14 +58,17 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public void Process()
         {
-            if (_lifeTime >= _lifeDuration)
+            if (_state is ToDeleteState)
             {
-                Die();
-            }
-            else
+                _controller.OnCreatureDeath(this);
+                return;
+            }  
+
+            if (_lifeTime >= _lifeDuration && _state is not DiedState)
             {
-                _state.Process();
+                _newState = new DiedState(this);
             }
+            _state.Process();
             _lifeTime++;
         }
 
@@ -75,26 +77,6 @@ namespace ProjectEvolution.Simulation.Algorithm
             _position = _newPosition;
             _state = _newState;
             _focusObject = _newFocusObject;
-        }
-
-        // TODO: In a future this should be a method which pick the specified state of creature
-        // basing on the creature data for example the energy
-        public void ChooseWhatToDo()
-        {
-            SeekForPartner();
-        }
-
-        private void Reproduce()
-        {
-            _newState = new ReproducingState(this);
-            _stateDuration = SimulationSettings.ReproductionTime;
-            _isGivingBirth = false;
-        }
-
-        private void SeekForPartner()
-        {
-            _newFocusObject = null;
-            _newState = new SeekingForPartnerState(this);
         }
 
         public ((float x, float y), CreatureStates, float[]) GetSavingData()
@@ -112,16 +94,17 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
         }
 
+        // TODO: In a future this should be a method which pick the specified state of creature
+        // basing on the creature data for example the energy
+        private void ChooseWhatToDo()
+        {
+            _newState = new SeekingForPartnerState(this);
+        }
+
         private void GiveBirth(SCreature partner)
         {
             var childPosition = (partner.Position - _position) / 2 + _position;
             _controller.OnCreatureBirth(new SCreature(childPosition, _controller));
-        }
-
-        private void Die()
-        {
-            _newState = new DiedState(this);
-            _lifeTime -= 2;
         }
 
         private float MoveToFocusedObject()

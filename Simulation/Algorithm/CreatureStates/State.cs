@@ -1,5 +1,6 @@
 ﻿using ProjectEvolution.CommonStuff;
 using System;
+using System.Diagnostics;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
@@ -22,6 +23,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                 else if (this is MovingToPartnerState) return CreatureStates.MovingToPartner;
                 else if (this is ReproducingState) return CreatureStates.Reproducing;
                 else if (this is SeekingForPartnerState) return CreatureStates.SeekingForPartner;
+                else if (this is ToDeleteState) return CreatureStates.ToDelete;
                 throw new Exception("Occurred a creature state which is not handled.");
             }
         }

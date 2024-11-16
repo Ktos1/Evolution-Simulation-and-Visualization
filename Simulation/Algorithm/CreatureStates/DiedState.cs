@@ -2,13 +2,23 @@
 {
     public partial class SCreature
     {
-        private class DiedState : State
+        private class DiedState : DurationState
         {
-            public DiedState(SCreature sCreature) : base(sCreature) { }
+            public DiedState(SCreature sCreature) : base(sCreature)
+            {
+                _stateDuration = SimulationSettings.DiedStateDuration;
+            }
 
             public override void Process()
             {
-                _creature._controller.OnCreatureDeath(_creature);
+                if (_stateDuration == 1)
+                {
+                    _creature._newState = new ToDeleteState(_creature);
+                }
+                else
+                {
+                    _stateDuration--;
+                }
             }
         }
     }

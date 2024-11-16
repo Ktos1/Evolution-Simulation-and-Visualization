@@ -77,12 +77,13 @@ public partial class Visualization : Node3D
         {
             if (i < _creatures.Count)
             {
+                var creature = _creatures[i];
                 var (position, state, _) = creaturesData[i];
                 _creatures[i].Update(position, state);
-                if (state == CreatureStates.Died)
+                if (state == CreatureStates.ToDelete)
                 {
                     _deadCreatures.Add(_creatures[i]);
-                }
+                } 
             }
             else
             {
@@ -95,7 +96,11 @@ public partial class Visualization : Node3D
 
     private void DeleteDeadCreatures()
     {
-        _deadCreatures.ForEach((deadCreature) => _creatures.Remove(deadCreature));
+        _deadCreatures.ForEach((deadCreature) =>
+        {
+            deadCreature.Delete();
+            _creatures.Remove(deadCreature);
+        });
         _deadCreatures.Clear();
     }
 

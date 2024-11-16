@@ -13,5 +13,10 @@
         /// The percentage of a gene possible range on which the standard deviation of the mutation is set.
         /// </summary>
         public static float MutationStdDev = 5;
+
+        /// <summary>
+        /// The duration in ticks of died creature presence on the map.
+        /// </summary>
+        public static int DiedStateDuration = 60;
     }
 }

@@ -2,6 +2,7 @@
 {
     public enum CreatureStates
     {
+        ToDelete,
         RandomMoves,
         SeekingForPartner,
         MovingToPartner,

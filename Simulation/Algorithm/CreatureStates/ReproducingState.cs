@@ -2,9 +2,14 @@
 {
     public partial class SCreature
     {
-        private class ReproducingState : State
+        private class ReproducingState : DurationState
         {
-            public ReproducingState(SCreature sCreature) : base(sCreature) { }
+            public ReproducingState(SCreature sCreature) 
+                : base(sCreature)
+            {
+                _stateDuration = SimulationSettings.ReproductionTime;
+                _creature._isGivingBirth = false;
+            }
 
             public override void Process()
             {
@@ -13,7 +18,7 @@
                 {
                     _creature.ChooseWhatToDo();
                 }
-                else if (_creature._stateDuration == 0)
+                else if (_stateDuration == 0)
                 {
                     if (!partner._isGivingBirth)
                     {
@@ -26,11 +31,11 @@
                         partner._isGivingBirth = false;
                         _creature.ChooseWhatToDo();
                     }
-                    _creature.Die();
+                    _creature._newState = new DiedState(_creature);
                 }
                 else
                 {
-                    _creature._stateDuration--;
+                    _stateDuration--;
                 }
             }
         }
