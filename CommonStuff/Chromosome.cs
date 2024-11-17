@@ -4,7 +4,7 @@ using System;
 
 namespace ProjectEvolution.CommonStuff
 {
-    internal abstract class Chromosome<T> where T: Gene
+    public abstract class Chromosome<T> where T: Gene
     {
         protected static Random _randGen = new Random();
         protected T[] _genes;

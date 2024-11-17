@@ -2,7 +2,7 @@
 
 namespace ProjectEvolution.Visualization
 {
-    internal class VGene : Gene
+    public class VGene : Gene
     {
         public VGene() { }
 

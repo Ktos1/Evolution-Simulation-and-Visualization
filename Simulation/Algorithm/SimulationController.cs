@@ -107,8 +107,8 @@ namespace ProjectEvolution.Simulation.Algorithm
             for (int i = 0; i < _creatures.Count; i++)
             {
                 SCreature creature = _creatures[i];
-                var (position, state, genes) = creature.GetSavingData();
-                creaturesDTOs[i] = new CreatureDTO(position, state, genes);
+                var (id, position, state, genes) = creature.GetSavingData();
+                creaturesDTOs[i] = new CreatureDTO(id, position, state, genes);
 
                 // here probably should be a plant data saving to a DTO
             }

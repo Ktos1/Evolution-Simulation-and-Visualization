@@ -1,188 +1,233 @@
 using Godot;
 using System.Linq;
 using System.Collections.Generic;
-using ProjectEvolution.Visualization;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Utility.BinarySerialization;
 
-public partial class Visualization : Node3D
+namespace ProjectEvolution.Visualization
 {
-    [Export] private HSlider _timeSlider;
-    [Export] private Button _startStopButton;
-    [Export] private GenesWindow _genesWindow;
-    [Export] private MeshInstance3D _floorMesh;
-
-    private double _deltaCount = 0;
-    private List<VCreature> _creatures = new List<VCreature>();
-    private List<VCreature> _deadCreatures = new List<VCreature>();
-
-    private bool _isTimeSliderDragging = false;
-    private bool _isStartStopButtonToggled = false;
-
-    public override void _Ready()
+    public partial class Visualization : Node3D
     {
-        InitializeCreatures();
-        _timeSlider.DragStarted += OnTimeSliderDragStarted;
-        _timeSlider.DragEnded += OnTimeSliderDragEnded;
-        _startStopButton.Toggled += OnStartStopButtonToggled;
+        [Export] private HSlider _timeSlider;
+        [Export] private Button _startStopButton;
+        [Export] private GenesWindow _genesWindow;
+        [Export] private MeshInstance3D _floorMesh;
 
-        (int x, int y) = BinReader.SimulationInfo.MapSize;
-        var mesh = _floorMesh.Mesh as BoxMesh;
-        mesh.Size = new Vector3(x, 0.5f, y);
-    }
+        private double _deltaCount = 0;
+        private List<VCreature> _creatures = new List<VCreature>();
+        private List<VCreature> _deadCreatures = new List<VCreature>();
 
-    public override void _Process(double delta)
-    {
-        if (!_isTimeSliderDragging && !_isStartStopButtonToggled)
+        private bool _isTimeSliderDragging = false;
+        private bool _isStartStopButtonToggled = false;
+
+        public override void _Ready()
         {
-            _deltaCount += delta;
-            if (_deltaCount > CommonSettings.TICK_DURATION)
+            InitializeCreatures();
+            _timeSlider.DragStarted += OnTimeSliderDragStarted;
+            _timeSlider.DragEnded += OnTimeSliderDragEnded;
+            _startStopButton.Toggled += OnStartStopButtonToggled;
+
+            (int x, int y) = BinReader.SimulationInfo.MapSize;
+            var mesh = _floorMesh.Mesh as BoxMesh;
+            mesh.Size = new Vector3(x, 0.5f, y);
+        }
+
+        public override void _Process(double delta)
+        {
+            if (!_isTimeSliderDragging && !_isStartStopButtonToggled)
             {
-                UpdateCreatures();
-                _deltaCount -= CommonSettings.TICK_DURATION;
-            }
-            ProcessCreatures(_deltaCount);
-        }
-    }
-
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (@event.IsActionPressed("pick_object"))
-        {
-            _creatures.ForEach((creature) => creature.Uncheck());
-            _genesWindow.Visible = false;
-        }
-    }
-
-    private void InitializeCreatures()
-    {
-        var creaturesData = BinReader.NextTick();
-        _genesWindow.AverageStartGenesValues = CalculateAverageGenesValues(creaturesData.Select((x) => x.chromosome).ToArray());
-        foreach (var creature in creaturesData)
-        {
-            var (position, state, chromosome) = creature;
-            AddNewCreature(position, state, chromosome);
-        }
-    }
-
-    private void UpdateCreatures()
-    {
-        var creaturesData = BinReader.NextTick();
-        if (creaturesData is null)
-        {
-            _startStopButton.ButtonPressed = true;
-            return;
-        }
-        for (int i = 0; i < creaturesData.Length; i++)
-        {
-            if (i < _creatures.Count)
-            {
-                var creature = _creatures[i];
-                var (position, state, _) = creaturesData[i];
-                _creatures[i].Update(position, state);
-                if (state == CreatureStates.ToDelete)
+                _deltaCount += delta;
+                if (_deltaCount > CommonSettings.TICK_DURATION)
                 {
-                    _deadCreatures.Add(_creatures[i]);
-                } 
+                    UpdateCreatures();
+                    _deltaCount -= CommonSettings.TICK_DURATION;
+                }
+                ProcessCreatures(_deltaCount);
             }
-            else
+        }
+
+        public override void _UnhandledInput(InputEvent @event)
+        {
+            if (@event.IsActionPressed("pick_object"))
             {
-                var (spawnPosition, state, chromosome) = creaturesData[i];
-                AddNewCreature(spawnPosition, state, chromosome);
+                _creatures.ForEach((creature) => creature.Uncheck());
+                _genesWindow.Visible = false;
             }
         }
-        DeleteDeadCreatures();
-    }
 
-    private void DeleteDeadCreatures()
-    {
-        _deadCreatures.ForEach((deadCreature) =>
+        private void InitializeCreatures()
         {
-            deadCreature.Delete();
-            _creatures.Remove(deadCreature);
-        });
-        _deadCreatures.Clear();
-    }
-
-    private void AddNewCreature(Vector2 spawnPosition, CreatureStates state, VChromosome chromosome)
-    {
-        var creature = new VCreature(spawnPosition, state, chromosome);
-        creature.ClickedOn += _genesWindow.OnClickedOnCreature;
-        _creatures.Add(creature);
-        CallDeferred("add_child", _creatures.Last().StaticBody);
-    }
-
-    /// <summary>
-    /// Processes creatures without loading new tick data. It uses the linear interpolation to make creature
-    /// movement more smooth.
-    /// </summary>
-    /// <param name="timeCounterBetweenTicks">
-    /// Current time counted from last tick data loading. It is used to the interpolation.
-    /// </param>
-    private void ProcessCreatures(double timeCounterBetweenTicks)
-    {
-        _creatures.ForEach((creature) => creature.Process((float)timeCounterBetweenTicks));
-    }
-
-    private void LoadOnTick(int tickNumber)
-    {
-        foreach (var creature in _creatures)
-        {
-            creature.Delete();
+            var creaturesData = BinReader.NextTick();
+            _genesWindow.AverageStartGenesValues = CalculateAverageGenesValues(
+                creaturesData.Select((x) => x.Chromosome).ToArray()
+                );
+            AddNewCreatures(creaturesData);
         }
-        _creatures.Clear();
-        _deadCreatures.Clear();
-        _deltaCount = 0;
-        BinReader.CurrentTickNumber = tickNumber;
 
-        var creaturesData = BinReader.NextTick();
-        for (int i = 0; i < creaturesData.Length; i++)
+        private void UpdateCreatures()
         {
-            var(position, state, chromosome) = creaturesData[i];
-            AddNewCreature(position, state, chromosome);
-        }
-    }
-
-    private float[] CalculateAverageGenesValues(VChromosome[] chromosomes)
-    {
-        float sum = 0;
-        int genesNumber = chromosomes[0].Genes.Length;
-        var result = new float[genesNumber];
-
-        for (int i = 0; i < genesNumber; i++)
-        {
-            for (int j = 0; j < chromosomes.Length; j++)
+            var creaturesData = BinReader.NextTick();
+            if (creaturesData is null)
             {
-                sum += chromosomes[j].Genes[i].Value;
+                _startStopButton.ButtonPressed = true;
+                return;
             }
-            result[i] = sum / chromosomes.Length;
-            sum = 0;
+            for (int i = 0; i < creaturesData.Length; i++)
+            {
+                if (i < _creatures.Count)
+                {
+                    _creatures[i].Update(creaturesData[i]);
+                }
+                else
+                {
+                    AddNewCreature(creaturesData[i]);
+                }
+            }
+            DeleteDeadCreatures();
         }
-        return result;
-    }
 
-    private void OnTimeSliderDragStarted()
-    {
-        _deltaCount = 0;
-        _isTimeSliderDragging = true;
-        _timeSlider.ValueChanged += OnTimeSliderValueChanged;
-    }
+        private void DeleteDeadCreatures()
+        {
+            _deadCreatures.ForEach((deadCreature) =>
+            {
+                _creatures.Remove(deadCreature);
+            });
+            _deadCreatures.Clear();
+        }
 
-    private void OnTimeSliderDragEnded(bool valueChanged)
-    {
-        _isTimeSliderDragging = false;
-        _timeSlider.ValueChanged -= OnTimeSliderValueChanged;
-    }
+        private void AddNewCreature(CreatureTickData creatureData)
+        {
+            var creature = new VCreature(creatureData, this);
+            creature.ClickedOn += _genesWindow.OnClickedOnCreature;
+            _creatures.Add(creature);
+            CallDeferred("add_child", _creatures.Last().StaticBody);
+        }
 
-    private void OnTimeSliderValueChanged(double value)
-    {
-        LoadOnTick(value == 0 ? 0 : (int)value - 1);
-        UpdateCreatures();
-        ProcessCreatures(CommonSettings.TICK_DURATION);
-    }
+        /// <summary>
+        /// Processes creatures without loading new tick data. It uses the linear interpolation to make creature
+        /// movement more smooth.
+        /// </summary>
+        /// <param name="timeCounterBetweenTicks">
+        /// Current time counted from last tick data loading. It is used to the interpolation.
+        /// </param>
+        private void ProcessCreatures(double timeCounterBetweenTicks)
+        {
+            _creatures.ForEach((creature) => creature.Process((float)timeCounterBetweenTicks));
+        }
 
-    private void OnStartStopButtonToggled(bool value)
-    {
-        _isStartStopButtonToggled = value;
+        private void LoadOnTick(int tickNumber)
+        {
+            ResetVisualizationState();
+            int tickIndex = tickNumber;
+            BinReader.CurrentTickNumber = tickIndex;
+            var creaturesData = BinReader.NextTick();
+            var idsWithoutChromosome = new List<uint>();
+            foreach (var creatureData in creaturesData)
+            {
+                if (creatureData.Chromosome is null)
+                {
+                    idsWithoutChromosome.Add(creatureData.Id);
+                }
+            }
+            tickIndex--;
+
+            int missingChromosomeCounter = idsWithoutChromosome.Count;
+            while (true)
+            {
+                BinReader.CurrentTickNumber = tickIndex;
+                var tickCreaturesData = BinReader.NextTick();
+                for (int i = tickCreaturesData.Length - 1; i >= 0; i--)
+                {
+                    var (id, _, _, chromosome) = tickCreaturesData[i];
+                    if (chromosome is not null)
+                    {
+                        for (int j = 0; j < idsWithoutChromosome.Count; j++)
+                        {
+                            if (idsWithoutChromosome[j] == id)
+                            {
+                                creaturesData[j] = creaturesData[j] with { Chromosome = chromosome };
+                                missingChromosomeCounter--;
+                            }
+                        }
+                    }
+                    else
+                        break;
+                }
+                if (missingChromosomeCounter == 0)
+                {
+                    break;
+                }
+                tickIndex--;
+            }
+            AddNewCreatures(creaturesData);
+            BinReader.CurrentTickNumber = tickNumber + 1;
+        }
+
+        private float[] CalculateAverageGenesValues(VChromosome[] chromosomes)
+        {
+            float sum = 0;
+            int genesNumber = chromosomes[0].Genes.Length;
+            var result = new float[genesNumber];
+
+            for (int i = 0; i < genesNumber; i++)
+            {
+                for (int j = 0; j < chromosomes.Length; j++)
+                {
+                    sum += chromosomes[j].Genes[i].Value;
+                }
+                result[i] = sum / chromosomes.Length;
+                sum = 0;
+            }
+            return result;
+        }
+
+        private void ResetVisualizationState()
+        {
+            foreach (var creature in _creatures)
+            {
+                creature.Delete();
+            }
+            _creatures.Clear();
+            _deadCreatures.Clear();
+            _deltaCount = 0;
+        }
+
+        private void AddNewCreatures(CreatureTickData[] creatures)
+        {
+            foreach (var creatureData in creatures)
+            {
+                AddNewCreature(creatureData);
+            }
+        }
+
+        public void OnCreatureDeletion(VCreature creature)
+        {
+            _deadCreatures.Add(creature);
+        }
+
+        private void OnTimeSliderDragStarted()
+        {
+            _deltaCount = 0;
+            _isTimeSliderDragging = true;
+            _timeSlider.ValueChanged += OnTimeSliderValueChanged;
+        }
+
+        private void OnTimeSliderDragEnded(bool valueChanged)
+        {
+            _isTimeSliderDragging = false;
+            _timeSlider.ValueChanged -= OnTimeSliderValueChanged;
+        }
+
+        private void OnTimeSliderValueChanged(double value)
+        {
+            LoadOnTick(value == 0 ? 0 : (int)value - 1);
+            UpdateCreatures();
+            ProcessCreatures(CommonSettings.TICK_DURATION);
+        }
+
+        private void OnStartStopButtonToggled(bool value)
+        {
+            _isStartStopButtonToggled = value;
+        }
     }
 }

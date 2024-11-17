@@ -27,13 +27,13 @@ namespace ProjectEvolution.Utility.BinarySerialization
             LoadNewFile();
         }
 
-        public static (Vector2 position, CreatureStates state, VChromosome chromosome)[] NextTick()
+        public static CreatureTickData[] NextTick()
         {
             _currentTickNumber++;
             if (_currentTickNumber >= _ticksDTOs.Length) return null;
 
             var creaturesDTOs = _ticksDTOs[_currentTickNumber].CreaturesData;
-            var creaturesData = new (Vector2 position, CreatureStates state, VChromosome chromosome)[creaturesDTOs.Length];
+            var creaturesData = new CreatureTickData[creaturesDTOs.Length];
 
             for (int i = 0; i < creaturesDTOs.Length; i++)
             {
@@ -51,7 +51,7 @@ namespace ProjectEvolution.Utility.BinarySerialization
             TotalTicksNumber = _ticksDTOs.Length;
         }
 
-        private static (Vector2 position, CreatureStates state, VChromosome chromosome) GetCreaturesDataFromDTO(CreatureDTO creatureDTO)
+        private static CreatureTickData GetCreaturesDataFromDTO(CreatureDTO creatureDTO)
         {
             var position = creatureDTO.Position;
             var positionVector = new Vector2(position.x, position.y);
@@ -60,7 +60,7 @@ namespace ProjectEvolution.Utility.BinarySerialization
             {
                 chromosome = new VChromosome(creatureDTO.Genes);
             }
-            return (positionVector, creatureDTO.CurrentState, chromosome);
+            return new CreatureTickData(creatureDTO.ID, positionVector, creatureDTO.CurrentState, chromosome);
         }
     }
 }

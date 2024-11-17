@@ -8,7 +8,9 @@ namespace ProjectEvolution.Simulation.Algorithm
     public partial class SCreature : MapObject
     {
         private static Random _randGen = new Random();
+        private static uint IDCounter = 0;
         private SimulationController _controller;
+        private uint _id = IDCounter++;
 
         private State _state;
         private MapObject _focusObject;
@@ -29,6 +31,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private bool _newBorn;
         private bool _isGivingBirth;
 
+         
         public SCreature(SimulationController controller)
         {
             _controller = controller;
@@ -79,18 +82,18 @@ namespace ProjectEvolution.Simulation.Algorithm
             _focusObject = _newFocusObject;
         }
 
-        public ((float x, float y), CreatureStates, float[]) GetSavingData()
+        public (uint, (float x, float y), CreatureStates, float[]) GetSavingData()
         {
             (float x, float y) = _position;
             var state = _state.ConvertToEnum();
             if (_newBorn)
             {
                 _newBorn = false;
-                return ((x, y), state, _chromosome.GetGenesValues());
+                return (_id, (x, y), state, _chromosome.GetGenesValues());
             }
             else
             {
-                return ((x, y), state, null);
+                return (_id, (x, y), state, null);
             }
         }
 

@@ -4,9 +4,11 @@ using System;
 
 namespace ProjectEvolution.Visualization
 {
-    internal class VCreature
+    public class VCreature
     {
+        private Visualization _visualization;
         private StaticBody3D _staticBody;
+        private uint _id;
         private Vector2 _previousPosition;
         private Vector2 _nextPosition;
         private CreatureStates _state;
@@ -18,14 +20,18 @@ namespace ProjectEvolution.Visualization
 
         public StaticBody3D StaticBody => _staticBody;
 
-        public VCreature(Vector2 spawnPosition, CreatureStates state, VChromosome chromosome)
+        public VCreature(CreatureTickData creatureData, Visualization visualization)
         {
+            var (id, spawnPosition, state, chromosome) = creatureData;
+            _id = id;
             _state = state;
             Chromosome = chromosome;
             _previousPosition = _nextPosition = spawnPosition;
             InitializeStaticBodyNode();
             MoveTo(spawnPosition);
             _staticBody.InputEvent += OnInputEvent;
+            _visualization = visualization;
+
         }
 
         public void Process(float deltaCount)
@@ -36,18 +42,28 @@ namespace ProjectEvolution.Visualization
             }
         }
 
-        public void Update(Vector2 position, CreatureStates state)
+        public void Update(CreatureTickData creatureData)
         {
-            if (!_isDead)
+            var(_, _, state, _) = creatureData;
+            if (state != CreatureStates.ToDelete)
             {
-                _previousPosition = _nextPosition;
-                _nextPosition = position;
-                _state = state;
-                if (_state == CreatureStates.Died)
+                if (!_isDead)
                 {
-                    Die();
+                    var (_, position, _, _) = creatureData;
+                    _previousPosition = _nextPosition;
+                    _nextPosition = position;
+                    _state = state;
+                    if (_state == CreatureStates.Died)
+                    {
+                        Die();
+                    }
                 }
             }
+            else
+            {
+                Delete();
+            }
+            
         }
 
         public void Uncheck()
@@ -59,6 +75,7 @@ namespace ProjectEvolution.Visualization
         public void Delete()
         {
             _staticBody.QueueFree();
+            _visualization.OnCreatureDeletion(this);
         }
 
         private void Die()
