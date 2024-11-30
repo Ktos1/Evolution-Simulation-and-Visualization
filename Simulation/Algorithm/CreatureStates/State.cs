@@ -1,6 +1,5 @@
 ﻿using ProjectEvolution.CommonStuff;
 using System;
-using System.Diagnostics;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {

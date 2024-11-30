@@ -9,6 +9,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private const int YEAR_DURATION = 500; // in ticks
         public readonly Map Map;
         private List<SCreature> _creatures = new List<SCreature>();
+        private PlantManager _plantManager;
 
         List<SCreature> _deadCreatures = new List<SCreature>();
         List<SCreature> _bornCreatures = new List<SCreature>();
@@ -22,6 +23,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 _creatures.Add(new SCreature(this));
             }
+            _plantManager = new PlantManager(1, 1, 1, this);
         }
 
         public bool StartSimulation(int years)
@@ -35,7 +37,9 @@ namespace ProjectEvolution.Simulation.Algorithm
                 {
                     creature.Process();
                 }
+                _plantManager.ProcessPlants();
                 _creatures.ForEach(creature => creature.Update());
+                _plantManager.UpdatePlants();
                 UpdateCreaturesList();
                 SaveTickData();
             }
@@ -103,16 +107,15 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private void SaveTickData()
         {
-            CreatureDTO[] creaturesDTOs = new CreatureDTO[_creatures.Count];
+            var creaturesDTOs = new CreatureDTO[_creatures.Count];
             for (int i = 0; i < _creatures.Count; i++)
             {
                 SCreature creature = _creatures[i];
                 var (id, position, state, genes) = creature.GetSavingData();
                 creaturesDTOs[i] = new CreatureDTO(id, position, state, genes);
-
-                // here probably should be a plant data saving to a DTO
             }
-            _binWriter.AddTick(new TickDTO(new PlantDTO[0], creaturesDTOs));
+            var plantsDTOs = _plantManager.GetSavingData();
+            _binWriter.AddTick(new TickDTO(plantsDTOs, creaturesDTOs));
         }
     }
 }

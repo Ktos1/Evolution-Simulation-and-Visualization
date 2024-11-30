@@ -30,7 +30,6 @@ namespace ProjectEvolution.Simulation.Algorithm
         private int _lifeTime = 0;
         private bool _newBorn;
         private bool _isGivingBirth;
-
          
         public SCreature(SimulationController controller)
         {

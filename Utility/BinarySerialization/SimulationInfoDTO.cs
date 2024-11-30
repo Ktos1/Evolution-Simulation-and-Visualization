@@ -1,6 +1,4 @@
-﻿
-using MessagePack;
-using System.Numerics;
+﻿using MessagePack;
 
 namespace ProjectEvolution.Utility.BinarySerialization
 {
