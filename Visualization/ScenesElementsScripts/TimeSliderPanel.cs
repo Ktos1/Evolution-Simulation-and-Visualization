@@ -13,6 +13,7 @@ public partial class TimeSliderPanel : Panel
     private int _totalTicksNumber = BinReader.TotalTicksNumber;
     private int _currentTickNumber => BinReader.CurrentTickNumber;
 
+    public bool IsRunning { get; set; } = true;
 
     public override void _Ready()
     {
@@ -23,8 +24,11 @@ public partial class TimeSliderPanel : Panel
 
     public override void _Process(double delta)
     {
-        _actualTimeLabel.Text = $"{GetTimeFromTicks(_currentTickNumber)}";
-        _timeSlider.Value = _currentTickNumber;
+        if (IsRunning)
+        {
+            _actualTimeLabel.Text = $"{GetTimeFromTicks(_currentTickNumber)}";
+            _timeSlider.Value = _currentTickNumber;
+        }
     }
 
     private void OnSlidingButtonToggled(bool newState)

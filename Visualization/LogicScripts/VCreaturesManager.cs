@@ -15,8 +15,6 @@ namespace ProjectEvolution.Visualization.LogicScripts
 
         private float[] _averageStartGenesValues;
 
-        public event Action DataEnd;
-
         public float[] AverageStartGenesValues => _averageStartGenesValues;
 
         public VCreaturesManager(Visualization visualization)
@@ -27,12 +25,7 @@ namespace ProjectEvolution.Visualization.LogicScripts
 
         public void UpdateCreatures()
         {
-            var creaturesData = BinReader.NextTick();
-            if (creaturesData is null)
-            {
-                DataEnd.Invoke();
-                return;
-            }
+            var creaturesData = BinReader.GetCreaturesTickData();
             for (int i = 0; i < creaturesData.Length; i++)
             {
                 if (i < _creatures.Count)
@@ -66,9 +59,9 @@ namespace ProjectEvolution.Visualization.LogicScripts
 
         public void LoadOnTick(int tickNumber)
         {
-            int tickIndex = tickNumber;
+            int tickIndex = tickNumber - 1;
             BinReader.CurrentTickNumber = tickIndex;
-            var creaturesData = BinReader.NextTick();
+            var creaturesData = BinReader.GetCreaturesTickData();
             var idsWithoutChromosome = new List<uint>();
             foreach (var creatureData in creaturesData)
             {
@@ -83,7 +76,7 @@ namespace ProjectEvolution.Visualization.LogicScripts
             while (true)
             {
                 BinReader.CurrentTickNumber = tickIndex;
-                var tickCreaturesData = BinReader.NextTick();
+                var tickCreaturesData = BinReader.GetCreaturesTickData();
                 for (int i = tickCreaturesData.Length - 1; i >= 0; i--)
                 {
                     var (id, _, _, chromosome) = tickCreaturesData[i];
@@ -108,6 +101,9 @@ namespace ProjectEvolution.Visualization.LogicScripts
                 tickIndex--;
             }
             AddNewCreatures(creaturesData);
+            BinReader.CurrentTickNumber = tickNumber;
+            UpdateCreatures();
+            ProcessCreatures(CommonSettings.TICK_DURATION);
         }
 
         public void Clear()
@@ -131,7 +127,7 @@ namespace ProjectEvolution.Visualization.LogicScripts
 
         private void InitializeCreatures()
         {
-            var creaturesData = BinReader.NextTick();
+            var creaturesData = BinReader.GetCreaturesTickData();
             _averageStartGenesValues = CalculateAverageGenesValues(
                 creaturesData.Select((x) => x.Chromosome).ToArray()
                 );

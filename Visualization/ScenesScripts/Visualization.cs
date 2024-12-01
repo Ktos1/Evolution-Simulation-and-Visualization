@@ -7,6 +7,7 @@ namespace ProjectEvolution.Visualization
 {
     public partial class Visualization : Node3D
     {
+        [Export] private TimeSliderPanel _timeSliderPanel;
         [Export] private HSlider _timeSlider;
         [Export] private Button _startStopButton;
         [Export] public GenesWindow _genesWindow;
@@ -26,8 +27,9 @@ namespace ProjectEvolution.Visualization
             _startStopButton.Toggled += OnStartStopButtonToggled;
 
             _creaturesManager = new VCreaturesManager(this);
+            // here should be plants initiazlization and after that NextTick on BinReader
             _genesWindow.AverageStartGenesValues = _creaturesManager.AverageStartGenesValues;
-            _creaturesManager.DataEnd += OnDataEnd;
+            BinReader.DataEnd += OnDataEnd;
 
             (int x, int y) = BinReader.SimulationInfo.MapSize;
             var mesh = _floorMesh.Mesh as BoxMesh;
@@ -41,8 +43,10 @@ namespace ProjectEvolution.Visualization
                 _deltaCount += delta;
                 if (_deltaCount > CommonSettings.TICK_DURATION)
                 {
+                    // here should be plants update
                     _creaturesManager.UpdateCreatures();
                     _deltaCount -= CommonSettings.TICK_DURATION;
+                    BinReader.NextTick();
                 }
                 _creaturesManager.ProcessCreatures(_deltaCount);
             }
@@ -61,6 +65,7 @@ namespace ProjectEvolution.Visualization
         {
             ResetVisualizationState();
             _creaturesManager.LoadOnTick(tickNumber);
+            // here should be LoadOnTick on plantsManager
             BinReader.CurrentTickNumber = tickNumber + 1;
         }
 
@@ -80,19 +85,19 @@ namespace ProjectEvolution.Visualization
             _deltaCount = 0;
             _isTimeSliderDragging = true;
             _timeSlider.ValueChanged += OnTimeSliderValueChanged;
+            _timeSliderPanel.IsRunning = false;
         }
 
         private void OnTimeSliderDragEnded(bool valueChanged)
         {
             _isTimeSliderDragging = false;
             _timeSlider.ValueChanged -= OnTimeSliderValueChanged;
+            _timeSliderPanel.IsRunning = true;
         }
 
         private void OnTimeSliderValueChanged(double value)
         {
-            LoadOnTick(value == 0 ? 0 : (int)value - 1);
-            _creaturesManager.UpdateCreatures();
-            _creaturesManager.ProcessCreatures(CommonSettings.TICK_DURATION);
+            LoadOnTick((int)value);
         }
 
         private void OnStartStopButtonToggled(bool value)

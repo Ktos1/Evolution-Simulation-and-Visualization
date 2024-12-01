@@ -2,6 +2,7 @@
 using MessagePack;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Visualization;
+using System;
 using System.IO;
 
 namespace ProjectEvolution.Utility.BinarySerialization
@@ -11,7 +12,9 @@ namespace ProjectEvolution.Utility.BinarySerialization
         private static MainDTO _mainDTO;
         private static TickDTO[] _ticksDTOs;
 
-        private static int _currentTickNumber = -1;
+        private static int _currentTickNumber = 0;
+
+        public static event Action DataEnd;
 
         public static SimulationInfoDTO SimulationInfo { get; private set; }
 
@@ -19,7 +22,7 @@ namespace ProjectEvolution.Utility.BinarySerialization
         public static int CurrentTickNumber
         {
             get { return _currentTickNumber; }
-            set { _currentTickNumber = (value < 0) ? -1 : value - 1; }
+            set { _currentTickNumber = (value < 0) ? 0 : value; }
         }
 
         static BinReader()
@@ -27,11 +30,15 @@ namespace ProjectEvolution.Utility.BinarySerialization
             LoadNewFile();
         }
 
-        public static CreatureTickData[] NextTick()
+        public static void NextTick()
         {
             _currentTickNumber++;
-            if (_currentTickNumber >= _ticksDTOs.Length) return null;
+            if (_currentTickNumber >= _ticksDTOs.Length)
+                DataEnd.Invoke(); 
+        }
 
+        public static CreatureTickData[] GetCreaturesTickData()
+        {
             var creaturesDTOs = _ticksDTOs[_currentTickNumber].CreaturesData;
             var creaturesData = new CreatureTickData[creaturesDTOs.Length];
 
@@ -49,6 +56,7 @@ namespace ProjectEvolution.Utility.BinarySerialization
             SimulationInfo = _mainDTO.SimulationInfo;
             _ticksDTOs = _mainDTO.TicksData;
             TotalTicksNumber = _ticksDTOs.Length;
+            _currentTickNumber = 0;
         }
 
         private static CreatureTickData GetCreaturesDataFromDTO(CreatureDTO creatureDTO)
