@@ -1,12 +1,13 @@
 ﻿using Godot;
 using ProjectEvolution.CommonStuff;
+using ProjectEvolution.Visualization.LogicScripts;
 using System;
 
 namespace ProjectEvolution.Visualization
 {
-    public class VCreature
+    internal class VCreature
     {
-        private Visualization _visualization;
+        private VCreaturesManager _creaturesManager;
         private StaticBody3D _staticBody;
         private uint _id;
         private Vector2 _previousPosition;
@@ -14,13 +15,14 @@ namespace ProjectEvolution.Visualization
         private CreatureStates _state;
         private bool _isDead = false;
 
-        public readonly VChromosome Chromosome;
+        public VChromosome Chromosome { get; private set; }
 
         public event EventHandler ClickedOn;
+        public event EventHandler Deleted;
 
         public StaticBody3D StaticBody => _staticBody;
 
-        public VCreature(CreatureTickData creatureData, Visualization visualization)
+        public VCreature(CreatureTickData creatureData, VCreaturesManager vCreaturesManager)
         {
             var (id, spawnPosition, state, chromosome) = creatureData;
             _id = id;
@@ -30,7 +32,7 @@ namespace ProjectEvolution.Visualization
             InitializeStaticBodyNode();
             MoveTo(spawnPosition);
             _staticBody.InputEvent += OnInputEvent;
-            _visualization = visualization;
+            _creaturesManager = vCreaturesManager;
 
         }
 
@@ -75,7 +77,7 @@ namespace ProjectEvolution.Visualization
         public void Delete()
         {
             _staticBody.QueueFree();
-            _visualization.OnCreatureDeletion(this);
+            Deleted.Invoke(this, null);
         }
 
         private void Die()
