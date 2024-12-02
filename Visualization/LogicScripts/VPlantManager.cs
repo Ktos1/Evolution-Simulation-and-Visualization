@@ -1,7 +1,6 @@
 ﻿using ProjectEvolution.Utility.BinarySerialization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ProjectEvolution.Visualization.LogicScripts
 {
@@ -56,7 +55,7 @@ namespace ProjectEvolution.Visualization.LogicScripts
             var plant = new VPlant(plantTickData, this);
             plant.Deleted += OnPlantDelete;
             _plants.Add(plant);
-            _visualization.CallDeferred("add_child", _plants.Last().StaticBody);
+            _visualization.CallDeferred("add_child", plant.PlantSceneObject);
         }
 
         private void DeleteDeadPlants()

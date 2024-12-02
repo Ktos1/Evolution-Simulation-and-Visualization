@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dw8ecpud32s6q"]
+
+[ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/PlantSceneObject.cs" id="1_0tqoi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bv41f"]
+size = Vector3(0.35, 0.35, 0.35)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ln2i"]
+albedo_color = Color(0, 1, 0, 1)
+
+[node name="PlantSceneObject" type="StaticBody3D" node_paths=PackedStringArray("_nest")]
+script = ExtResource("1_0tqoi")
+_nest = NodePath("MeshInstance3D/Nest")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0.25, 0)
+mesh = SubResource("BoxMesh_bv41f")
+surface_material_override/0 = SubResource("StandardMaterial3D_4ln2i")
+
+[node name="Nest" type="Node3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.175, 0)

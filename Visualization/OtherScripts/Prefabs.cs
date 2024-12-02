@@ -9,5 +9,8 @@ namespace ProjectEvolution.Visualization
 
         public static PackedScene GeneInfoRow { get; } =
             GD.Load<PackedScene>("res://Visualization/SubScenes/GeneInfoRow.tscn");
+
+        public static PackedScene Plant { get; } =
+            GD.Load<PackedScene>("res://Visualization/SubScenes/Plant.tscn");
     }
 }

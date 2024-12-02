@@ -9,14 +9,14 @@ namespace ProjectEvolution.Visualization.LogicScripts
         private Vector2 _position;
         private int _partsNumber;
 
-        private StaticBody3D _staticBody;
+        private PlantSceneObject _plantSceneObject;
 
         private VPlantManager _plantManager;
 
         public event EventHandler Deleted;
 
         public uint ID => _id;
-        public StaticBody3D StaticBody => _staticBody;
+        public PlantSceneObject PlantSceneObject => _plantSceneObject;
 
         public VPlant(PlantTickData plantTickData, VPlantManager vPlantManager)
         {
@@ -36,14 +36,15 @@ namespace ProjectEvolution.Visualization.LogicScripts
 
         public void Delete()
         {
-            _staticBody.QueueFree();
+            _plantSceneObject.QueueFree();
             Deleted.Invoke(this, null);
         }
 
         private void InitializeStaticBodyNode()
         {
-            _staticBody = Prefabs.Creature.Instantiate() as StaticBody3D;
-            _staticBody.Position = new Vector3(_position.X, 0.75f, _position.Y);
+            _plantSceneObject = Prefabs.Plant.Instantiate() as PlantSceneObject;
+            _plantSceneObject.Initialize(_partsNumber - 1);
+            _plantSceneObject.Position = new Vector3(_position.X, 0, _position.Y);
         }
     }
 }
