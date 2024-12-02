@@ -16,6 +16,7 @@ namespace ProjectEvolution.Visualization
         private double _deltaCount = 0;
         
         private VCreaturesManager _creaturesManager;
+        private VPlantManager _plantsManager;
 
         private bool _isTimeSliderDragging = false;
         private bool _isStartStopButtonToggled = false;
@@ -27,7 +28,8 @@ namespace ProjectEvolution.Visualization
             _startStopButton.Toggled += OnStartStopButtonToggled;
 
             _creaturesManager = new VCreaturesManager(this);
-            // here should be plants initiazlization and after that NextTick on BinReader
+            _plantsManager = new VPlantManager(this);
+            BinReader.NextTick();
             _genesWindow.AverageStartGenesValues = _creaturesManager.AverageStartGenesValues;
             BinReader.DataEnd += OnDataEnd;
 
@@ -43,7 +45,7 @@ namespace ProjectEvolution.Visualization
                 _deltaCount += delta;
                 if (_deltaCount > CommonSettings.TICK_DURATION)
                 {
-                    // here should be plants update
+                    _plantsManager.UpdatePlants();
                     _creaturesManager.UpdateCreatures();
                     _deltaCount -= CommonSettings.TICK_DURATION;
                     BinReader.NextTick();

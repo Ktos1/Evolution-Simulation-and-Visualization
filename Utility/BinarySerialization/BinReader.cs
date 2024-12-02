@@ -2,6 +2,7 @@
 using MessagePack;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Visualization;
+using ProjectEvolution.Visualization.LogicScripts;
 using System;
 using System.IO;
 
@@ -49,6 +50,18 @@ namespace ProjectEvolution.Utility.BinarySerialization
             return creaturesData;
         }
 
+        public static PlantTickData[] GetPlantTickData()
+        {
+            var plantsDTOs = _ticksDTOs[_currentTickNumber].PlantsData;
+            var plantsData = new PlantTickData[plantsDTOs.Length];
+
+            for (int i = 0; i < plantsDTOs.Length; i++)
+            {
+                plantsData[i] = GetPlantDataFromDTO(plantsDTOs[i]);
+            }
+            return plantsData;
+        }
+
         public static void LoadNewFile()
         {
             byte[] blob = File.ReadAllBytes("result.bin");
@@ -69,6 +82,19 @@ namespace ProjectEvolution.Utility.BinarySerialization
                 chromosome = new VChromosome(creatureDTO.Genes);
             }
             return new CreatureTickData(creatureDTO.ID, positionVector, creatureDTO.CurrentState, chromosome);
+        }
+
+        private static PlantTickData GetPlantDataFromDTO(PlantDTO plantDTO)
+        {
+            var id = plantDTO.ID;
+            var partsNumber = plantDTO.PartsNumber;
+            Vector2? position = null;
+            if (plantDTO.Position.HasValue)
+            {
+                var (x, y) = plantDTO.Position.Value;
+                position = new Vector2(x, y);
+            }
+            return new PlantTickData(id, position, partsNumber);
         }
     }
 }
