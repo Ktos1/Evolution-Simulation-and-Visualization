@@ -9,7 +9,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private const int YEAR_DURATION = 500; // in ticks
         public readonly Map Map;
         private List<SCreature> _creatures = new List<SCreature>();
-        private PlantManager _plantManager;
+        private SPlantManager _plantManager;
 
         List<SCreature> _deadCreatures = new List<SCreature>();
         List<SCreature> _bornCreatures = new List<SCreature>();
@@ -23,7 +23,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 _creatures.Add(new SCreature(this));
             }
-            _plantManager = new PlantManager(1, 1, 1, this);
+            _plantManager = new SPlantManager(1, 1, 1, this);
         }
 
         public bool StartSimulation(int years)
@@ -114,8 +114,8 @@ namespace ProjectEvolution.Simulation.Algorithm
                 var (id, position, state, genes) = creature.GetSavingData();
                 creaturesDTOs[i] = new CreatureDTO(id, position, state, genes);
             }
-            var plantsDTOs = _plantManager.GetSavingData();
-            _binWriter.AddTick(new TickDTO(plantsDTOs, creaturesDTOs));
+            var(plantsNumber, plantsDTOs) = _plantManager.GetSavingData();
+            _binWriter.AddTick(new TickDTO(plantsNumber, plantsDTOs, creaturesDTOs));
         }
     }
 }

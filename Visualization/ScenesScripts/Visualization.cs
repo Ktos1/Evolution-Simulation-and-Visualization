@@ -67,13 +67,14 @@ namespace ProjectEvolution.Visualization
         {
             ResetVisualizationState();
             _creaturesManager.LoadOnTick(tickNumber);
-            // here should be LoadOnTick on plantsManager
+            _plantsManager.LoadOnTick(tickNumber);
             BinReader.CurrentTickNumber = tickNumber + 1;
         }
 
         private void ResetVisualizationState()
         {
             _creaturesManager.Clear();
+            _plantsManager.Clear();
             _deltaCount = 0;
         }
 

@@ -3,7 +3,7 @@ using ProjectEvolution.Utility.BinarySerialization;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
-    internal class Plant : MapObject
+    internal class SPlant : MapObject
     {
         private static uint _iDCounter = 0;
 
@@ -17,7 +17,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private bool _wasModified = false;
         private bool _saveAfterSpawn = true;
 
-        public Plant(Vector2 position, int partsNumber)
+        public SPlant(Vector2 position, int partsNumber)
         {
             _position = position;
             _partsNumber = _newPartsNumber = partsNumber;

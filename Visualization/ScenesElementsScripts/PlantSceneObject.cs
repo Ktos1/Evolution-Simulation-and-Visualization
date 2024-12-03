@@ -29,7 +29,7 @@ public partial class PlantSceneObject : StaticBody3D
         }
     }
 
-    public void Initialize(int fruitNumber)
+    public void Initialize(int fruitNumber, Vector3[] fruitsPositions)
     {
         FruitNumber = fruitNumber;
         for (int i = 0; i < _fruits.Length; i++)
@@ -38,18 +38,7 @@ public partial class PlantSceneObject : StaticBody3D
             _nest.AddChild(fruit);
             _fruits[i] = fruit;
 
-            var sign = _randGen.NextBoolean();
-            var firstCoord = (_randGen.NextSingle() * 0.11f + 0.11f) * (sign ? 1 : -1);
-            var secondCoord = _randGen.NextSingle() * 0.44f - 0.22f;
-            var heightCoord = _randGen.NextSingle() * 0.11f - 0.07f;
-            if (_randGen.NextBoolean())
-            {
-                fruit.Position = new Vector3(firstCoord, heightCoord, secondCoord);
-            }
-            else
-            {
-                fruit.Position = new Vector3(secondCoord, heightCoord, firstCoord);
-            }
+            fruit.Position = fruitsPositions[i];
 
             if (i >= fruitNumber) fruit.Visible = false;
         }

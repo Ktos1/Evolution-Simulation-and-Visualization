@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
-    internal class PlantManager
+    internal class SPlantManager
     {
         private SimulationController _controller;
         private Random _randGen = new Random();
-        private List<Plant> _plants;
+        private List<SPlant> _plants;
 
         /// <summary>
         /// 
@@ -23,7 +23,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         /// <param name="clusterDensity">
         /// Specifies the number of plant per unit area.
         /// </param>
-        public PlantManager
+        public SPlantManager
             (float clustersDensity, 
             float clusterSize, 
             float clusterDensity, 
@@ -49,7 +49,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
         }
 
-        public PlantDTO[] GetSavingData()
+        public (int plantsNumber, PlantDTO[] plantsDTOs) GetSavingData()
         {
             var result = new List<PlantDTO>();
             foreach (var plant in _plants)
@@ -60,10 +60,10 @@ namespace ProjectEvolution.Simulation.Algorithm
                     result.Add(plantInfo);
                 }
             }
-            return result.ToArray();
+            return (_plants.Count, result.ToArray());
         }
 
-        private List<Plant> GeneratePlants(
+        private List<SPlant> GeneratePlants(
             float clustersDensity,
             float clusterSize,
             float clusterDensity)
@@ -74,10 +74,10 @@ namespace ProjectEvolution.Simulation.Algorithm
             var clusterArea = Math.PI * Math.Pow(clusterSize, 2);
             var plantsPerCluster = (int)Math.Round(clusterArea * clusterDensity);
 
-            var plants = new List<Plant>();
+            var plants = new List<SPlant>();
             foreach (var clusterCenter in clusterCenters)
             {
-                plants.Add(new Plant(clusterCenter, 3));
+                plants.Add(new SPlant(clusterCenter, 4));
             }
 
             return plants;

@@ -73,7 +73,7 @@ namespace ProjectEvolution.Visualization.LogicScripts
             tickIndex--;
 
             int missingChromosomeCounter = idsWithoutChromosome.Count;
-            while (true)
+            while (missingChromosomeCounter != 0)
             {
                 BinReader.CurrentTickNumber = tickIndex;
                 var tickCreaturesData = BinReader.GetCreaturesTickData();
@@ -93,10 +93,6 @@ namespace ProjectEvolution.Visualization.LogicScripts
                     }
                     else
                         break;
-                }
-                if (missingChromosomeCounter == 0)
-                {
-                    break;
                 }
                 tickIndex--;
             }

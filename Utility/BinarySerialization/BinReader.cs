@@ -50,16 +50,18 @@ namespace ProjectEvolution.Utility.BinarySerialization
             return creaturesData;
         }
 
-        public static PlantTickData[] GetPlantTickData()
+        public static (int plantsNumber, PlantTickData[] plantsData) GetPlantTickData()
         {
-            var plantsDTOs = _ticksDTOs[_currentTickNumber].PlantsData;
+            var tickDTO = _ticksDTOs[_currentTickNumber];
+            var plantsDTOs = tickDTO.PlantsData;
+            var plantsNumber = tickDTO.PlantsNumber;
             var plantsData = new PlantTickData[plantsDTOs.Length];
 
             for (int i = 0; i < plantsDTOs.Length; i++)
             {
                 plantsData[i] = GetPlantDataFromDTO(plantsDTOs[i]);
             }
-            return plantsData;
+            return (plantsNumber, plantsData);
         }
 
         public static void LoadNewFile()

@@ -18,7 +18,7 @@ namespace ProjectEvolution.Visualization.LogicScripts
 
         public void UpdatePlants()
         {
-            var plantsData = BinReader.GetPlantTickData();
+            var (_, plantsData) = BinReader.GetPlantTickData();
             foreach (var plantData in plantsData)
             {
                 if (plantData.Position.HasValue)
@@ -41,9 +41,53 @@ namespace ProjectEvolution.Visualization.LogicScripts
             _deadPlants.Clear();
         }
 
+        public void LoadOnTick(int tickNumber)
+        {
+            BinReader.CurrentTickNumber = tickNumber;
+            var(plantsNumber, _) = BinReader.GetPlantTickData();
+            var plants = new List<PlantTickData>();
+
+            var findedAll = false;
+            while (true)
+            {
+                var (_, plantsData) = BinReader.GetPlantTickData();
+                foreach (var plantData in plantsData)
+                {
+                    var existingPlant = plants.Find(x => x.Id == plantData.Id);
+                    if (existingPlant != null)
+                    {
+                        if (plantData.Position.HasValue)
+                        {
+                            existingPlant = existingPlant with { Position = plantData.Position };
+                        }
+                    }
+                    else if (plants.Count != plantsNumber && plantData.PartsNumber != 0)
+                    {
+                        plants.Add(plantData);
+                    }
+
+                    if (plants.Count == plantsNumber)
+                    {
+                        var plant = plants.Find(x => x.Position == null);
+                        if (plant == null)
+                        {
+                            findedAll = true;
+                            break;
+                        }
+                    }
+                }
+                if (findedAll) break;
+                else BinReader.CurrentTickNumber--;
+            }
+            foreach (var plantData in plants)
+            {
+                AddNewPlant(plantData);
+            }
+        }
+
         private void InitializePlants()
         {
-            var plantsData = BinReader.GetPlantTickData();
+            var (_, plantsData) = BinReader.GetPlantTickData();
             foreach (var plantData in plantsData)
             {
                 AddNewPlant(plantData);
