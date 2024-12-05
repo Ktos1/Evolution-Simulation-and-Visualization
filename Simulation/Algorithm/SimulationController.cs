@@ -16,14 +16,15 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private BinWriter _binWriter;
 
-        public SimulationController(Map map, int creaturesNum)
+        public SimulationController(Map map, int creaturesNum, 
+            float clustersDensity, float clusterSize, float clusterDensity)
         {
             Map = map;
             for (int i = 0; i < creaturesNum; i++)
             {
                 _creatures.Add(new SCreature(this));
             }
-            _plantManager = new SPlantManager(0.15f, 20, 3f, this);
+            _plantManager = new SPlantManager(clustersDensity, clusterSize, clusterDensity, this);
         }
 
         public bool StartSimulation(int years)
