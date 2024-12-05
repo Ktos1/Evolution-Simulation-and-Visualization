@@ -39,8 +39,14 @@ namespace ProjectEvolution.Visualization.LogicScripts
 
         public void Update(PlantTickData plantTickData)
         {
-            _partsNumber = plantTickData.PartsNumber;
-            if (_partsNumber == 0) Delete();
+            if (plantTickData.PartsNumber == 0) Delete();
+            else
+            {
+                var temp = _partsNumber;
+                _partsNumber = plantTickData.PartsNumber;
+                if (temp > _partsNumber) _plantSceneObject.SubstractFruit();
+                else _plantSceneObject.AddFruit();
+            }
         }
 
         public void Delete()

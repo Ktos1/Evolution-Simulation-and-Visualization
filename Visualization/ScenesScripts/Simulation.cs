@@ -20,7 +20,11 @@ public partial class Simulation : Control
 
     private void OnStartButtonPress()
     {
-        var simulationControler = new SimulationController(new Map((int)_xMapSize.Value, (int)_yMapSize.Value), (int)_creturesNum.Value);
+        var simulationControler = new SimulationController(
+            new Map((int)_xMapSize.Value,
+            (int)_yMapSize.Value),
+            (int)_creturesNum.Value
+            );
         if (simulationControler.StartSimulation((int)_simulationDuration.Value))
         {
             GetNode<Label>("Panel/SuccessLabel").Visible = true;

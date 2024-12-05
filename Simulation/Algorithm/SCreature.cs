@@ -34,9 +34,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         public SCreature(SimulationController controller)
         {
             _controller = controller;
-            var tiles = _controller.Map.Tiles;
-            var mapSizeX = tiles.GetLength(0);
-            var mapSizeY = tiles.GetLength(1);
+            var(mapSizeX, mapSizeY) = controller.Map.Size;
 
             _position = _newPosition = new Vector2(
                 _randGen.NextSingle() * mapSizeX - mapSizeX / 2f,

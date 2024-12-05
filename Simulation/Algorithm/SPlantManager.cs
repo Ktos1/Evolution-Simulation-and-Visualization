@@ -21,7 +21,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         /// Specifies the size of each cluster.
         /// </param>
         /// <param name="clusterDensity">
-        /// Specifies the number of plant per unit area.
+        /// Specifies the number of plants per unit area.
         /// </param>
         public SPlantManager
             (float clustersDensity, 
@@ -71,22 +71,63 @@ namespace ProjectEvolution.Simulation.Algorithm
             var (mapSizeX, mapSizeY) = _controller.Map.Size;
             var clusterCenters = GenerateClustersCenter(clustersDensity);
 
-            var clusterArea = Math.PI * Math.Pow(clusterSize, 2);
+            var clusterRadius = clusterSize / 2;
+            var clusterArea = Math.PI * Math.Pow(clusterRadius, 2);
             var plantsPerCluster = (int)Math.Round(clusterArea * clusterDensity);
 
             var plants = new List<SPlant>();
+
+            var plantsMinDist = 1 / clusterDensity * Math.PI * 0.25;
             foreach (var clusterCenter in clusterCenters)
             {
-                plants.Add(new SPlant(clusterCenter, 4));
+                for (var i = 0; i < plantsPerCluster; i++)
+                {
+                    var firstShot = true;
+                    var shotsCounter = 0;
+                    while (true)
+                    {
+                        var XShot = _randGen.NextSingle() * clusterSize - clusterRadius + clusterCenter.X;
+                        var YShot = _randGen.NextSingle() * clusterSize - clusterRadius + clusterCenter.Y;
+                        var xLimit = _controller.Map.Size.x / 2f;
+                        var yLimit = _controller.Map.Size.y / 2f;
+                        
+                        var ShotsVector = new Vector2(XShot, YShot);
+                        if ((ShotsVector - clusterCenter).Length() <= clusterRadius)
+                        {
+                            if(XShot > xLimit || XShot < -xLimit || YShot > yLimit || YShot < -yLimit)
+                            {
+                                if (firstShot) break;
+                                else continue;
+                            }
+                            var tooClose = false;
+                            foreach (var plant in plants)
+                            {
+                                if ((ShotsVector - plant.Position).Length() < plantsMinDist)
+                                {
+                                    tooClose = true;
+                                    shotsCounter++;
+                                    break;
+                                }
+                            }
+                            if (!tooClose)
+                            {
+                                plants.Add(new SPlant(ShotsVector, 4));
+                                break;
+                            }
+                            if (shotsCounter > 10) break;
+                            firstShot = false;
+                        }
+                    }
+                }
             }
-
             return plants;
         }
 
         private Vector2[] GenerateClustersCenter(float clustersDensity)
         {
-            // cluster density is a side of a square on which, on average, appear one cluster.
-            var clustersMinDist = clustersDensity * 0.7;
+            // the inverse of clusters density is a side of a square on which,
+            // on average, appear one cluster.
+            var clustersMinDist = 1 / clustersDensity * 0.143;
 
             var (mapSizeX, mapSizeY) = _controller.Map.Size;
             var mapArea = mapSizeX * mapSizeY;

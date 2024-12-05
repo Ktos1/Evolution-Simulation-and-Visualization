@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
-    public class SimulationController // eventually this class could be named the World
+    public class SimulationController
     {
         private const int YEAR_DURATION = 500; // in ticks
         public readonly Map Map;
@@ -23,7 +23,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 _creatures.Add(new SCreature(this));
             }
-            _plantManager = new SPlantManager(1, 1, 1, this);
+            _plantManager = new SPlantManager(0.15f, 20, 3f, this);
         }
 
         public bool StartSimulation(int years)
