@@ -2,6 +2,7 @@
 using ProjectEvolution.Utility.BinarySerialization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
@@ -9,7 +10,9 @@ namespace ProjectEvolution.Simulation.Algorithm
     {
         private SimulationController _controller;
         private Random _randGen = new Random();
-        private List<SPlant> _plants;
+        private List<SPlant> _plants = new List<SPlant>();
+        private List<SPlant> _propagatedPlants = new List<SPlant>();
+        private List<SPlant> _deadPlants = new List<SPlant>();
 
         /// <summary>
         /// 
@@ -30,7 +33,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             SimulationController controller)
         {
             _controller = controller;
-            _plants = GeneratePlants(clustersDensity, clusterSize, clusterDensity);
+            GeneratePlants(clustersDensity, clusterSize, clusterDensity);
         }
 
         public void ProcessPlants()
@@ -47,6 +50,10 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 plant.Update();
             }
+            _propagatedPlants.ForEach(plant => _plants.Add(plant));
+            _propagatedPlants.Clear();
+            _deadPlants.ForEach(plant => _plants.Remove(plant));
+            _deadPlants.Clear();
         }
 
         public (int plantsNumber, PlantDTO[] plantsDTOs) GetSavingData()
@@ -63,7 +70,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             return (_plants.Count, result.ToArray());
         }
 
-        private List<SPlant> GeneratePlants(
+        private void GeneratePlants(
             float clustersDensity,
             float clusterSize,
             float clusterDensity)
@@ -82,45 +89,63 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 for (var i = 0; i < plantsPerCluster; i++)
                 {
-                    var firstShot = true;
-                    var shotsCounter = 0;
-                    while (true)
-                    {
-                        var XShot = _randGen.NextSingle() * clusterSize - clusterRadius + clusterCenter.X;
-                        var YShot = _randGen.NextSingle() * clusterSize - clusterRadius + clusterCenter.Y;
-                        var xLimit = _controller.Map.Size.x / 2f;
-                        var yLimit = _controller.Map.Size.y / 2f;
-                        
-                        var ShotsVector = new Vector2(XShot, YShot);
-                        if ((ShotsVector - clusterCenter).Length() <= clusterRadius)
-                        {
-                            if(XShot > xLimit || XShot < -xLimit || YShot > yLimit || YShot < -yLimit)
-                            {
-                                if (firstShot) break;
-                                else continue;
-                            }
-                            var tooClose = false;
-                            foreach (var plant in plants)
-                            {
-                                if ((ShotsVector - plant.Position).Length() < plantsMinDist)
-                                {
-                                    tooClose = true;
-                                    shotsCounter++;
-                                    break;
-                                }
-                            }
-                            if (!tooClose)
-                            {
-                                plants.Add(new SPlant(ShotsVector, 4));
-                                break;
-                            }
-                            if (shotsCounter > 10) break;
-                            firstShot = false;
-                        }
-                    }
+                    TrySpawnPlant(clusterCenter, clusterRadius, (float)plantsMinDist, 10, 4, false);
                 }
             }
-            return plants;
+            UpdatePlants();
+        }
+
+        internal void TryPropagatePlant(SPlant sPlant)
+        {
+            TrySpawnPlant(sPlant.Position, 1, 0.5f, 15, 1, true);
+        }
+
+        private void TrySpawnPlant(
+            Vector2 refPoint,
+            float areaRadius,
+            float minPlantsDist,
+            int attemptsNumber,
+            int partsNumber,
+            bool ignoreBeyondBorders)
+        {
+            var firstShot = true;
+            while (attemptsNumber > 0)
+            {
+                var XShot = _randGen.NextSingle() * areaRadius * 2 - areaRadius + refPoint.X;
+                var YShot = _randGen.NextSingle() * areaRadius * 2 - areaRadius + refPoint.Y;
+                var xLimit = _controller.Map.Size.x / 2f;
+                var yLimit = _controller.Map.Size.y / 2f;
+
+                var ShotsVector = new Vector2(XShot, YShot);
+                if ((ShotsVector - refPoint).Length() <= areaRadius)
+                {
+                    if (XShot > xLimit || XShot < -xLimit || YShot > yLimit || YShot < -yLimit)
+                    {
+                        if (ignoreBeyondBorders) continue;
+                        else
+                        {
+                            if (firstShot) break;
+                            else continue;
+                        }
+                    }
+                    var tooClose = false;
+                    foreach (var plant in _plants.Concat(_propagatedPlants))
+                    {
+                        if ((ShotsVector - plant.Position).Length() < minPlantsDist)
+                        {
+                            tooClose = true;
+                            attemptsNumber--;
+                            break;
+                        }
+                    }
+                    if (!tooClose)
+                    {
+                        _propagatedPlants.Add(new SPlant(ShotsVector, partsNumber, this));
+                        break;
+                    }
+                    firstShot = false;
+                }
+            }
         }
 
         private Vector2[] GenerateClustersCenter(float clustersDensity)
@@ -167,5 +192,6 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
             return clustersCenters;
         }
+
     }
 }

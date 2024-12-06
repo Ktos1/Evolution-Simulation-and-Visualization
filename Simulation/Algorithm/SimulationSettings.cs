@@ -18,5 +18,10 @@
         /// The duration in ticks of died creature presence on the map.
         /// </summary>
         public static int DiedStateDuration = 60;
+
+        /// <summary>
+        /// The time to a plant grow.
+        /// </summary>
+        public static int TimePlantToGrow = 180;
     }
 }

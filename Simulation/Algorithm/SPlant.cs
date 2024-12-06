@@ -7,6 +7,8 @@ namespace ProjectEvolution.Simulation.Algorithm
     {
         private static uint _iDCounter = 0;
 
+        private SPlantManager _plantManager;
+
         private uint _id = _iDCounter++;
         private int _partsNumber;
         private int _newPartsNumber;
@@ -17,10 +19,11 @@ namespace ProjectEvolution.Simulation.Algorithm
         private bool _wasModified = false;
         private bool _saveAfterSpawn = true;
 
-        public SPlant(Vector2 position, int partsNumber)
+        public SPlant(Vector2 position, int partsNumber, SPlantManager plantManager)
         {
             _position = position;
             _partsNumber = _newPartsNumber = partsNumber;
+            _plantManager = plantManager;
         }
 
         public void Process()
@@ -28,6 +31,11 @@ namespace ProjectEvolution.Simulation.Algorithm
             if (!_wasEaten)
             {
                 _newTimeWithoutBeingEaten++;
+                if (_newTimeWithoutBeingEaten > SimulationSettings.TimePlantToGrow)
+                {
+                    Grow();
+                    _newTimeWithoutBeingEaten = 0;
+                }
             }
         }
 
@@ -67,6 +75,18 @@ namespace ProjectEvolution.Simulation.Algorithm
             else
             {
                 return null;
+            }
+        }
+
+        private void Grow()
+        {
+            if (_partsNumber == 4)
+            {
+                _plantManager.TryPropagatePlant(this);
+            }
+            else
+            {
+                _newPartsNumber++;
             }
         }
 

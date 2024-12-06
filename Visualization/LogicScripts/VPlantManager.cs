@@ -48,17 +48,19 @@ namespace ProjectEvolution.Visualization.LogicScripts
             var plants = new List<PlantTickData>();
 
             var findedAll = false;
-            while (true)
+
+            while (!findedAll)
             {
-                var (_, plantsData) = BinReader.GetPlantTickData();
+                var(_, plantsData) = BinReader.GetPlantTickData();
                 foreach (var plantData in plantsData)
                 {
                     var existingPlant = plants.Find(x => x.Id == plantData.Id);
-                    if (existingPlant != null)
+                    if (existingPlant != default)
                     {
                         if (plantData.Position.HasValue)
                         {
-                            existingPlant = existingPlant with { Position = plantData.Position };
+                            var index = plants.IndexOf(existingPlant);
+                            plants[index] = existingPlant with { Position = plantData.Position };
                         }
                     }
                     else if (plants.Count != plantsNumber && plantData.PartsNumber != 0)
@@ -69,15 +71,14 @@ namespace ProjectEvolution.Visualization.LogicScripts
                     if (plants.Count == plantsNumber)
                     {
                         var plant = plants.Find(x => x.Position == null);
-                        if (plant == null)
+                        if (plant == default)
                         {
                             findedAll = true;
                             break;
                         }
                     }
                 }
-                if (findedAll) break;
-                else BinReader.CurrentTickNumber--;
+                BinReader.CurrentTickNumber--;
             }
             foreach (var plantData in plants)
             {
