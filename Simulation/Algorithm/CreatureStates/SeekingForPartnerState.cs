@@ -14,19 +14,16 @@
                 SCreature[] creaturesInRange = _creature._controller.ObjectsInRange<SCreature>
                     (_creature, _creature._sightRange);
                 var isPartnerFounded = false;
-                if (creaturesInRange is not null)
+                foreach (var creatureInRange in creaturesInRange)
                 {
-                    foreach (var creatureInRange in creaturesInRange)
+                    if (creatureInRange._state is SeekingForPartnerState ||
+                    creatureInRange._focusObject == _creature &&
+                    creatureInRange._state is MovingToPartnerState)
                     {
-                        if (creatureInRange._state is SeekingForPartnerState ||
-                        creatureInRange._focusObject == _creature &&
-                        creatureInRange._state is MovingToPartnerState)
-                        {
-                            _creature._newFocusObject = creatureInRange;
-                            _creature._newState = new MovingToPartnerState(_creature);
-                            isPartnerFounded = true;
-                            break;
-                        }
+                        _creature._newFocusObject = creatureInRange;
+                        _creature._newState = new MovingToPartnerState(_creature);
+                        isPartnerFounded = true;
+                        break;
                     }
                 }
                 if (!isPartnerFounded)

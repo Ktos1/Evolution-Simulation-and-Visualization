@@ -7,7 +7,7 @@
             public ReproducingState(SCreature sCreature) 
                 : base(sCreature)
             {
-                _stateDuration = SimulationSettings.ReproductionTime;
+                _stateDuration = SimulationSettings.ReproductionDuration;
                 _creature._isGivingBirth = false;
             }
 
@@ -31,7 +31,7 @@
                         partner._isGivingBirth = false;
                         _creature.ChooseWhatToDo();
                     }
-                    _creature._newState = new DiedState(_creature);
+                    //_creature._newState = new DiedState(_creature);
                 }
                 else
                 {

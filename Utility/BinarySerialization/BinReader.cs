@@ -33,9 +33,11 @@ namespace ProjectEvolution.Utility.BinarySerialization
 
         public static void NextTick()
         {
-            _currentTickNumber++;
-            if (_currentTickNumber >= _ticksDTOs.Length)
-                DataEnd.Invoke(); 
+            if (++_currentTickNumber >= _ticksDTOs.Length)
+            {
+                _currentTickNumber--;
+                DataEnd.Invoke();
+            } 
         }
 
         public static CreatureTickData[] GetCreaturesTickData()

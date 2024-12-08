@@ -24,6 +24,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private float _speed;
         private Tuple<float, float> _movementLimitations;
 
+        private float _energy;
         private float _sightRange;
 
         private int _lifeDuration;
@@ -45,6 +46,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             _speed = 2f;
 
             _sightRange = 1;
+            _energy = 50;
             _chromosome = new SChromosome();
             _lifeDuration = _randGen.Next(250, 350);
             _newBorn = true;
@@ -69,6 +71,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                 _newState = new DiedState(this);
             }
             _state.Process();
+            _energy -= 0.01f;
             _lifeTime++;
         }
 
@@ -94,11 +97,16 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
         }
 
-        // TODO: In a future this should be a method which pick the specified state of creature
-        // basing on the creature data for example the energy
         private void ChooseWhatToDo()
         {
-            _newState = new SeekingForPartnerState(this);
+            if (_energy < 50)
+            {
+                _newState = new SeekingForFoodState(this);
+            }
+            else
+            {
+                _newState = new SeekingForPartnerState(this);
+            }
         }
 
         private void GiveBirth(SCreature partner)

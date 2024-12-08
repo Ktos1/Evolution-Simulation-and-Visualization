@@ -19,6 +19,8 @@ namespace ProjectEvolution.Simulation.Algorithm
         private bool _wasModified = false;
         private bool _saveAfterSpawn = true;
 
+        public event DeleteEventHandler Deleted;
+
         public SPlant(Vector2 position, int partsNumber, SPlantManager plantManager)
         {
             _position = position;
@@ -53,11 +55,15 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 Delete();
             }
+            else if (_newPartsNumber < 0)
+            {
+                _newPartsNumber = 0;
+            }
             else
             {
                 _newTimeWithoutBeingEaten = 0;
-                _wasEaten = true;
-            } 
+            }
+            _wasEaten = true;
         }
 
         public PlantDTO GetSavingData()
@@ -92,7 +98,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private void Delete()
         {
-
+            Deleted.Invoke(this);
         }
     }
 }

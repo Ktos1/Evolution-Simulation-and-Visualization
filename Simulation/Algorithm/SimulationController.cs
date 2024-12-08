@@ -43,6 +43,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                 _plantManager.UpdatePlants();
                 UpdateCreaturesList();
                 SaveTickData();
+                _plantManager.DeleteDeadPlants();
             }
             _binWriter.SaveToFile();
             BinReader.LoadNewFile();
@@ -71,12 +72,18 @@ namespace ProjectEvolution.Simulation.Algorithm
                 foreach (var creature in _creatures)
                 {
                     var distance = (seeker.Position - creature.Position).Length();
-                    if (distance < range && distance != 0)
+                    if (distance <= range && distance != 0)
                     {
                         objectsInRange.Add((distance, creature as T));
                     }
                 }
             }
+            else if (typeof(T) == typeof(SPlant))
+            {
+                objectsInRange = _plantManager.GetPlantsInRange(seeker.Position, range) 
+                    as List<(float, T)>;
+            }
+
             var sortedResult = objectsInRange.OrderBy((pair) => pair.distance).ToList();
             var resultArray = new T[sortedResult.Count()];
 

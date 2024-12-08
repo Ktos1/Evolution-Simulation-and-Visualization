@@ -114,7 +114,7 @@ namespace ProjectEvolution.Visualization.LogicScripts
 
         private void OnPlantDelete(object plant, EventArgs e)
         {
-            _deadPlants.Add(plant as  VPlant);
+            _deadPlants.Add(plant as VPlant);
         }
     }
 }

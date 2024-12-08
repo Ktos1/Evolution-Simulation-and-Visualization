@@ -23,6 +23,9 @@ namespace ProjectEvolution.Simulation.Algorithm
                 else if (this is ReproducingState) return CreatureStates.Reproducing;
                 else if (this is SeekingForPartnerState) return CreatureStates.SeekingForPartner;
                 else if (this is ToDeleteState) return CreatureStates.ToDelete;
+                else if (this is MovingToFoodState) return CreatureStates.MovingToFood;
+                else if (this is SeekingForFoodState) return CreatureStates.SeekingForFood;
+                else if (this is EatingState) return CreatureStates.Eating;
                 throw new Exception("Occurred a creature state which is not handled.");
             }
         }

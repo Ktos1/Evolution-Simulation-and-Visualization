@@ -5,7 +5,11 @@
         /// <summary>
         /// The time in ticks needed to give a birth.
         /// </summary>
-        public static int ReproductionTime = 60;
+        public static int ReproductionDuration = 60;
+
+        public static int EatingDuration = 10;
+
+        public static float EnergyFromPlantPart = 5;
 
         public static float MutationChance = 0.2f;
 
