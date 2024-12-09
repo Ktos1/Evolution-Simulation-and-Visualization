@@ -23,21 +23,21 @@ namespace ProjectEvolution.Utility.BinarySerialization
         public static int CurrentTickNumber
         {
             get { return _currentTickNumber; }
-            set { _currentTickNumber = (value < 0) ? 0 : value; }
+            set 
+            {
+                if (value < 0) _currentTickNumber = 0;
+                else if (value >= _ticksDTOs.Length)
+                {
+                    DataEnd.Invoke();
+                    _currentTickNumber = _ticksDTOs.Length;
+                }
+                else _currentTickNumber = value;
+            }
         }
 
         static BinReader()
         {
             LoadNewFile();
-        }
-
-        public static void NextTick()
-        {
-            if (++_currentTickNumber >= _ticksDTOs.Length)
-            {
-                _currentTickNumber--;
-                DataEnd.Invoke();
-            } 
         }
 
         public static CreatureTickData[] GetCreaturesTickData()

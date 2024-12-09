@@ -29,7 +29,7 @@ namespace ProjectEvolution.Visualization
 
             _creaturesManager = new VCreaturesManager(this);
             _plantsManager = new VPlantManager(this);
-            BinReader.NextTick();
+            BinReader.CurrentTickNumber++;
             _genesWindow.AverageStartGenesValues = _creaturesManager.AverageStartGenesValues;
             BinReader.DataEnd += OnDataEnd;
 
@@ -48,7 +48,7 @@ namespace ProjectEvolution.Visualization
                     _plantsManager.UpdatePlants();
                     _creaturesManager.UpdateCreatures();
                     _deltaCount -= CommonSettings.TICK_DURATION;
-                    BinReader.NextTick();
+                    BinReader.CurrentTickNumber++;
                 }
                 _creaturesManager.ProcessCreatures(_deltaCount);
             }
