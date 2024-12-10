@@ -29,7 +29,7 @@ namespace ProjectEvolution.Utility.BinarySerialization
                 else if (value >= _ticksDTOs.Length)
                 {
                     DataEnd.Invoke();
-                    _currentTickNumber = _ticksDTOs.Length;
+                    _currentTickNumber = _ticksDTOs.Length - 1;
                 }
                 else _currentTickNumber = value;
             }

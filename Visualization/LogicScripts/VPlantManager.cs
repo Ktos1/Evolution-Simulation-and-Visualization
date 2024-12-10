@@ -1,6 +1,7 @@
 ﻿using ProjectEvolution.Utility.BinarySerialization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectEvolution.Visualization.LogicScripts
 {
@@ -44,11 +45,14 @@ namespace ProjectEvolution.Visualization.LogicScripts
         public void LoadOnTick(int tickNumber)
         {
             BinReader.CurrentTickNumber = tickNumber;
-            var(plantsNumber, _) = BinReader.GetPlantTickData();
+            var(plantsNumber, plantsDataTemp) = BinReader.GetPlantTickData();
+            foreach (var plant in plantsDataTemp)
+                if (plant.PartsNumber == 0) plantsNumber--;
+
             var plants = new List<PlantTickData>();
+            var plantsNotInTargetTickIds = new List<uint>();
 
             var findedAll = false;
-
             while (!findedAll)
             {
                 var(_, plantsData) = BinReader.GetPlantTickData();
@@ -63,9 +67,14 @@ namespace ProjectEvolution.Visualization.LogicScripts
                             plants[index] = existingPlant with { Position = plantData.Position };
                         }
                     }
-                    else if (plants.Count != plantsNumber && plantData.PartsNumber != 0)
+                    else if (plantData.PartsNumber == 0)
                     {
-                        plants.Add(plantData);
+                        plantsNotInTargetTickIds.Add(plantData.Id);
+                    }
+                    else if (plants.Count != plantsNumber)
+                    {
+                        var forbbidenPlant = plantsNotInTargetTickIds.Find(id => id == plantData.Id);
+                        if (forbbidenPlant == default) plants.Add(plantData);
                     }
 
                     if (plants.Count == plantsNumber)

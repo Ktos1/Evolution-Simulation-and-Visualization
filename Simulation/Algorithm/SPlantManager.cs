@@ -112,6 +112,10 @@ namespace ProjectEvolution.Simulation.Algorithm
                     TrySpawnPlant(clusterCenter, clusterRadius, (float)plantsMinDist, 10, 4, false);
                 }
             }
+            // this must be here because the trySpawnPlant added new plant to the _propagatedPlants
+            // and the UpdatePlants() add from the propagated to the _plants from which plants are
+            // being saved (specially in the first tick).
+            UpdatePlants();
         }
 
         private void TrySpawnPlant(
