@@ -20,6 +20,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             float clustersDensity, float clusterSize, float clusterDensity)
         {
             Map = map;
+            ResetMapObjectIds();
             for (int i = 0; i < creaturesNum; i++)
             {
                 _creatures.Add(new SCreature(this));
@@ -124,6 +125,12 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
             var(plantsNumber, plantsDTOs) = _plantManager.GetSavingData();
             _binWriter.AddTick(new TickDTO(plantsNumber, plantsDTOs, creaturesDTOs));
+        }
+
+        private void ResetMapObjectIds()
+        {
+            SCreature.ResetIds();
+            SPlant.ResetIds();
         }
     }
 }

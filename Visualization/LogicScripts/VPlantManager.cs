@@ -1,7 +1,6 @@
 ﻿using ProjectEvolution.Utility.BinarySerialization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ProjectEvolution.Visualization.LogicScripts
 {

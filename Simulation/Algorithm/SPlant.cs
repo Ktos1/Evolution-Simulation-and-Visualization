@@ -5,11 +5,11 @@ namespace ProjectEvolution.Simulation.Algorithm
 {
     internal class SPlant : MapObject
     {
-        private static uint _iDCounter = 0;
+        private static uint _idCounter = 0;
 
         private SPlantManager _plantManager;
 
-        private uint _id = _iDCounter++;
+        private uint _id = _idCounter++;
         private int _partsNumber;
         private int _newPartsNumber;
         private int _timeWithoutBeingEaten = 0;
@@ -82,6 +82,11 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 return null;
             }
+        }
+
+        public static void ResetIds()
+        {
+            _idCounter = 0;
         }
 
         private void Grow()

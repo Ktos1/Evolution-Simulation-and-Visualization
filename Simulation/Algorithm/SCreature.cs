@@ -8,9 +8,9 @@ namespace ProjectEvolution.Simulation.Algorithm
     public partial class SCreature : MapObject
     {
         private static Random _randGen = new Random();
-        private static uint IDCounter = 0;
+        private static uint _idCounter = 0;
         private SimulationController _controller;
-        private uint _id = IDCounter++;
+        private uint _id = _idCounter++;
 
         private State _state;
         private MapObject _focusObject;
@@ -95,6 +95,11 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 return (_id, (x, y), state, null);
             }
+        }
+
+        public static void ResetIds()
+        {
+            _idCounter = 0;
         }
 
         private void ChooseWhatToDo()
