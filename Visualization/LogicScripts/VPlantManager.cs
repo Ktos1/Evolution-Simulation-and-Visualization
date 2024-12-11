@@ -72,8 +72,16 @@ namespace ProjectEvolution.Visualization.LogicScripts
                     }
                     else if (plants.Count != plantsNumber)
                     {
-                        var forbbidenPlant = plantsNotInTargetTickIds.Find(id => id == plantData.Id);
-                        if (forbbidenPlant == default) plants.Add(plantData);
+                        var forbiddenPlant = false;
+                        foreach (var forbbidenId in plantsNotInTargetTickIds)
+                        {
+                            if (plantData.Id == forbbidenId)
+                            {
+                                forbiddenPlant = true;
+                                break;
+                            }
+                        }
+                        if (!forbiddenPlant) plants.Add(plantData);
                     }
 
                     if (plants.Count == plantsNumber)
