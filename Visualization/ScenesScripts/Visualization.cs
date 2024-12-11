@@ -10,7 +10,7 @@ namespace ProjectEvolution.Visualization
         [Export] private TimeSliderPanel _timeSliderPanel;
         [Export] private HSlider _timeSlider;
         [Export] private Button _startStopButton;
-        [Export] public GenesWindow _genesWindow;
+        [Export] public GenesWindow GenesWindow;
         [Export] private MeshInstance3D _floorMesh;
 
         private double _deltaCount = 0;
@@ -20,6 +20,7 @@ namespace ProjectEvolution.Visualization
 
         private bool _isTimeSliderDragging = false;
         private bool _isStartStopButtonToggled = false;
+        private bool _isOnEnd = false;
 
         public override void _Ready()
         {
@@ -30,7 +31,7 @@ namespace ProjectEvolution.Visualization
             _creaturesManager = new VCreaturesManager(this);
             _plantsManager = new VPlantManager(this);
             BinReader.CurrentTickNumber++;
-            _genesWindow.AverageStartGenesValues = _creaturesManager.AverageStartGenesValues;
+            GenesWindow.AverageStartGenesValues = _creaturesManager.AverageStartGenesValues;
             BinReader.DataEnd += OnDataEnd;
 
             (int x, int y) = BinReader.SimulationInfo.MapSize;
@@ -40,7 +41,7 @@ namespace ProjectEvolution.Visualization
 
         public override void _Process(double delta)
         {
-            if (!_isTimeSliderDragging && !_isStartStopButtonToggled)
+            if (!_isTimeSliderDragging && !_isStartStopButtonToggled && !_isOnEnd)
             {
                 _deltaCount += delta;
                 if (_deltaCount > CommonSettings.TICK_DURATION)
@@ -59,7 +60,7 @@ namespace ProjectEvolution.Visualization
             if (@event.IsActionPressed("pick_object"))
             {
                 _creaturesManager.UncheckAllCreatures();
-                _genesWindow.Visible = false;
+                GenesWindow.Visible = false;
             }
         }
 
@@ -80,7 +81,7 @@ namespace ProjectEvolution.Visualization
 
         private void OnDataEnd()
         {
-            _startStopButton.ButtonPressed = true;
+            _isOnEnd = true;
         }
 
         private void OnTimeSliderDragStarted()
@@ -96,6 +97,7 @@ namespace ProjectEvolution.Visualization
             _isTimeSliderDragging = false;
             _timeSlider.ValueChanged -= OnTimeSliderValueChanged;
             _timeSliderPanel.IsRunning = true;
+            _isOnEnd = false;
         }
 
         private void OnTimeSliderValueChanged(double value)

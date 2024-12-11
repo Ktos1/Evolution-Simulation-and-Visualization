@@ -141,7 +141,7 @@ namespace ProjectEvolution.Visualization.LogicScripts
         private void AddNewCreature(CreatureTickData creatureData)
         {
             var creature = new VCreature(creatureData, this);
-            creature.ClickedOn += _visualization._genesWindow.OnClickedOnCreature;
+            creature.ClickedOn += _visualization.GenesWindow.OnClickedOnCreature;
             creature.Deleted += OnCreatureDeletion;
             _creatures.Add(creature);
             _visualization.CallDeferred("add_child", _creatures.Last().StaticBody);

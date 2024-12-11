@@ -22,12 +22,12 @@ ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_uoer2"]
 font_size = 24
 
-[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "_genesWindow", "_floorMesh")]
+[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "GenesWindow", "_floorMesh")]
 script = ExtResource("1_8ml5k")
 _timeSliderPanel = NodePath("TimeSliderPanel")
 _timeSlider = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/TimeSlider")
 _startStopButton = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/StartStopButton")
-_genesWindow = NodePath("GenesWindow")
+GenesWindow = NodePath("GenesWindow")
 _floorMesh = NodePath("FloorStaticBody/FloorMesh")
 
 [node name="FloorStaticBody" type="StaticBody3D" parent="."]
