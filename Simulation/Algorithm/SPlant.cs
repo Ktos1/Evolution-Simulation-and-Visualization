@@ -7,7 +7,7 @@ namespace ProjectEvolution.Simulation.Algorithm
     {
         private static uint _idCounter = 0;
 
-        private SPlantManager _plantManager;
+        private Cluster _cluster;
 
         private uint _id = _idCounter++;
         private int _partsNumber;
@@ -21,11 +21,11 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public event DeleteEventHandler Deleted;
 
-        public SPlant(Vector2 position, int partsNumber, SPlantManager plantManager)
+        public SPlant(Vector2 position, int partsNumber, Cluster cluster)
         {
             _position = position;
             _partsNumber = _newPartsNumber = partsNumber;
-            _plantManager = plantManager;
+            _cluster = cluster;
         }
 
         public void Process()
@@ -93,7 +93,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         {
             if (_partsNumber == 4)
             {
-                _plantManager.TryPropagatePlant(this);
+                _cluster.TryPropagatePlant(this);
             }
             else
             {

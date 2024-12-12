@@ -2,7 +2,6 @@
 using ProjectEvolution.Utility.BinarySerialization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
@@ -10,11 +9,9 @@ namespace ProjectEvolution.Simulation.Algorithm
     {
         private SimulationController _controller;
         private Random _randGen = new Random();
-        private List<SPlant> _plants = new List<SPlant>();
-        private List<SPlant> _propagatedPlants = new List<SPlant>();
-        private List<SPlant> _deadPlants = new List<SPlant>();
+        private List<Cluster> _clusters = new List<Cluster>();
 
-        private int _maxPlantsAmount;
+        public List<Cluster> Clusters => _clusters;
 
         /// <summary>
         /// 
@@ -35,44 +32,30 @@ namespace ProjectEvolution.Simulation.Algorithm
             SimulationController controller)
         {
             _controller = controller;
-            GeneratePlants(clustersDensity, clusterSize, clusterDensity);
-            _maxPlantsAmount = _plants.Count * 2;
+            GenerateClusters(clustersDensity, clusterSize, clusterDensity);
         }
 
         public void ProcessPlants()
         {
-            foreach (var plant in _plants)
-            {
-                plant.Process();
-            }
+            _clusters.ForEach(cluster => cluster.ProcessPlants());
         }
 
         public void UpdatePlants()
         {
-            foreach (var plant in _plants)
-            {
-                plant.Update();
-            }
-            _propagatedPlants.ForEach(plant => _plants.Add(plant));
-            _propagatedPlants.Clear();
+            _clusters.ForEach(cluster => cluster.UpdatePlants());
         }
 
         public void DeleteDeadPlants()
         {
-            _deadPlants.ForEach(plant => _plants.Remove(plant));
-            _deadPlants.Clear();
+            _clusters.ForEach(cluster => cluster.DeleteDeadPlants());
         }
 
         public List<(float distance, SPlant plant)> GetPlantsInRange(Vector2 centerPoint, float range)
         {
             var result = new List<(float distance, SPlant plant)>();
-            foreach (var plant in _plants)
+            foreach (var cluster in _clusters)
             {
-                var distance = (centerPoint - plant.Position).Length();
-                if (distance <= range)
-                {
-                    result.Add((distance, plant));
-                }
+                result.AddRange(cluster.GetPlantsInRange(centerPoint, range));
             }
             return result;
         }
@@ -80,152 +63,52 @@ namespace ProjectEvolution.Simulation.Algorithm
         public (int plantsNumber, PlantDTO[] plantsDTOs) GetSavingData()
         {
             var result = new List<PlantDTO>();
-            foreach (var plant in _plants)
+            foreach (var cluster in _clusters)
             {
-                var plantInfo = plant.GetSavingData();
-                if (plantInfo != null)
-                {
-                    result.Add(plantInfo);
-                }
+                result.AddRange(cluster.GetSavingData());
             }
-            return (_plants.Count, result.ToArray());
+            return (result.Count, result.ToArray());
         }
 
-        internal void TryPropagatePlant(SPlant sPlant)
-        {
-            if (_plants.Count <= _maxPlantsAmount)
-                TrySpawnPlant(sPlant.Position, 1, 0.5f, 15, 1, true);
-        }
-
-        private void GeneratePlants(
-            float clustersDensity,
-            float clusterSize,
-            float clusterDensity)
-        {
-            var clusterCenters = GenerateClustersCenter(clustersDensity);
-
-            var clusterRadius = clusterSize / 2;
-            var clusterArea = Math.PI * Math.Pow(clusterRadius, 2);
-            var plantsPerCluster = (int)Math.Round(clusterArea * clusterDensity);
-
-            var plantsMinDist = 1 / clusterDensity * Math.PI * 0.25;
-            foreach (var clusterCenter in clusterCenters)
-            {
-                for (var i = 0; i < plantsPerCluster; i++)
-                {
-                    TrySpawnPlant(clusterCenter, clusterRadius, (float)plantsMinDist, 10, 4, false);
-                }
-            }
-            // this must be here because the trySpawnPlant added new plant to the _propagatedPlants
-            // and the UpdatePlants() add from the propagated to the _plants from which plants are
-            // being saved (specially in the first tick).
-            UpdatePlants();
-        }
-
-        private void TrySpawnPlant(
-            Vector2 refPoint,
-            float areaRadius,
-            float minPlantsDist,
-            int attemptsNumber,
-            int partsNumber,
-            bool ignoreBeyondBorders)
-        {
-            var firstShot = true;
-            while (attemptsNumber > 0)
-            {
-                var XShot = _randGen.NextSingle() * areaRadius * 2 - areaRadius + refPoint.X;
-                var YShot = _randGen.NextSingle() * areaRadius * 2 - areaRadius + refPoint.Y;
-                var xLimit = _controller.Map.Limitations.x;
-                var yLimit = _controller.Map.Limitations.y;
-
-                var ShotsVector = new Vector2(XShot, YShot);
-                if ((ShotsVector - refPoint).Length() <= areaRadius)
-                {
-                    if (XShot > xLimit || XShot < -xLimit || YShot > yLimit || YShot < -yLimit)
-                    {
-                        if (ignoreBeyondBorders) continue;
-                        else
-                        {
-                            if (firstShot) break;
-                            else continue;
-                        }
-                    }
-                    var tooClose = false;
-                    foreach (var plant in _plants.Concat(_propagatedPlants))
-                    {
-                        if ((ShotsVector - plant.Position).Length() < minPlantsDist)
-                        {
-                            tooClose = true;
-                            attemptsNumber--;
-                            break;
-                        }
-                    }
-                    if (!tooClose)
-                    {
-                        _propagatedPlants.Add(CreatePlant(ShotsVector, partsNumber));
-                        break;
-                    }
-                    firstShot = false;
-                }
-            }
-        }
-
-        private Vector2[] GenerateClustersCenter(float clustersDensity)
+        private void GenerateClusters(float clustersDensity, float clusterSize, float clusterDensity)
         {
             // the inverse of clusters density is a side of a square on which,
             // on average, appear one cluster.
             var clustersMinDist = 1 / clustersDensity * 0.1;
 
             var (mapSizeX, mapSizeY) = _controller.Map.Size;
-            //var mapDiagonal = Math.Sqrt(Math.Pow(mapSizeX,2) + Math.Pow(mapSizeY, 2));
             var mapArea = mapSizeX * mapSizeY;
             var clustersNumber = (int)Math.Round(mapArea * clustersDensity);
-            var clustersCenters = new Vector2[clustersNumber];
 
             for (int i = 0; i < clustersNumber; i++)
             {
-                bool goodPosition = false;
+                bool badPosition = false;
                 while (true)
                 {
                     var positionProposition = new Vector2(
                     _randGen.NextSingle() * mapSizeX - mapSizeX / 2f,
                     _randGen.NextSingle() * mapSizeY - mapSizeY / 2f
                     );
-                    foreach (var clusterCenter in clustersCenters)
+
+                    foreach (var cluster in _clusters)
                     {
+                        var clusterCenter = cluster.Position;
                         if (clusterCenter != Vector2.Zero)
                         {
                             if ((clusterCenter - positionProposition).Length() < clustersMinDist)
                             {
+                                badPosition = true;
                                 break;
                             }
                         }
-                        else
-                        {
-                            goodPosition = true;
-                            break;
-                        }
                     }
-                    if (goodPosition)
+                    if (!badPosition)
                     {
-                        clustersCenters[i] = positionProposition;
+                        _clusters.Add(new Cluster(positionProposition, clusterSize, clusterDensity, this, _controller));
                         break;
                     }
                 }
             }
-            return clustersCenters;
-        }
-
-        private SPlant CreatePlant(Vector2 position, int partsNumber)
-        {
-            var plant = new SPlant(position, partsNumber, this);
-            plant.Deleted += OnPlantDeleted;
-            return plant;
-        }
-
-        private void OnPlantDeleted(MapObject deletedPlant)
-        {
-            _deadPlants.Add(deletedPlant as SPlant);
         }
     }
 }
