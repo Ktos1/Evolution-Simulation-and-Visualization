@@ -29,6 +29,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private int _lifeDuration;
         private int _lifeTime = 0;
+
         private bool _newBorn;
         private bool _isGivingBirth;
          
@@ -46,11 +47,14 @@ namespace ProjectEvolution.Simulation.Algorithm
             _speed = 2f;
 
             _sightRange = 1;
-            _energy = 50;
+            _energy = 30;
             _chromosome = new SChromosome();
-            _lifeDuration = _randGen.Next(250, 350);
+            _lifeDuration = _randGen.Next(1000, 1250);
+
             _newBorn = true;
-            _state = _newState = new SeekingForPartnerState(this);
+
+            var isSearchingForFood = _energy <= _chromosome.EnergyAmountToStartFoodSearchGene.Value;
+            _state = _newState = isSearchingForFood ? new SeekingForFoodState(this) : new SeekingForPartnerState(this);
         }
 
         public SCreature(Vector2 position, SimulationController controller) : this(controller)
@@ -66,9 +70,10 @@ namespace ProjectEvolution.Simulation.Algorithm
                 return;
             }  
 
-            if (_lifeTime >= _lifeDuration && _state is not DiedState)
+            if (_state is not DiedState)
             {
-                _newState = new DiedState(this);
+                if (_lifeTime >= _lifeDuration || _energy <= 0)
+                    _newState = new DiedState(this);
             }
             _state.Process();
             _energy -= 0.01f;
@@ -102,18 +107,6 @@ namespace ProjectEvolution.Simulation.Algorithm
             _idCounter = 0;
         }
 
-        private void ChooseWhatToDo()
-        {
-            if (_energy < 50)
-            {
-                _newState = new SeekingForFoodState(this);
-            }
-            else
-            {
-                _newState = new SeekingForPartnerState(this);
-            }
-        }
-
         private void GiveBirth(SCreature partner)
         {
             var childPosition = (partner.Position - _position) / 2 + _position;
@@ -124,6 +117,11 @@ namespace ProjectEvolution.Simulation.Algorithm
         {
             _movementDirection = (_focusObject.Position - _position).Normalized();
             Move();
+            return GetDistanceToFocusObject();
+        }
+
+        private float GetDistanceToFocusObject()
+        {
             return (_focusObject.Position - _position).Length();
         }
 

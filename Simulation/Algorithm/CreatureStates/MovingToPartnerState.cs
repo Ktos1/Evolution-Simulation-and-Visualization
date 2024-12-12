@@ -17,11 +17,23 @@
                     {
                         _creature._newState = new ReproducingState(_creature);
                     }
+                    else if (_creature._energy <= _creature._chromosome.EnergyAmountToStartFoodSearchGene.Value)
+                    {
+                        _creature._newState = new SeekingForFoodState(_creature);
+                    }
                 }
                 else
                 {
-                    _creature._newState = new SeekingForPartnerState(_creature);
+                    ChooseWhatToDo();
                 }
+            }
+
+            private void ChooseWhatToDo()
+            {
+                if (_creature._energy <= _creature._chromosome.EnergyAmountToStartFoodSearchGene.Value)
+                    _creature._newState = new SeekingForFoodState(_creature);
+                else
+                    _creature._newState = new SeekingForPartnerState(_creature);
             }
         }
     }

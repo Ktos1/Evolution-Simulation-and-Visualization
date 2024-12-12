@@ -14,6 +14,8 @@ namespace ProjectEvolution.Simulation.Algorithm
         private List<SPlant> _propagatedPlants = new List<SPlant>();
         private List<SPlant> _deadPlants = new List<SPlant>();
 
+        private int _maxPlantsAmount;
+
         /// <summary>
         /// 
         /// </summary>
@@ -34,6 +36,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         {
             _controller = controller;
             GeneratePlants(clustersDensity, clusterSize, clusterDensity);
+            _maxPlantsAmount = _plants.Count * 2;
         }
 
         public void ProcessPlants()
@@ -90,7 +93,8 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         internal void TryPropagatePlant(SPlant sPlant)
         {
-            TrySpawnPlant(sPlant.Position, 1, 0.5f, 15, 1, true);
+            if (_plants.Count <= _maxPlantsAmount)
+                TrySpawnPlant(sPlant.Position, 1, 0.5f, 15, 1, true);
         }
 
         private void GeneratePlants(
@@ -131,8 +135,8 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 var XShot = _randGen.NextSingle() * areaRadius * 2 - areaRadius + refPoint.X;
                 var YShot = _randGen.NextSingle() * areaRadius * 2 - areaRadius + refPoint.Y;
-                var xLimit = _controller.Map.Size.x / 2f;
-                var yLimit = _controller.Map.Size.y / 2f;
+                var xLimit = _controller.Map.Limitations.x;
+                var yLimit = _controller.Map.Limitations.y;
 
                 var ShotsVector = new Vector2(XShot, YShot);
                 if ((ShotsVector - refPoint).Length() <= areaRadius)
@@ -170,9 +174,10 @@ namespace ProjectEvolution.Simulation.Algorithm
         {
             // the inverse of clusters density is a side of a square on which,
             // on average, appear one cluster.
-            var clustersMinDist = 1 / clustersDensity * 0.143;
+            var clustersMinDist = 1 / clustersDensity * 0.1;
 
             var (mapSizeX, mapSizeY) = _controller.Map.Size;
+            //var mapDiagonal = Math.Sqrt(Math.Pow(mapSizeX,2) + Math.Pow(mapSizeY, 2));
             var mapArea = mapSizeX * mapSizeY;
             var clustersNumber = (int)Math.Round(mapArea * clustersDensity);
             var clustersCenters = new Vector2[clustersNumber];

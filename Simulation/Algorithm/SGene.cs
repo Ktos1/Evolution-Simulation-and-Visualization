@@ -16,6 +16,8 @@ namespace ProjectEvolution.Simulation.Algorithm
             var stddev = range * SimulationSettings.MutationStdDev * 0.01;
             var diff = (float)Normal.Sample(_randGen, 0, stddev);
             Value += diff;
+            if (Value > MaxValue) Value = MaxValue;
+            if (Value < MinValue) Value = MinValue;
         }
     }
 }

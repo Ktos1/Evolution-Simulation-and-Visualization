@@ -16,7 +16,7 @@
                 var partner = (SCreature)_creature._focusObject;
                 if (partner._state is not ReproducingState)
                 {
-                    _creature.ChooseWhatToDo();
+                    ChooseWhatToDo();
                 }
                 else if (_stateDuration == 0)
                 {
@@ -24,19 +24,26 @@
                     {
                         _creature._isGivingBirth = true;
                         _creature.GiveBirth(partner);
-                        _creature.ChooseWhatToDo();
                     }
                     else
                     {
                         partner._isGivingBirth = false;
-                        _creature.ChooseWhatToDo();
                     }
-                    //_creature._newState = new DiedState(_creature);
+                    _creature._energy -= SimulationSettings.ReproductionCost;
+                    ChooseWhatToDo();
                 }
                 else
                 {
                     _stateDuration--;
                 }
+            }
+
+            private void ChooseWhatToDo()
+            {
+                if (_creature._energy <= _creature._chromosome.EnergyAmountToStartFoodSearchGene.Value)
+                    _creature._newState = new SeekingForFoodState(_creature);
+                else
+                    _creature._newState = new SeekingForPartnerState(_creature);
             }
         }
     }

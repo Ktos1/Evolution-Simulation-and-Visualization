@@ -23,9 +23,21 @@ namespace ProjectEvolution.CommonStuff
             protected set => _genes[1] = value;
         }
 
+        public T EnergyAmountToStartPartnerSearchGene
+        {
+            get => _genes[2];
+            protected set => _genes[2] = value;
+        }
+
+        public T EnergyAmountToStartFoodSearchGene
+        {
+            get => _genes[3];
+            protected set => _genes[3] = value;
+        }
+
         public Chromosome()
         {
-            _genes = new T[2];
+            _genes = new T[4];
             if (typeof(T) == typeof(SGene))
             {
                 for (var i = 0; i < _genes.Length; i++)
@@ -47,6 +59,8 @@ namespace ProjectEvolution.CommonStuff
         {
             TurningFrequencyGene.SetLimitations(0, 100);
             TurningAngleGene.SetLimitations(0, 180);
+            EnergyAmountToStartPartnerSearchGene.SetLimitations(0, 100);
+            EnergyAmountToStartFoodSearchGene.SetLimitations(0, 100);
         }
     }
 }

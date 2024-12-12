@@ -14,15 +14,23 @@
                 var eatenPlant = _creature._focusObject as SPlant;
                 if (eatenPlant == null)
                 {
-                    _creature.ChooseWhatToDo();
+                    _creature._newState = new SeekingForFoodState(_creature);
                 }
                 else if (_stateDuration == 0)
                 {
                     eatenPlant.BeingEaten();
                     _creature._energy += SimulationSettings.EnergyFromPlantPart;
-                    _creature.ChooseWhatToDo();
+                    ChooseWhatToDo();
                 }
                 else _stateDuration--;
+            }
+
+            private void ChooseWhatToDo()
+            {
+                if (_creature._energy >= _creature._chromosome.EnergyAmountToStartPartnerSearchGene.Value)
+                    _creature._newState = new SeekingForPartnerState(_creature);
+                else
+                    _creature._newState = new SeekingForFoodState(_creature);
             }
         }
     }

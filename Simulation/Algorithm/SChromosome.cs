@@ -10,7 +10,12 @@ namespace ProjectEvolution.Simulation.Algorithm
             for (int i = 0; i < _genes.Length; i++)
             {
                 var gene = _genes[i];
-                var range = gene.MaxValue - gene.MinValue;
+                float range;
+
+                if (gene == EnergyAmountToStartFoodSearchGene)
+                    range = EnergyAmountToStartPartnerSearchGene.Value - gene.MinValue;
+                else
+                    range = gene.MaxValue - gene.MinValue;
 
                 gene.Value = _randGen.NextSingle() * range + gene.MinValue;
             }

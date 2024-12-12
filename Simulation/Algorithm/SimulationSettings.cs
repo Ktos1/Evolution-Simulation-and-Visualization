@@ -13,6 +13,8 @@
 
         public static float MutationChance = 0.2f;
 
+        public static float ReproductionCost = 25f;
+
         /// <summary>
         /// The percentage of a gene possible range on which the standard deviation of the mutation is set.
         /// </summary>
