@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using ProjectEvolution.CommonStuff;
 using System.IO;
 using System.Text.Json;
 using System.Xml;
@@ -28,13 +29,17 @@ namespace ProjectEvolution.Utility.BinarySerialization
             var main = new MainDTO(_simulationInfo, _ticksData);
             byte[] binaryResults = MessagePackSerializer.Serialize(main);
 
-            var json = MessagePackSerializer.ConvertToJson(binaryResults);
-            var jsonDocument = JsonDocument.Parse(json);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            var prettyJson = JsonSerializer.Serialize(jsonDocument.RootElement, options);
-
+            if (CommonSettings.GenerateJSON)
+            {
+                var json = MessagePackSerializer.ConvertToJson(binaryResults);
+                var jsonDocument = JsonDocument.Parse(json);
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                var prettyJson = JsonSerializer.Serialize(jsonDocument.RootElement, options);
+                File.WriteAllText("binaryResultJSON.json", prettyJson);
+            }
+            
             File.WriteAllBytes("result.bin", binaryResults);
-            File.WriteAllText("binaryResultJSON.json", prettyJson);
+            
         }
     }
 }

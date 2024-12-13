@@ -23,21 +23,33 @@ namespace ProjectEvolution.CommonStuff
             protected set => _genes[1] = value;
         }
 
-        public T EnergyAmountToStartPartnerSearchGene
+        public T EnrgAmntToStrtPrtnrSrchGene
         {
             get => _genes[2];
             protected set => _genes[2] = value;
         }
 
-        public T EnergyAmountToStartFoodSearchGene
+        public T EnrgAmntToStrtFdSrchGene
         {
             get => _genes[3];
             protected set => _genes[3] = value;
         }
 
+        public T SightGene
+        {
+            get => _genes[4];
+            protected set => _genes[4] = value;
+        }
+
+        public T SpeedGene
+        {
+            get => _genes[5];
+            protected set => _genes[5] = value;
+        }
+
         public Chromosome()
         {
-            _genes = new T[4];
+            _genes = new T[6];
             if (typeof(T) == typeof(SGene))
             {
                 for (var i = 0; i < _genes.Length; i++)
@@ -59,8 +71,10 @@ namespace ProjectEvolution.CommonStuff
         {
             TurningFrequencyGene.SetLimitations(0, 100);
             TurningAngleGene.SetLimitations(0, 180);
-            EnergyAmountToStartPartnerSearchGene.SetLimitations(0, 100);
-            EnergyAmountToStartFoodSearchGene.SetLimitations(0, 100);
+            EnrgAmntToStrtPrtnrSrchGene.SetLimitations(0, 100);
+            EnrgAmntToStrtFdSrchGene.SetLimitations(0, 100);
+            SightGene.SetLimitations(0, 10);
+            SpeedGene.SetLimitations(0, 6);
         }
     }
 }

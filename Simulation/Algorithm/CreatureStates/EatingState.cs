@@ -27,7 +27,7 @@
 
             private void ChooseWhatToDo()
             {
-                if (_creature._energy >= _creature._chromosome.EnergyAmountToStartPartnerSearchGene.Value)
+                if (_creature._energy >= _creature._chromosome.EnrgAmntToStrtPrtnrSrchGene.Value)
                     _creature._newState = new SeekingForPartnerState(_creature);
                 else
                     _creature._newState = new SeekingForFoodState(_creature);

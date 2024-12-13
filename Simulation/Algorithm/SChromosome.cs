@@ -12,8 +12,8 @@ namespace ProjectEvolution.Simulation.Algorithm
                 var gene = _genes[i];
                 float range;
 
-                if (gene == EnergyAmountToStartFoodSearchGene)
-                    range = EnergyAmountToStartPartnerSearchGene.Value - gene.MinValue;
+                if (gene == EnrgAmntToStrtFdSrchGene)
+                    range = EnrgAmntToStrtPrtnrSrchGene.Value - gene.MinValue;
                 else
                     range = gene.MaxValue - gene.MinValue;
 

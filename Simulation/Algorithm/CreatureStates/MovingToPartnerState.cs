@@ -13,14 +13,12 @@
                     partner._focusObject == _creature &&
                     partner._state is MovingToPartnerState)
                 {
-                    if (_creature.MoveToFocusedObject() < 0.3f)
-                    {
+                    if (_creature.GetDistanceToFocusObject() > _creature._sightRange)
+                        ChooseWhatToDo();
+                    else if (_creature.MoveToFocusedObject() < 0.3f)
                         _creature._newState = new ReproducingState(_creature);
-                    }
-                    else if (_creature._energy <= _creature._chromosome.EnergyAmountToStartFoodSearchGene.Value)
-                    {
+                    else if (_creature._energy <= _creature._chromosome.EnrgAmntToStrtFdSrchGene.Value)
                         _creature._newState = new SeekingForFoodState(_creature);
-                    }
                 }
                 else
                 {
@@ -30,7 +28,7 @@
 
             private void ChooseWhatToDo()
             {
-                if (_creature._energy <= _creature._chromosome.EnergyAmountToStartFoodSearchGene.Value)
+                if (_creature._energy <= _creature._chromosome.EnrgAmntToStrtFdSrchGene.Value)
                     _creature._newState = new SeekingForFoodState(_creature);
                 else
                     _creature._newState = new SeekingForPartnerState(_creature);

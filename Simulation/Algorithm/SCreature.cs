@@ -9,8 +9,8 @@ namespace ProjectEvolution.Simulation.Algorithm
     {
         private static Random _randGen = new Random();
         private static uint _idCounter = 0;
-        private SimulationController _controller;
         private uint _id = _idCounter++;
+        private SimulationController _controller;
 
         private State _state;
         private MapObject _focusObject;
@@ -26,6 +26,8 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private float _energy;
         private float _sightRange;
+        private float _energyCostPerTick;
+        private float _movementEnergyCostPerUnit;
 
         private int _lifeDuration;
         private int _lifeTime = 0;
@@ -44,17 +46,19 @@ namespace ProjectEvolution.Simulation.Algorithm
                 );
             _movementDirection = new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1).Normalized();
             _movementLimitations = new Tuple<float, float>(mapSizeX / 2f, mapSizeY / 2f);
-            _speed = 2f;
 
-            _sightRange = 1;
-            _energy = 30;
-            _chromosome = new SChromosome();
             _lifeDuration = _randGen.Next(1000, 1250);
+            _energy = 30;
+            
+            _chromosome = new SChromosome();
+            CalculateEnergyCosts();
+            _sightRange = _chromosome.SightGene.Value;
+            _speed = _chromosome.SpeedGene.Value;
+
+            var isSearchingForFood = _energy <= _chromosome.EnrgAmntToStrtFdSrchGene.Value;
+            _state = _newState = isSearchingForFood ? new SeekingForFoodState(this) : new SeekingForPartnerState(this);
 
             _newBorn = true;
-
-            var isSearchingForFood = _energy <= _chromosome.EnergyAmountToStartFoodSearchGene.Value;
-            _state = _newState = isSearchingForFood ? new SeekingForFoodState(this) : new SeekingForPartnerState(this);
         }
 
         public SCreature(Vector2 position, SimulationController controller) : this(controller)
@@ -76,7 +80,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                     _newState = new DiedState(this);
             }
             _state.Process();
-            _energy -= 0.01f;
+            _energy -= _energyCostPerTick;
             _lifeTime++;
         }
 
@@ -105,6 +109,14 @@ namespace ProjectEvolution.Simulation.Algorithm
         public static void ResetIds()
         {
             _idCounter = 0;
+        }
+
+        private void CalculateEnergyCosts()
+        {
+            var sightCost = Mathf.Pow(_chromosome.SightGene.Value, 2) * (1 / 800f);
+            _energyCostPerTick += sightCost;
+
+            _movementEnergyCostPerUnit = Mathf.Pow(_chromosome.SpeedGene.Value, 2) * (1 / 95f);
         }
 
         private void GiveBirth(SCreature partner)
@@ -139,6 +151,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private void Move()
         {
             var moveDist = CommonSettings.TICK_DURATION * _speed;
+            _energy -= _movementEnergyCostPerUnit * moveDist;
             _newPosition += _movementDirection * moveDist;
 
             if (_newPosition.X > _movementLimitations.Item1 || _newPosition.X < -_movementLimitations.Item1)
