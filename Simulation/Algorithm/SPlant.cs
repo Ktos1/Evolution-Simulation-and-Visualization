@@ -33,7 +33,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             if (!_wasEaten)
             {
                 _newTimeWithoutBeingEaten++;
-                if (_newTimeWithoutBeingEaten > SimulationSettings.TimePlantToGrow)
+                if (_newTimeWithoutBeingEaten > SimulationSettings.TimeToPlantGrow)
                 {
                     Grow();
                     _newTimeWithoutBeingEaten = 0;

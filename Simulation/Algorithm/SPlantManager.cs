@@ -10,6 +10,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private SimulationController _controller;
         private Random _randGen = new Random();
         private List<Cluster> _clusters = new List<Cluster>();
+        private float _clustersMinDist;
 
         public List<Cluster> Clusters => _clusters;
 
@@ -73,11 +74,40 @@ namespace ProjectEvolution.Simulation.Algorithm
             return (totalPlantsNumber, totalPlantsData.ToArray());
         }
 
+        public Vector2 GetNewClusterPosition()
+        {
+            var (mapSizeX, mapSizeY) = _controller.Map.Size;
+            bool badPosition = false;
+            while (true)
+            {
+                var positionProposition = new Vector2(
+                _randGen.NextSingle() * mapSizeX - mapSizeX / 2f,
+                _randGen.NextSingle() * mapSizeY - mapSizeY / 2f
+                );
+
+                foreach (var cluster in _clusters)
+                {
+                    if (cluster.IsEmpty) continue;
+                    var clusterCenter = cluster.Position;
+                    if ((clusterCenter - positionProposition).Length() < _clustersMinDist)
+                    {
+                        badPosition = true;
+                        break;
+                    }
+                }
+                if (!badPosition)
+                {
+                    return positionProposition;
+                }
+                else badPosition = false;
+            }
+        }
+
         private void GenerateClusters(float clustersDensity, float clusterSize, float clusterDensity)
         {
             // the inverse of clusters density is a side of a square on which,
             // on average, appear one cluster.
-            var clustersMinDist = 1 / clustersDensity * 0.1;
+            _clustersMinDist = 1 / clustersDensity * 0.11f;
 
             var (mapSizeX, mapSizeY) = _controller.Map.Size;
             var mapArea = mapSizeX * mapSizeY;
@@ -85,33 +115,8 @@ namespace ProjectEvolution.Simulation.Algorithm
 
             for (int i = 0; i < clustersNumber; i++)
             {
-                bool badPosition = false;
-                while (true)
-                {
-                    var positionProposition = new Vector2(
-                    _randGen.NextSingle() * mapSizeX - mapSizeX / 2f,
-                    _randGen.NextSingle() * mapSizeY - mapSizeY / 2f
-                    );
-
-                    foreach (var cluster in _clusters)
-                    {
-                        var clusterCenter = cluster.Position;
-                        if (clusterCenter != Vector2.Zero)
-                        {
-                            if ((clusterCenter - positionProposition).Length() < clustersMinDist)
-                            {
-                                badPosition = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!badPosition)
-                    {
-                        _clusters.Add(new Cluster(positionProposition, clusterSize, clusterDensity, this, _controller));
-                        break;
-                    }
-                    else badPosition = false;
-                }
+                var position = GetNewClusterPosition();
+                _clusters.Add(new Cluster(position, clusterSize, clusterDensity, this, _controller));
             }
         }
     }

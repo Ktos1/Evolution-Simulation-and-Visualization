@@ -16,8 +16,11 @@ namespace ProjectEvolution.Simulation.Algorithm
         private List<SPlant> _propagatedPlants = new List<SPlant>();
         private List<SPlant> _deadPlants = new List<SPlant>();
 
+        private bool _isEmpty = false;
+        private int _timeToRespawn;
+
         public Vector2 Position { get; private set; }
-        public bool IsFull { get; private set; }
+        public bool IsEmpty => _isEmpty;
 
         public Cluster(
             Vector2 position, 
@@ -34,11 +37,18 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public void ProcessPlants()
         {
-            _plants.ForEach(plant => plant.Process());
+            if (!_isEmpty)
+                _plants.ForEach(plant => plant.Process());
+            else if (_timeToRespawn != 0)
+                _timeToRespawn--;
+            else
+                Respawn();
         }
 
         public void UpdatePlants()
         {
+            if (IsEmpty) return;
+
             foreach (var plant in _plants)
             {
                 plant.Update();
@@ -49,7 +59,14 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public void DeleteDeadPlants()
         {
+            if (_isEmpty) return;
+
             _deadPlants.ForEach(plant => _plants.Remove(plant));
+            if (!_plants.Any())
+            {
+                _isEmpty = true;
+                _timeToRespawn = SimulationSettings.TimeToClusterRespawn;
+            }   
             _deadPlants.Clear();
         }
 
@@ -105,6 +122,16 @@ namespace ProjectEvolution.Simulation.Algorithm
             UpdatePlants();
         }
 
+        private void Respawn()
+        {
+            Position = _sPlantManager.GetNewClusterPosition();
+            for (int i = 0; i < SimulationSettings.plantsNumberInRespawnedCluster; i++)
+            {
+                TrySpawnPlant(Position, 2, 0.5f, 5, 4, false);
+            }
+            _isEmpty = false;
+        }
+
         private void TrySpawnPlant(
             Vector2 refPoint,
             float areaRadius,
@@ -137,7 +164,6 @@ namespace ProjectEvolution.Simulation.Algorithm
                     var withPropagated = true;
                     foreach (var cluster in _sPlantManager.Clusters)
                     {
-                        if (cluster == this) continue;
                         var plants = cluster._plants;
                         if (withPropagated)
                         {

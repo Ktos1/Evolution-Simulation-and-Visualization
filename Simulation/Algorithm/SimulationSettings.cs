@@ -28,6 +28,10 @@
         /// <summary>
         /// The time to a plant grow.
         /// </summary>
-        public static int TimePlantToGrow = 180;
+        public static int TimeToPlantGrow = 180;
+
+        public static int TimeToClusterRespawn = 180;
+
+        public static int plantsNumberInRespawnedCluster = 4;
     }
 }
