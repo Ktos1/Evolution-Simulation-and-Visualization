@@ -67,7 +67,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             return result;
         }
 
-        public PlantDTO[] GetSavingData()
+        public (int plantsNumber, PlantDTO[] plantsData) GetSavingData()
         {
             var result = new List<PlantDTO>();
             foreach (var plant in _plants)
@@ -78,7 +78,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                     result.Add(plantInfo);
                 }
             }
-            return result.ToArray();
+            return (_plants.Count, result.ToArray());
         }
 
         internal void TryPropagatePlant(SPlant sPlant)

@@ -62,12 +62,15 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public (int plantsNumber, PlantDTO[] plantsDTOs) GetSavingData()
         {
-            var result = new List<PlantDTO>();
+            var totalPlantsNumber = 0;
+            var totalPlantsData = new List<PlantDTO>();
             foreach (var cluster in _clusters)
             {
-                result.AddRange(cluster.GetSavingData());
+                (int plantsNumber, PlantDTO[] plantsData) = cluster.GetSavingData();
+                totalPlantsNumber += plantsNumber;
+                totalPlantsData.AddRange(plantsData);
             }
-            return (result.Count, result.ToArray());
+            return (totalPlantsNumber, totalPlantsData.ToArray());
         }
 
         private void GenerateClusters(float clustersDensity, float clusterSize, float clusterDensity)
@@ -107,6 +110,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                         _clusters.Add(new Cluster(positionProposition, clusterSize, clusterDensity, this, _controller));
                         break;
                     }
+                    else badPosition = false;
                 }
             }
         }
