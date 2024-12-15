@@ -107,7 +107,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         {
             // the inverse of clusters density is a side of a square on which,
             // on average, appear one cluster.
-            _clustersMinDist = 1 / clustersDensity * 0.11f;
+            _clustersMinDist = 1 / clustersDensity * 0.10f;
 
             var (mapSizeX, mapSizeY) = _controller.Map.Size;
             var mapArea = mapSizeX * mapSizeY;

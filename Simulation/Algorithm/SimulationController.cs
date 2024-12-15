@@ -1,4 +1,5 @@
-﻿using ProjectEvolution.Utility.BinarySerialization;
+﻿using ProjectEvolution.CommonStuff;
+using ProjectEvolution.Utility.BinarySerialization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,6 @@ namespace ProjectEvolution.Simulation.Algorithm
 {
     public class SimulationController
     {
-        private const int YEAR_DURATION = 500; // in ticks
         public readonly Map Map;
         private List<SCreature> _creatures = new List<SCreature>();
         private SPlantManager _plantManager;
@@ -30,7 +30,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         public bool StartSimulation(int years)
         {
-            int totalTicksNumber = years * YEAR_DURATION;
+            int totalTicksNumber = years * CommonSettings.YEAR_DURATION;
             _binWriter = new BinWriter(totalTicksNumber + 1, new SimulationInfoDTO(Map.Size));
             SaveTickData();
             for (int i = 0; i < totalTicksNumber; i++)

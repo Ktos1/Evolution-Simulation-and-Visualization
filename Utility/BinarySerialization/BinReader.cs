@@ -5,7 +5,7 @@ using ProjectEvolution.Visualization;
 using ProjectEvolution.Visualization.LogicScripts;
 using System;
 using System.IO;
-
+    
 namespace ProjectEvolution.Utility.BinarySerialization
 {
     internal static class BinReader
@@ -20,6 +20,10 @@ namespace ProjectEvolution.Utility.BinarySerialization
         public static SimulationInfoDTO SimulationInfo { get; private set; }
 
         public static int TotalTicksNumber { get; private set; }
+
+        public static int YearsNumber => 
+            (int)Mathf.Ceil(TotalTicksNumber / (float)CommonSettings.YEAR_DURATION);
+
         public static int CurrentTickNumber
         {
             get { return _currentTickNumber; }
@@ -33,11 +37,6 @@ namespace ProjectEvolution.Utility.BinarySerialization
                 }
                 else _currentTickNumber = value;
             }
-        }
-
-        static BinReader()
-        {
-            LoadNewFile();
         }
 
         public static CreatureTickData[] GetCreaturesTickData()

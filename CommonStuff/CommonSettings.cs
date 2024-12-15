@@ -12,6 +12,8 @@
 
         public const float TICKS_PER_SECONDS = 1 / TICK_DURATION;
 
+        public const int YEAR_DURATION = 500; // in ticks
+
         public static bool GenerateJSON = false;
     }
 }

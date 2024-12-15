@@ -40,6 +40,8 @@ namespace ProjectEvolution.Utility.BinarySerialization
             
             File.WriteAllBytes("result.bin", binaryResults);
             
+            var plotCreater = new PlotsCreater(_ticksData);
+            plotCreater.CreatePlots();
         }
     }
 }
