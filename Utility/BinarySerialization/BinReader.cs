@@ -39,6 +39,11 @@ namespace ProjectEvolution.Utility.BinarySerialization
             }
         }
 
+        static BinReader()
+        {
+            LoadNewFile();
+        }
+
         public static CreatureTickData[] GetCreaturesTickData()
         {
             var creaturesDTOs = _ticksDTOs[_currentTickNumber].CreaturesData;

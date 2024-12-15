@@ -1,13 +1,14 @@
 ﻿using MathNet.Numerics.Distributions;
 using ProjectEvolution.CommonStuff;
+using System;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
-    internal class SGene : Gene
+    public class SGene : Gene
     {
         public SGene() { }
 
-        public SGene(float minValue, float maxValue, float value)
+        private SGene(float minValue, float maxValue, float value)
             : base(minValue, maxValue, value) { }
 
         public void Mutate()
@@ -18,6 +19,11 @@ namespace ProjectEvolution.Simulation.Algorithm
             Value += diff;
             if (Value > MaxValue) Value = MaxValue;
             if (Value < MinValue) Value = MinValue;
+        }
+
+        public SGene Clone()
+        {
+            return new SGene(MinValue, MaxValue, Value);
         }
     }
 }

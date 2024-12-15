@@ -47,7 +47,7 @@ namespace ProjectEvolution.CommonStuff
             protected set => _genes[5] = value;
         }
 
-        public Chromosome()
+        protected Chromosome()
         {
             _genes = new T[6];
             if (typeof(T) == typeof(SGene))

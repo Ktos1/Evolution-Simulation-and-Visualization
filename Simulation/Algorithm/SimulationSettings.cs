@@ -11,7 +11,9 @@
 
         public static float EnergyFromPlantPart = 5;
 
-        public static float MutationChance = 0.2f;
+        public static float CrossoverChance = 0.80f;
+
+        public static float MutationChance = 0.01f;
 
         public static float ReproductionCost = 25f;
 

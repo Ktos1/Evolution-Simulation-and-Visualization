@@ -47,7 +47,6 @@ namespace ProjectEvolution.Simulation.Algorithm
                 _plantManager.DeleteDeadPlants();
             }
             _binWriter.SaveToFile();
-            BinReader.LoadNewFile();
             return true;
         }
 

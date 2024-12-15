@@ -34,36 +34,15 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private bool _newBorn;
         private bool _isGivingBirth;
-         
+
         public SCreature(SimulationController controller)
         {
-            _controller = controller;
-            var(mapSizeX, mapSizeY) = controller.Map.Size;
-
-            _position = _newPosition = new Vector2(
-                _randGen.NextSingle() * mapSizeX - mapSizeX / 2f,
-                _randGen.NextSingle() * mapSizeY - mapSizeY / 2f
-                );
-            _movementDirection = new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1).Normalized();
-            _movementLimitations = new Tuple<float, float>(mapSizeX / 2f, mapSizeY / 2f);
-
-            _lifeDuration = _randGen.Next(1000, 1250);
-            _energy = 30;
-            
-            _chromosome = new SChromosome();
-            CalculateEnergyCosts();
-            _sightRange = _chromosome.SightGene.Value;
-            _speed = _chromosome.SpeedGene.Value;
-
-            var isSearchingForFood = _energy <= _chromosome.EnrgAmntToStrtFdSrchGene.Value;
-            _state = _newState = isSearchingForFood ? new SeekingForFoodState(this) : new SeekingForPartnerState(this);
-
-            _newBorn = true;
+            Initialize(null, null, controller);
         }
 
-        public SCreature(Vector2 position, SimulationController controller) : this(controller)
+        public SCreature(Vector2 position, SChromosome chromosome, SimulationController controller)
         {
-            _position = _newPosition = position;
+            Initialize(position, chromosome, controller);
         }
 
         public void Process()
@@ -122,7 +101,8 @@ namespace ProjectEvolution.Simulation.Algorithm
         private void GiveBirth(SCreature partner)
         {
             var childPosition = (partner.Position - _position) / 2 + _position;
-            _controller.OnCreatureBirth(new SCreature(childPosition, _controller));
+            var childChromosome = _chromosome.GetChildChromosome(partner._chromosome);
+            _controller.OnCreatureBirth(new SCreature(childPosition, childChromosome, _controller));
         }
 
         private float MoveToFocusedObject()
@@ -166,6 +146,36 @@ namespace ProjectEvolution.Simulation.Algorithm
                 _movementDirection.Y = -_movementDirection.Y;
                 _newPosition += _movementDirection * moveDist;
             }
+        }
+
+        private void Initialize(Vector2? position, SChromosome chromosome, SimulationController controller)
+        {
+            _controller = controller;
+            var (mapSizeX, mapSizeY) = controller.Map.Size;
+
+            _lifeDuration = _randGen.Next(1000, 1250);
+            _energy = 30;
+
+            if (chromosome != null) _chromosome = chromosome;
+            else _chromosome = new SChromosome();
+            CalculateEnergyCosts();
+            _sightRange = _chromosome.SightGene.Value;
+            _speed = _chromosome.SpeedGene.Value;
+
+            var isSearchingForFood = _energy <= _chromosome.EnrgAmntToStrtFdSrchGene.Value;
+            _state = _newState = isSearchingForFood ? new SeekingForFoodState(this) : new SeekingForPartnerState(this);
+
+            _newBorn = true;
+
+            if (position.HasValue)
+                _position = _newPosition = position.Value;
+            else
+                _position = _newPosition = new Vector2(
+                _randGen.NextSingle() * mapSizeX - mapSizeX / 2f,
+                _randGen.NextSingle() * mapSizeY - mapSizeY / 2f
+                );
+            _movementDirection = new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1).Normalized();
+            _movementLimitations = new Tuple<float, float>(mapSizeX / 2f, mapSizeY / 2f);
         }
     }
 }

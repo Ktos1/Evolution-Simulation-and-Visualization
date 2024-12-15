@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
-    internal class SChromosome : Chromosome<SGene>
+    public class SChromosome : Chromosome<SGene>
     {
         public SChromosome() : base()
         {
@@ -21,15 +21,19 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
         }
 
-        public SChromosome(SGene[] genes)
+        private SChromosome(SGene[] genes)
         {
-            _genes = genes;
+            _genes = new SGene[genes.Length];
+            for (int i = 0; i < genes.Length; i++)
+            {
+                _genes[i] = genes[i].Clone();
+            }
         }
 
         public SChromosome GetChildChromosome (SChromosome partnerChromosome)
         {
             SChromosome childChromosome;
-            if (_randGen.NextSingle() < 0.25f)
+            if (_randGen.NextSingle() < SimulationSettings.CrossoverChance)
             {
                 childChromosome = Crossover(partnerChromosome);
             }
