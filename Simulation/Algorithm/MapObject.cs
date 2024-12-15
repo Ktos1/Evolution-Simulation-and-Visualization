@@ -7,5 +7,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         protected Vector2 _position;
 
         public Vector2 Position => _position;
+
+        public delegate void DeleteEventHandler(MapObject deletedObj);
     }
 }

@@ -1,54 +1,89 @@
 ﻿using Godot;
 using ProjectEvolution.CommonStuff;
+using ProjectEvolution.Visualization.LogicScripts;
 using System;
 
 namespace ProjectEvolution.Visualization
 {
     internal class VCreature
     {
+        private VCreaturesManager _creaturesManager;
         private StaticBody3D _staticBody;
+        private uint _id;
         private Vector2 _previousPosition;
         private Vector2 _nextPosition;
         private CreatureStates _state;
+        private bool _isDead = false;
 
-        public readonly VChromosome Chromosome;
+        public VChromosome Chromosome { get; private set; }
 
         public event EventHandler ClickedOn;
+        public event EventHandler Deleted;
 
         public StaticBody3D StaticBody => _staticBody;
 
-        public VCreature(Vector2 spawnPosition, CreatureStates state, VChromosome chromosome)
+        public VCreature(CreatureTickData creatureData, VCreaturesManager vCreaturesManager)
         {
+            var (id, spawnPosition, state, chromosome) = creatureData;
+            _id = id;
             _state = state;
             Chromosome = chromosome;
             _previousPosition = _nextPosition = spawnPosition;
             InitializeStaticBodyNode();
             MoveTo(spawnPosition);
             _staticBody.InputEvent += OnInputEvent;
+            _creaturesManager = vCreaturesManager;
+
         }
 
         public void Process(float deltaCount)
         {
-            if (_previousPosition != _nextPosition)
+            if (_previousPosition != _nextPosition && !_isDead)
             {
                 MoveTo(_previousPosition.Lerp(_nextPosition, deltaCount / CommonSettings.TICK_DURATION));
             }
         }
 
-        public void Update(Vector2 position, CreatureStates state)
+        public void Update(CreatureTickData creatureData)
         {
-            _previousPosition = _nextPosition;
-            _nextPosition = position;
-            _state = state;
-            if (_state == CreatureStates.Died)
+            var(_, _, state, _) = creatureData;
+            if (state != CreatureStates.ToDelete)
             {
-                Die();
+                if (!_isDead)
+                {
+                    var (_, position, _, _) = creatureData;
+                    _previousPosition = _nextPosition;
+                    _nextPosition = position;
+                    _state = state;
+                    if (_state == CreatureStates.Died)
+                    {
+                        Die();
+                    }
+                }
             }
+            else
+            {
+                Delete();
+            }
+            
+        }
+
+        public void Uncheck()
+        {
+            if(_isDead) ChangeColor(new Color(0.5f, 0.5f, 0.5f));
+            else ChangeColor(new Color("#de4040"));
         }
 
         public void Delete()
         {
             _staticBody.QueueFree();
+            Deleted.Invoke(this, null);
+        }
+
+        private void Die()
+        {
+            ChangeColor(new Color(0.5f, 0.5f, 0.5f));
+            _isDead = true;
         }
 
         private void ChangeColor(Color color)
@@ -56,11 +91,6 @@ namespace ProjectEvolution.Visualization
             var material = new StandardMaterial3D();
             material.AlbedoColor = color;
             _staticBody.GetNode<MeshInstance3D>("MeshInstance3D").SetSurfaceOverrideMaterial(0, material);
-        }
-
-        public void Uncheck()
-        {
-            ChangeColor(new Color("#de4040"));
         }
 
         private void MoveTo (Vector2 newPosition)
@@ -82,25 +112,14 @@ namespace ProjectEvolution.Visualization
         {
             _staticBody.Rotation = new Vector3(0, -angle, 0);
         }
-            
-        private async void Die()
-        {
-            ChangeColor(new Color(0.5f, 0.5f, 0.5f));
-            var timer = new Timer();
-            _staticBody.AddChild(timer);
-            timer.WaitTime = CommonSettings.TICK_DURATION * 60;
-            timer.OneShot = true;
-            timer.Start();
-            await _staticBody.ToSignal(timer, "timeout");
-
-            _staticBody.QueueFree();
-        }
 
         private void OnInputEvent(Node camera, InputEvent @event, Vector3 eventPosition, Vector3 normal, long shapeIdx)
         {
             if (@event.IsActionPressed("pick_object"))
             {
-                ChangeColor(new Color("#ff828c"));
+                if (_isDead) ChangeColor(new Color(0.75f, 0.75f, 0.75f));
+                else ChangeColor(new Color("#ff828c"));
+
                 ClickedOn(this, null);
             }
         }

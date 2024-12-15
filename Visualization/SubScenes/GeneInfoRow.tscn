@@ -49,6 +49,7 @@ grow_vertical = 0
 size_flags_vertical = 1
 theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_p180g")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_ak3gt")
+step = 0.0
 value = 5.0
 editable = false
 scrollable = false

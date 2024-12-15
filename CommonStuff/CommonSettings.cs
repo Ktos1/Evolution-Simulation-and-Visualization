@@ -10,6 +10,8 @@
         /// </remarks>
         public const float TICK_DURATION = 1 / 30f;
 
-        public const float TICKS_PER_SECONDS = 1/TICK_DURATION;
+        public const float TICKS_PER_SECONDS = 1 / TICK_DURATION;
+
+        public static bool GenerateJSON = false;
     }
 }

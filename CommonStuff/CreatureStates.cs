@@ -2,11 +2,13 @@
 {
     public enum CreatureStates
     {
-        RandomMoves,
+        ToDelete,
         SeekingForPartner,
         MovingToPartner,
-        Stop,
-        Died,
-        Reproducing
+        Reproducing,
+        SeekingForFood,
+        MovingToFood,
+        Eating,
+        Died
     }
 }

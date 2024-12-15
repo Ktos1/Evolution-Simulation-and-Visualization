@@ -1,43 +1,53 @@
-﻿using ProjectEvolution.Utility;
+﻿using ProjectEvolution.Utility.BinarySerialization;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
-    public class SimulationController // eventually this class could be named the World
+    public class SimulationController
     {
         private const int YEAR_DURATION = 500; // in ticks
         public readonly Map Map;
         private List<SCreature> _creatures = new List<SCreature>();
+        private SPlantManager _plantManager;
 
         List<SCreature> _deadCreatures = new List<SCreature>();
         List<SCreature> _bornCreatures = new List<SCreature>();
 
-        public SimulationController(Map map, int creaturesNum)
+        private BinWriter _binWriter;
+
+        public SimulationController(Map map, int creaturesNum, 
+            float clustersDensity, float clusterSize, float clusterDensity)
         {
             Map = map;
+            ResetMapObjectIds();
             for (int i = 0; i < creaturesNum; i++)
             {
                 _creatures.Add(new SCreature(this));
             }
-            SavePopulationToJson();
+            _plantManager = new SPlantManager(clustersDensity, clusterSize, clusterDensity, this);
         }
 
         public bool StartSimulation(int years)
         {
-            for (int i = 0; i < years * YEAR_DURATION; i++)
+            int totalTicksNumber = years * YEAR_DURATION;
+            _binWriter = new BinWriter(totalTicksNumber + 1, new SimulationInfoDTO(Map.Size));
+            SaveTickData();
+            for (int i = 0; i < totalTicksNumber; i++)
             {
                 foreach (var creature in _creatures)
                 {
                     creature.Process();
                 }
+                _plantManager.ProcessPlants();
                 _creatures.ForEach(creature => creature.Update());
+                _plantManager.UpdatePlants();
                 UpdateCreaturesList();
-                SavePopulationToJson();
+                SaveTickData();
+                _plantManager.DeleteDeadPlants();
             }
-
-            File.WriteAllText("result.json", JsonWriter.jsonString);
+            _binWriter.SaveToFile();
+            BinReader.LoadNewFile();
             return true;
         }
 
@@ -63,12 +73,18 @@ namespace ProjectEvolution.Simulation.Algorithm
                 foreach (var creature in _creatures)
                 {
                     var distance = (seeker.Position - creature.Position).Length();
-                    if (distance < range && distance != 0)
+                    if (distance <= range && distance != 0)
                     {
                         objectsInRange.Add((distance, creature as T));
                     }
                 }
             }
+            else if (typeof(T) == typeof(SPlant))
+            {
+                objectsInRange = _plantManager.GetPlantsInRange(seeker.Position, range) 
+                    as List<(float, T)>;
+            }
+
             var sortedResult = objectsInRange.OrderBy((pair) => pair.distance).ToList();
             var resultArray = new T[sortedResult.Count()];
 
@@ -98,21 +114,23 @@ namespace ProjectEvolution.Simulation.Algorithm
             _bornCreatures.Clear();
         }
 
-        private void SavePopulationToJson()
+        private void SaveTickData()
         {
-            foreach (var creature in _creatures)
+            var creaturesDTOs = new CreatureDTO[_creatures.Count];
+            for (int i = 0; i < _creatures.Count; i++)
             {
-                var (position, state, genes) = creature.GetSavingData();
-                if (genes == null)
-                {
-                    JsonWriter.WriteCreature(position, state);
-                }
-                else
-                {
-                    JsonWriter.WriteNewCreature(position, state, genes);
-                }
+                SCreature creature = _creatures[i];
+                var (id, position, state, genes) = creature.GetSavingData();
+                creaturesDTOs[i] = new CreatureDTO(id, position, state, genes);
             }
-            JsonWriter.NextTick();
+            var(plantsNumber, plantsDTOs) = _plantManager.GetSavingData();
+            _binWriter.AddTick(new TickDTO(plantsNumber, plantsDTOs, creaturesDTOs));
+        }
+
+        private void ResetMapObjectIds()
+        {
+            SCreature.ResetIds();
+            SPlant.ResetIds();
         }
     }
 }

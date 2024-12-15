@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProjectEvolution.Simulation.Algorithm
+﻿namespace ProjectEvolution.Simulation.Algorithm
 {
     public class Map
     {
-        // in the future type of Tiles should be a 2D-array of the custom type Tile
-        public readonly int[,] Tiles;
+        public (int x, int y) Size { get; private set; }
+        public (float x, float y) Limitations { get; private set; }
+
         public Map(int xSize, int ySize)
         {
-            Tiles = new int[xSize, ySize];
+            Size = new(xSize, ySize);
+            Limitations = new(xSize / 2f, ySize / 2f);
         }
     }
 }

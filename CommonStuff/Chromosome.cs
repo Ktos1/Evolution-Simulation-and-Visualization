@@ -4,7 +4,7 @@ using System;
 
 namespace ProjectEvolution.CommonStuff
 {
-    internal abstract class Chromosome<T> where T: Gene
+    public abstract class Chromosome<T> where T: Gene
     {
         protected static Random _randGen = new Random();
         protected T[] _genes;
@@ -23,9 +23,33 @@ namespace ProjectEvolution.CommonStuff
             protected set => _genes[1] = value;
         }
 
+        public T EnrgAmntToStrtPrtnrSrchGene
+        {
+            get => _genes[2];
+            protected set => _genes[2] = value;
+        }
+
+        public T EnrgAmntToStrtFdSrchGene
+        {
+            get => _genes[3];
+            protected set => _genes[3] = value;
+        }
+
+        public T SightGene
+        {
+            get => _genes[4];
+            protected set => _genes[4] = value;
+        }
+
+        public T SpeedGene
+        {
+            get => _genes[5];
+            protected set => _genes[5] = value;
+        }
+
         public Chromosome()
         {
-            _genes = new T[2];
+            _genes = new T[6];
             if (typeof(T) == typeof(SGene))
             {
                 for (var i = 0; i < _genes.Length; i++)
@@ -47,6 +71,10 @@ namespace ProjectEvolution.CommonStuff
         {
             TurningFrequencyGene.SetLimitations(0, 100);
             TurningAngleGene.SetLimitations(0, 180);
+            EnrgAmntToStrtPrtnrSrchGene.SetLimitations(0, 100);
+            EnrgAmntToStrtFdSrchGene.SetLimitations(0, 100);
+            SightGene.SetLimitations(0, 10);
+            SpeedGene.SetLimitations(0, 6);
         }
     }
 }

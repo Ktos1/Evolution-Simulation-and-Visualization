@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://birdpk8ymh3dc"]
+[gd_scene load_steps=12 format=3 uid="uid://birdpk8ymh3dc"]
 
 [ext_resource type="Script" path="res://Visualization/ScenesScripts/Visualization.cs" id="1_8ml5k"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/Camera3d.cs" id="2_qh4s7"]
@@ -6,9 +6,6 @@
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/MenuPanel.cs" id="4_oy4js"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/GenesWindow.cs" id="5_i1j78"]
 [ext_resource type="PackedScene" uid="uid://cc0xbbpeoy2ig" path="res://Visualization/SubScenes/GeneInfoRow.tscn" id="6_x4371"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_7a5pq"]
-size = Vector3(10, 0.5, 10)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pjdl"]
 albedo_color = Color(0.47, 1, 0.505333, 1)
@@ -25,19 +22,18 @@ ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_uoer2"]
 font_size = 24
 
-[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSlider", "_startStopButton", "_genesWindow")]
+[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "GenesWindow", "_floorMesh")]
 script = ExtResource("1_8ml5k")
+_timeSliderPanel = NodePath("TimeSliderPanel")
 _timeSlider = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/TimeSlider")
 _startStopButton = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/StartStopButton")
-_genesWindow = NodePath("GenesWindow")
+GenesWindow = NodePath("GenesWindow")
+_floorMesh = NodePath("FloorStaticBody/FloorMesh")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="FloorStaticBody" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("BoxShape3D_7a5pq")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+[node name="FloorMesh" type="MeshInstance3D" parent="FloorStaticBody"]
 mesh = SubResource("BoxMesh_vc10d")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

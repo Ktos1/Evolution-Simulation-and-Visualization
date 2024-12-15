@@ -9,7 +9,7 @@ font_size = 30
 font_size = 20
 font_color = Color(0.0972, 0.81, 0.23976, 1)
 
-[node name="Simulation" type="Control" node_paths=PackedStringArray("_creturesNum", "_xMapSize", "_yMapSize", "_simulationDuration", "_startButton", "_backButton")]
+[node name="Simulation" type="Control" node_paths=PackedStringArray("_tabBar", "_commonContainer", "_creturesNum", "_xMapSize", "_yMapSize", "_simulationDuration", "_plantsContainer", "_clustersDensity", "_clusterSize", "_clusterDensity", "_startButton", "_backButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,10 +17,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6ij0f")
-_creturesNum = NodePath("Panel/VBoxContainer/PropertyRow1/CreatureNumSpinBox")
-_xMapSize = NodePath("Panel/VBoxContainer/PropertyRow2/MapSize/XMapSizeSpinBox")
-_yMapSize = NodePath("Panel/VBoxContainer/PropertyRow2/MapSize/YMapSizeSpinBox")
-_simulationDuration = NodePath("Panel/VBoxContainer/PropertyRow3/SimDurationSpinBox")
+_tabBar = NodePath("Panel/TabBar")
+_commonContainer = NodePath("Panel/OgolneVBox")
+_creturesNum = NodePath("Panel/OgolneVBox/PropertyRow1/CreatureNumSpinBox")
+_xMapSize = NodePath("Panel/OgolneVBox/PropertyRow2/MapSize/XMapSizeSpinBox")
+_yMapSize = NodePath("Panel/OgolneVBox/PropertyRow2/MapSize/YMapSizeSpinBox")
+_simulationDuration = NodePath("Panel/OgolneVBox/PropertyRow3/SimDurationSpinBox")
+_plantsContainer = NodePath("Panel/RoslinyVBox")
+_clustersDensity = NodePath("Panel/RoslinyVBox/PropertyRow1/ClustersDenSpinBox")
+_clusterSize = NodePath("Panel/RoslinyVBox/PropertyRow2/ClusterSizeSpinBox")
+_clusterDensity = NodePath("Panel/RoslinyVBox/PropertyRow3/ClusterDenSpinBox")
 _startButton = NodePath("Panel/ButtonsBoxContainer/StartButton")
 _backButton = NodePath("Panel/ButtonsBoxContainer/BackButton")
 
@@ -92,26 +98,49 @@ layout_mode = 2
 size_flags_horizontal = 10
 text = "Powrót"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="TabBar" type="TabBar" parent="Panel"]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 0.233
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -161.5
+offset_top = -113.0
+offset_right = 161.5
+offset_bottom = -75.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+tab_alignment = 1
+tab_count = 2
+tab_0/title = "Ogólne"
+tab_1/title = "Rośliny"
+
+[node name="OgolneVBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -203.5
+offset_top = -50.5
 offset_right = 203.5
+offset_bottom = 50.5
 grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_group_ = true
 
-[node name="PropertyRow1" type="HBoxContainer" parent="Panel/VBoxContainer"]
+[node name="PropertyRow1" type="HBoxContainer" parent="Panel/OgolneVBox"]
 layout_mode = 2
 tooltip_text = "Początkowa wielkość populacji."
 
-[node name="CreatureNumLabel" type="Label" parent="Panel/VBoxContainer/PropertyRow1"]
+[node name="CreatureNumLabel" type="Label" parent="Panel/OgolneVBox/PropertyRow1"]
 layout_mode = 2
 text = "Liczba osobników: "
 
-[node name="CreatureNumSpinBox" type="SpinBox" parent="Panel/VBoxContainer/PropertyRow1"]
+[node name="CreatureNumSpinBox" type="SpinBox" parent="Panel/OgolneVBox/PropertyRow1"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -121,18 +150,18 @@ value = 10.0
 rounded = true
 alignment = 1
 
-[node name="PropertyRow2" type="HBoxContainer" parent="Panel/VBoxContainer"]
+[node name="PropertyRow2" type="HBoxContainer" parent="Panel/OgolneVBox"]
 layout_mode = 2
 
-[node name="MapSizeLabel" type="Label" parent="Panel/VBoxContainer/PropertyRow2"]
+[node name="MapSizeLabel" type="Label" parent="Panel/OgolneVBox/PropertyRow2"]
 layout_mode = 2
 text = "Rozmiar mapy:"
 
-[node name="MapSize" type="HBoxContainer" parent="Panel/VBoxContainer/PropertyRow2"]
+[node name="MapSize" type="HBoxContainer" parent="Panel/OgolneVBox/PropertyRow2"]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="XMapSizeSpinBox" type="SpinBox" parent="Panel/VBoxContainer/PropertyRow2/MapSize"]
+[node name="XMapSizeSpinBox" type="SpinBox" parent="Panel/OgolneVBox/PropertyRow2/MapSize"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -143,11 +172,11 @@ value = 10.0
 rounded = true
 alignment = 1
 
-[node name="XLabel" type="Label" parent="Panel/VBoxContainer/PropertyRow2/MapSize"]
+[node name="XLabel" type="Label" parent="Panel/OgolneVBox/PropertyRow2/MapSize"]
 layout_mode = 2
 text = "X"
 
-[node name="YMapSizeSpinBox" type="SpinBox" parent="Panel/VBoxContainer/PropertyRow2/MapSize"]
+[node name="YMapSizeSpinBox" type="SpinBox" parent="Panel/OgolneVBox/PropertyRow2/MapSize"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -158,15 +187,15 @@ value = 10.0
 rounded = true
 alignment = 1
 
-[node name="PropertyRow3" type="HBoxContainer" parent="Panel/VBoxContainer"]
+[node name="PropertyRow3" type="HBoxContainer" parent="Panel/OgolneVBox"]
 layout_mode = 2
 tooltip_text = "Długość symulacji w latach."
 
-[node name="MapSizeLabel" type="Label" parent="Panel/VBoxContainer/PropertyRow3"]
+[node name="MapSizeLabel" type="Label" parent="Panel/OgolneVBox/PropertyRow3"]
 layout_mode = 2
 text = "Długość symulacji:"
 
-[node name="SimDurationSpinBox" type="SpinBox" parent="Panel/VBoxContainer/PropertyRow3"]
+[node name="SimDurationSpinBox" type="SpinBox" parent="Panel/OgolneVBox/PropertyRow3"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -174,4 +203,75 @@ tooltip_text = "Długość symulacji w latach."
 min_value = 2.0
 value = 5.0
 rounded = true
+alignment = 1
+
+[node name="RoslinyVBox" type="VBoxContainer" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -203.5
+offset_top = -50.5
+offset_right = 203.5
+offset_bottom = 50.5
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_group_ = true
+
+[node name="PropertyRow1" type="HBoxContainer" parent="Panel/RoslinyVBox"]
+layout_mode = 2
+tooltip_text = "Liczba skupisk roślin na jednostkę powierzchni."
+
+[node name="ClustersDenLabel" type="Label" parent="Panel/RoslinyVBox/PropertyRow1"]
+layout_mode = 2
+text = "Gęstość skupisk:"
+
+[node name="ClustersDenSpinBox" type="SpinBox" parent="Panel/RoslinyVBox/PropertyRow1"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 0.005
+max_value = 0.2
+step = 0.001
+value = 0.02
+alignment = 1
+
+[node name="PropertyRow2" type="HBoxContainer" parent="Panel/RoslinyVBox"]
+layout_mode = 2
+tooltip_text = "Rozmiar skupisk roślin."
+
+[node name="ClusterSizeLabel" type="Label" parent="Panel/RoslinyVBox/PropertyRow2"]
+layout_mode = 2
+text = "Rozmiar skupiska:"
+
+[node name="ClusterSizeSpinBox" type="SpinBox" parent="Panel/RoslinyVBox/PropertyRow2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+tooltip_text = "Początkowa wielkość populacji."
+min_value = 1.0
+max_value = 20.0
+step = 0.1
+value = 3.0
+alignment = 1
+
+[node name="PropertyRow3" type="HBoxContainer" parent="Panel/RoslinyVBox"]
+layout_mode = 2
+tooltip_text = "Liczba roślin na jednostkę powierzchni wewnątrz skupiska."
+
+[node name="ClusterDenLabel" type="Label" parent="Panel/RoslinyVBox/PropertyRow3"]
+layout_mode = 2
+text = "Gęstość skupiska:"
+
+[node name="ClusterDenSpinBox" type="SpinBox" parent="Panel/RoslinyVBox/PropertyRow3"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 0.1
+max_value = 4.0
+step = 0.01
+value = 1.0
 alignment = 1
