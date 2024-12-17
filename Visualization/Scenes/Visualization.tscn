@@ -22,12 +22,13 @@ ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_uoer2"]
 font_size = 24
 
-[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "GenesWindow", "_floorMesh")]
+[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "GenesWindow", "_plotsButton", "_floorMesh")]
 script = ExtResource("1_8ml5k")
 _timeSliderPanel = NodePath("TimeSliderPanel")
 _timeSlider = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/TimeSlider")
 _startStopButton = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/StartStopButton")
 GenesWindow = NodePath("GenesWindow")
+_plotsButton = NodePath("PlotsButton")
 _floorMesh = NodePath("FloorStaticBody/FloorMesh")
 
 [node name="FloorStaticBody" type="StaticBody3D" parent="."]
@@ -194,3 +195,16 @@ alignment = 1
 
 [node name="GeneInfoRow" parent="GenesWindow/VBoxContainer/ScrollContainer/MarginContainer/GeneVBox" instance=ExtResource("6_x4371")]
 layout_mode = 2
+
+[node name="PlotsButton" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -85.0
+offset_top = -85.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 0
+grow_vertical = 0

@@ -128,7 +128,7 @@ namespace ProjectEvolution.Utility
                 LegendPlacement = LegendPlacement.Inside,
                 LegendOrientation = LegendOrientation.Vertical,
                 LegendLineSpacing = 5,
-                LegendBackground = OxyColors.White,
+                LegendBackground = OxyColor.Parse("#cecece"),
                 LegendBorder = OxyColors.Black
             };
             populationsPlot.Legends.Add(legend);
@@ -154,7 +154,12 @@ namespace ProjectEvolution.Utility
             DataPoint[][] dataSeries,
             string[] dataSeriesTitles = null)
         {
-            var plotModel = new PlotModel { Title = title };
+            var plotModel = new PlotModel
+            {
+                Title = title,
+                DefaultFont = "Arial",
+                TitlePadding = 0,
+            };
 
             plotModel.Axes.Add(new LinearAxis
             {
@@ -162,10 +167,11 @@ namespace ProjectEvolution.Utility
                 Title = xTitle,
                 TitleFontSize = 15,
                 TitleFontWeight = FontWeights.Bold,
-                AxisTitleDistance = 8,
+                AxisTitleDistance = 11,
                 MaximumPadding = 0.01,
                 MinimumPadding = 0.01,
-                IntervalLength = 25
+                IntervalLength = 25,
+                AxisTickToLabelDistance = -0,
             });
 
             plotModel.Axes.Add(new LinearAxis
@@ -174,9 +180,9 @@ namespace ProjectEvolution.Utility
                 Title = yTitle,
                 TitleFontSize = 15,
                 TitleFontWeight = FontWeights.Bold,
-                AxisTitleDistance = 12,
+                AxisTitleDistance = 15,
                 MaximumPadding = 0.01,
-                IntervalLength = 25
+                IntervalLength = 25,
             });
 
             for (int i = 0; i < dataSeries.Length; i++)
@@ -193,10 +199,22 @@ namespace ProjectEvolution.Utility
 
         private void ExportPlotToSVG(string fileName, PlotModel plotModel)
         {
-            using (var stream = new FileStream($"Plots/{fileName}", FileMode.Create))
+            using (var memoryStream = new MemoryStream())
             {
                 var exporter = new SvgExporter { Width = 800, Height = 450 };
-                exporter.Export(plotModel, stream);
+                exporter.Export(plotModel, memoryStream);
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                using (var reader = new StreamReader(memoryStream))
+                {
+                    string svgContent = reader.ReadToEnd();
+                    svgContent = svgContent
+                        .Replace("dominant-baseline=\"hanging\"", "dy=\"6\"")
+                        .Replace("dominant-baseline=\"middle\"", "dy=\"2\"");
+
+                    File.WriteAllText($"Plots/{fileName}", svgContent);
+                }
             }
         }
     }

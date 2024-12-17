@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckn642ovajni"]
+
+[ext_resource type="Script" path="res://Visualization/ScenesScripts/PlotsScene.cs" id="1_3akb2"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_km44r"]
+
+[node name="PlotsScene" type="Control" node_paths=PackedStringArray("_plotDisplay", "_plotsTabBar", "_backButton")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3akb2")
+_plotDisplay = NodePath("PlotDisplay")
+_plotsTabBar = NodePath("PlotsTabBar")
+_backButton = NodePath("BackButton")
+
+[node name="PlotDisplay" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -515.5
+offset_right = 515.5
+offset_bottom = 580.0
+grow_horizontal = 2
+texture = SubResource("PlaceholderTexture2D_km44r")
+
+[node name="PlotsTabBar" type="TabBar" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -467.0
+offset_top = -68.0
+offset_right = -186.0
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 0
+current_tab = 0
+scrolling_enabled = false
+tab_count = 3
+tab_0/title = "Zmiany"
+tab_1/title = "Odchylenie"
+tab_2/title = "Populacje"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1000.0
+offset_top = 594.0
+offset_right = 1114.0
+offset_bottom = 636.0
+text = "Powrót"

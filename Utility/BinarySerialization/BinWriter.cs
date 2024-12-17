@@ -2,7 +2,6 @@
 using ProjectEvolution.CommonStuff;
 using System.IO;
 using System.Text.Json;
-using System.Xml;
 
 namespace ProjectEvolution.Utility.BinarySerialization
 {

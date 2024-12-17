@@ -11,7 +11,10 @@ namespace ProjectEvolution.Visualization
         [Export] private HSlider _timeSlider;
         [Export] private Button _startStopButton;
         [Export] public GenesWindow GenesWindow;
+        [Export] private BaseButton _plotsButton;
         [Export] private MeshInstance3D _floorMesh;
+
+        private PlotsScene _plotsScene;
 
         private double _deltaCount = 0;
         
@@ -27,6 +30,11 @@ namespace ProjectEvolution.Visualization
             _timeSlider.DragStarted += OnTimeSliderDragStarted;
             _timeSlider.DragEnded += OnTimeSliderDragEnded;
             _startStopButton.Toggled += OnStartStopButtonToggled;
+            _plotsButton.Pressed += OnPlotsButtonPressed;
+
+            _plotsScene = ResourceLoader.Load<PackedScene>(
+                    "res://Visualization/Scenes/PlotsScene.tscn").Instantiate() as PlotsScene;
+            _plotsScene.Initialize(this);
 
             _creaturesManager = new VCreaturesManager(this);
             _plantsManager = new VPlantManager(this);
@@ -108,6 +116,13 @@ namespace ProjectEvolution.Visualization
         private void OnStartStopButtonToggled(bool value)
         {
             _isStartStopButtonToggled = value;
+        }
+
+        private void OnPlotsButtonPressed()
+        {
+            var root = GetTree().Root;
+            root.RemoveChild(this);
+            root.AddChild(_plotsScene);
         }
     }
 }
