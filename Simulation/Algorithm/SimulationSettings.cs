@@ -35,5 +35,11 @@
         public static int TimeToClusterRespawn = 180;
 
         public static int plantsNumberInRespawnedCluster = 4;
+
+        public static int CreaturesNumber { get; set; }
+
+        public static Map Map { get; set; }
+
+        public static int SimulDurationInYears { get; set; }
     }
 }

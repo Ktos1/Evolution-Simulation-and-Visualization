@@ -1,5 +1,6 @@
 ﻿using Godot;
 using ProjectEvolution.Utility.BinarySerialization;
+using System.Threading;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
@@ -28,7 +29,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             _cluster = cluster;
         }
 
-        public void Process()
+        public void Process(CancellationToken cancelToken)
         {
             if (!_wasEaten)
             {
@@ -39,6 +40,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                     _newTimeWithoutBeingEaten = 0;
                 }
             }
+            cancelToken.ThrowIfCancellationRequested();
         }
 
         public void Update()

@@ -3,6 +3,7 @@ using ProjectEvolution.Utility.BinarySerialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
@@ -35,17 +36,19 @@ namespace ProjectEvolution.Simulation.Algorithm
             GeneratePlants(clusterSize, clusterDensity);
         }
 
-        public void ProcessPlants()
+        public void ProcessPlants(CancellationToken cancelToken)
         {
             if (!_isEmpty)
-                _plants.ForEach(plant => plant.Process());
+                _plants.ForEach(plant => plant.Process(cancelToken));
             else if (_timeToRespawn != 0)
                 _timeToRespawn--;
             else
                 Respawn();
+
+            cancelToken.ThrowIfCancellationRequested();
         }
 
-        public void UpdatePlants()
+        public void UpdatePlants(CancellationToken? cancelToken = null)
         {
             if (IsEmpty) return;
 
@@ -55,6 +58,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             }
             _propagatedPlants.ForEach(plant => _plants.Add(plant));
             _propagatedPlants.Clear();
+            cancelToken?.ThrowIfCancellationRequested();
         }
 
         public void DeleteDeadPlants()

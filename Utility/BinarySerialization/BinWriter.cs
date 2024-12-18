@@ -2,6 +2,7 @@
 using ProjectEvolution.CommonStuff;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 
 namespace ProjectEvolution.Utility.BinarySerialization
 {
@@ -23,10 +24,10 @@ namespace ProjectEvolution.Utility.BinarySerialization
             _ticksData[_index++] = tick;
         }
 
-        public void SaveToFile()
+        public void SaveToFile(CancellationToken cancelToken)
         {
             var main = new MainDTO(_simulationInfo, _ticksData);
-            byte[] binaryResults = MessagePackSerializer.Serialize(main);
+            byte[] binaryResults = MessagePackSerializer.Serialize(main, cancellationToken: cancelToken);
 
             if (CommonSettings.GenerateJSON)
             {

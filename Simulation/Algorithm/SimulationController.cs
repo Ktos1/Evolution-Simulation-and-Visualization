@@ -2,6 +2,7 @@
 using ProjectEvolution.Utility.BinarySerialization;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
@@ -16,21 +17,28 @@ namespace ProjectEvolution.Simulation.Algorithm
 
         private BinWriter _binWriter;
 
-        public SimulationController(Map map, int creaturesNum, 
-            float clustersDensity, float clusterSize, float clusterDensity)
+        public SimulationController(
+            Map map, 
+            int creaturesNum, 
+            float clustersDensity, 
+            float clusterSize, 
+            float clusterDensity,
+            CancellationToken cancelToken
+            )
         {
             Map = map;
             ResetMapObjectIds();
             for (int i = 0; i < creaturesNum; i++)
             {
                 _creatures.Add(new SCreature(this));
+                cancelToken.ThrowIfCancellationRequested();
             }
-            _plantManager = new SPlantManager(clustersDensity, clusterSize, clusterDensity, this);
+            _plantManager = new SPlantManager(clustersDensity, clusterSize, clusterDensity, this, cancelToken);
         }
 
-        public bool StartSimulation(int years)
+        public bool StartSimulation(CancellationToken cancelToken, ref int actualTick)
         {
-            int totalTicksNumber = years * CommonSettings.YEAR_DURATION;
+            int totalTicksNumber = SimulationSettings.SimulDurationInYears * CommonSettings.YEAR_DURATION;
             _binWriter = new BinWriter(totalTicksNumber + 1, new SimulationInfoDTO(Map.Size));
             SaveTickData();
             for (int i = 0; i < totalTicksNumber; i++)
@@ -38,15 +46,18 @@ namespace ProjectEvolution.Simulation.Algorithm
                 foreach (var creature in _creatures)
                 {
                     creature.Process();
+                    cancelToken.ThrowIfCancellationRequested();
                 }
-                _plantManager.ProcessPlants();
+                _plantManager.ProcessPlants(cancelToken);
                 _creatures.ForEach(creature => creature.Update());
-                _plantManager.UpdatePlants();
+                _plantManager.UpdatePlants(cancelToken);
                 UpdateCreaturesList();
                 SaveTickData();
                 _plantManager.DeleteDeadPlants();
+
+                actualTick = i;
             }
-            _binWriter.SaveToFile();
+            _binWriter.SaveToFile(cancelToken);
             return true;
         }
 

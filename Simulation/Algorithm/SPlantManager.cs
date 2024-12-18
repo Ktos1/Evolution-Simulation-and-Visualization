@@ -2,6 +2,7 @@
 using ProjectEvolution.Utility.BinarySerialization;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ProjectEvolution.Simulation.Algorithm
 {
@@ -30,20 +31,21 @@ namespace ProjectEvolution.Simulation.Algorithm
             (float clustersDensity, 
             float clusterSize, 
             float clusterDensity, 
-            SimulationController controller)
+            SimulationController controller,
+            CancellationToken cancelToken)
         {
             _controller = controller;
-            GenerateClusters(clustersDensity, clusterSize, clusterDensity);
+            GenerateClusters(clustersDensity, clusterSize, clusterDensity, cancelToken);
         }
 
-        public void ProcessPlants()
+        public void ProcessPlants(CancellationToken cancelToken)
         {
-            _clusters.ForEach(cluster => cluster.ProcessPlants());
+            _clusters.ForEach(cluster => cluster.ProcessPlants(cancelToken));
         }
 
-        public void UpdatePlants()
+        public void UpdatePlants(CancellationToken cancelToken)
         {
-            _clusters.ForEach(cluster => cluster.UpdatePlants());
+            _clusters.ForEach(cluster => cluster.UpdatePlants(cancelToken));
         }
 
         public void DeleteDeadPlants()
@@ -74,7 +76,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             return (totalPlantsNumber, totalPlantsData.ToArray());
         }
 
-        public Vector2 GetNewClusterPosition()
+        public Vector2 GetNewClusterPosition(CancellationToken? cancelToken = null)
         {
             var (mapSizeX, mapSizeY) = _controller.Map.Size;
             bool badPosition = false;
@@ -100,10 +102,15 @@ namespace ProjectEvolution.Simulation.Algorithm
                     return positionProposition;
                 }
                 else badPosition = false;
+                cancelToken?.ThrowIfCancellationRequested();
             }
         }
 
-        private void GenerateClusters(float clustersDensity, float clusterSize, float clusterDensity)
+        private void GenerateClusters(
+            float clustersDensity, 
+            float clusterSize, 
+            float clusterDensity, 
+            CancellationToken cancelToken)
         {
             // the inverse of clusters density is a side of a square on which,
             // on average, appear one cluster.
@@ -116,7 +123,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
             for (int i = 0; i < clustersNumber; i++)
             {
-                var position = GetNewClusterPosition();
+                var position = GetNewClusterPosition(cancelToken);
                 _clusters.Add(new Cluster(position, clusterSize, clusterDensity, this, _controller));
             }
         }
