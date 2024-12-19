@@ -13,6 +13,7 @@ namespace ProjectEvolution.Visualization
         [Export] public GenesWindow GenesWindow;
         [Export] private BaseButton _plotsButton;
         [Export] private MeshInstance3D _floorMesh;
+        [Export] private Label _yearLabel;
 
         private PlotsScene _plotsScene;
 
@@ -61,6 +62,8 @@ namespace ProjectEvolution.Visualization
                 }
                 _creaturesManager.ProcessCreatures(_deltaCount);
             }
+            _yearLabel.Text = $"Rok: " +
+                $"{Mathf.CeilToInt(BinReader.CurrentTickNumber / (float)CommonSettings.YEAR_DURATION)}";
         }
 
         public override void _UnhandledInput(InputEvent @event)

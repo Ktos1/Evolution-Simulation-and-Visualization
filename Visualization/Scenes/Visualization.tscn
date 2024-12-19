@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://birdpk8ymh3dc"]
+[gd_scene load_steps=13 format=3 uid="uid://birdpk8ymh3dc"]
 
 [ext_resource type="Script" path="res://Visualization/ScenesScripts/Visualization.cs" id="1_8ml5k"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/Camera3d.cs" id="2_qh4s7"]
@@ -22,7 +22,10 @@ ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_uoer2"]
 font_size = 24
 
-[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "GenesWindow", "_plotsButton", "_floorMesh")]
+[sub_resource type="LabelSettings" id="LabelSettings_6q2cy"]
+font_size = 24
+
+[node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "GenesWindow", "_plotsButton", "_floorMesh", "_yearLabel")]
 script = ExtResource("1_8ml5k")
 _timeSliderPanel = NodePath("TimeSliderPanel")
 _timeSlider = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/TimeSlider")
@@ -30,6 +33,7 @@ _startStopButton = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/Start
 GenesWindow = NodePath("GenesWindow")
 _plotsButton = NodePath("PlotsButton")
 _floorMesh = NodePath("FloorStaticBody/FloorMesh")
+_yearLabel = NodePath("Panel/YearLabel")
 
 [node name="FloorStaticBody" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
@@ -208,3 +212,25 @@ offset_right = -15.0
 offset_bottom = -15.0
 grow_horizontal = 0
 grow_vertical = 0
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 157.0
+offset_bottom = 55.0
+
+[node name="YearLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -55.5
+offset_top = -17.0
+offset_right = 55.5
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Rok: 0000"
+label_settings = SubResource("LabelSettings_6q2cy")
