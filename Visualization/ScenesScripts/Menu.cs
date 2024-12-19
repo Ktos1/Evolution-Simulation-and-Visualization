@@ -1,6 +1,6 @@
 using Godot;
-using ProjectEvolution;
 using ProjectEvolution.Utility.BinarySerialization;
+using ProjectEvolution.Visualization.ScenesScripts;
 using System.Diagnostics;
 
 public partial class Menu : Control
@@ -18,28 +18,29 @@ public partial class Menu : Control
         _simulationButton.Pressed += OnSimulationButtonPress;
         _visualizationButton.Pressed += OnVisualizationButtonPress;
         _exitButton.Pressed += OnExitButtonPress;
+        SceneManager.Initialize(this, GetTree().Root);
     }
 
     private void OnSimulationButtonPress()
     {
-        GetTree().ChangeSceneToPacked(Scenes.SimulationScene);
+        SceneManager.ChangeToScene(SceneType.Simulation);
     }
+
     private void OnVisualizationButtonPress()
     {
         try
         {
             var temp = BinReader.CurrentTickNumber;
-            GetTree().ChangeSceneToPacked(Scenes.VisualizationScene);
+            SceneManager.ChangeToScene(SceneType.Visualization);
         }
         catch (System.Exception)
         {
             _errorLabel.Visible = true;
         }
     }
+
     private void OnExitButtonPress()
     {
-        // here should be a close notification in the future
-        // which will inform nodes about the upcoming process termination 
         GetTree().Quit();
     }
 }

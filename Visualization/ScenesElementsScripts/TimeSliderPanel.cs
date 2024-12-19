@@ -2,7 +2,6 @@ using Godot;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Utility.BinarySerialization;
 
-
 public partial class TimeSliderPanel : Panel
 {
     [Export] private Button _slidingButton;

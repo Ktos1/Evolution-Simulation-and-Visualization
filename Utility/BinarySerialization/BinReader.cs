@@ -22,7 +22,7 @@ namespace ProjectEvolution.Utility.BinarySerialization
         public static int TotalTicksNumber { get; private set; }
 
         public static int YearsNumber => 
-            (int)Mathf.Ceil(TotalTicksNumber / (float)CommonSettings.YEAR_DURATION);
+            Mathf.CeilToInt(TotalTicksNumber / (float)CommonSettings.YEAR_DURATION);
 
         public static int CurrentTickNumber
         {
@@ -37,11 +37,6 @@ namespace ProjectEvolution.Utility.BinarySerialization
                 }
                 else _currentTickNumber = value;
             }
-        }
-
-        static BinReader()
-        {
-            LoadNewFile();
         }
 
         public static CreatureTickData[] GetCreaturesTickData()

@@ -73,10 +73,9 @@ offset_right = 250.5
 offset_bottom = 74.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 1
+current_tab = 0
 
 [node name="Ogólne" type="MarginContainer" parent="Panel/TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
@@ -167,6 +166,7 @@ rounded = true
 alignment = 1
 
 [node name="Rośliny" type="MarginContainer" parent="Panel/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
