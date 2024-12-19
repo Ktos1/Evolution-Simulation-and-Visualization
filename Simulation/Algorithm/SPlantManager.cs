@@ -11,6 +11,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private SimulationController _controller;
         private Random _randGen = new Random();
         private List<Cluster> _clusters = new List<Cluster>();
+        private List<Cluster> _clustersToDelete = new List<Cluster>();
         private float _clustersMinDist;
 
         public List<Cluster> Clusters => _clusters;
@@ -51,6 +52,8 @@ namespace ProjectEvolution.Simulation.Algorithm
         public void DeleteDeadPlants()
         {
             _clusters.ForEach(cluster => cluster.DeleteDeadPlants());
+            _clustersToDelete.ForEach(cluster => _clusters.Remove(cluster));
+            _clustersToDelete.Clear();
         }
 
         public List<(float distance, SPlant plant)> GetPlantsInRange(Vector2 centerPoint, float range)
@@ -121,11 +124,29 @@ namespace ProjectEvolution.Simulation.Algorithm
             var mapArea = mapSizeX * mapSizeY;
             var clustersNumber = Mathf.FloorToInt(mapArea / Mathf.Pow(idealClustersMinDist, 2));
 
+            var respawnablePlantsSum = 0;
+            var respawnable = true;
             for (int i = 0; i < clustersNumber; i++)
             {
                 var position = GetNewClusterPosition(cancelToken);
-                _clusters.Add(new Cluster(position, clusterSize, clusterDensity, this, _controller));
+                if (respawnable)
+                {
+                    if (respawnablePlantsSum > SimulationSettings.maxPlantsNumberToRespawn)
+                        respawnable = false;
+                    else
+                        respawnablePlantsSum += SimulationSettings.plantsNumberInRespawnedCluster;
+                }
+                
+                var newCluster = new Cluster (position, clusterSize, clusterDensity, this, _controller)
+                    { IsRespawnable = respawnable };
+                newCluster.Deletion += OnClusterDeletion;
+                _clusters.Add(newCluster);
             }
+        }
+
+        private void OnClusterDeletion(Cluster clusterToDelete)
+        {
+            _clustersToDelete.Add(clusterToDelete);
         }
     }
 }

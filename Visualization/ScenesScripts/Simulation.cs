@@ -76,7 +76,6 @@ namespace ProjectEvolution.Visualization
             _startButton.Pressed += OnStartButtonPress;
             _backButton.Pressed += OnBackButtonPress;
             _abortButton.Pressed += OnAbortButtonPress;
-            _totalTicks = (int)_simulationDuration.Value * CommonSettings.YEAR_DURATION;
             _successLabel = GetNode<Label>("Panel/SuccessLabel");
             GetSpinBoxReferences();
         }
@@ -132,6 +131,8 @@ namespace ProjectEvolution.Visualization
         {
             IsSimulating = true;
             SubmitSettings();
+            _totalTicks = SimulationSettings.SimulDurationInYears * CommonSettings.YEAR_DURATION;
+
             _cancelTokSource = new CancellationTokenSource();
 
             try

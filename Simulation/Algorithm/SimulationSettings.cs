@@ -36,6 +36,8 @@
 
         public static int plantsNumberInRespawnedCluster = 4;
 
+        public static int maxPlantsNumberToRespawn = 160;
+
         public static int CreaturesNumber { get; set; }
 
         public static Map Map { get; set; }

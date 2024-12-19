@@ -23,6 +23,7 @@ public partial class Menu : Control
 
     private void OnSimulationButtonPress()
     {
+        _errorLabel.Visible = false;
         SceneManager.ChangeToScene(SceneType.Simulation);
     }
 

@@ -64,5 +64,5 @@ offset_right = 223.0
 offset_bottom = 184.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Najpierw dodaj plik wynikowy lub przeprowadź symulację"
+text = "Najpierw przeprowadź symulację lub dodaj plik wynikowy."
 label_settings = SubResource("LabelSettings_n5lwp")

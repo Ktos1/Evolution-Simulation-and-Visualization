@@ -20,8 +20,13 @@ namespace ProjectEvolution.Simulation.Algorithm
         private bool _isEmpty = false;
         private int _timeToRespawn;
 
+        public delegate void DeletionEventHandler(Cluster clusterToDelete);
+        public event DeletionEventHandler Deletion;
+
         public Vector2 Position { get; private set; }
         public bool IsEmpty => _isEmpty;
+
+        public bool IsRespawnable { get; set; }
 
         public Cluster(
             Vector2 position, 
@@ -68,8 +73,16 @@ namespace ProjectEvolution.Simulation.Algorithm
             _deadPlants.ForEach(plant => _plants.Remove(plant));
             if (!_plants.Any())
             {
-                _isEmpty = true;
-                _timeToRespawn = SimulationSettings.TimeToClusterRespawn;
+                if (IsRespawnable)
+                {
+                    _isEmpty = true;
+                    _timeToRespawn = SimulationSettings.TimeToClusterRespawn;
+                }
+                else
+                {
+                    Deletion.Invoke(this);
+                    return;
+                }
             }   
             _deadPlants.Clear();
         }
