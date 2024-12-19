@@ -16,6 +16,9 @@ config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 
 [display]
 
+window/size/resizable=false
+window/size/window_width_override=1440
+window/size/window_height_override=810
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_width"
 

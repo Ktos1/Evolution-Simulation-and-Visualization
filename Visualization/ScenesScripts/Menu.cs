@@ -1,6 +1,7 @@
 using Godot;
 using ProjectEvolution.Utility.BinarySerialization;
 using ProjectEvolution.Visualization.ScenesScripts;
+using System;
 using System.Diagnostics;
 
 public partial class Menu : Control
@@ -9,6 +10,7 @@ public partial class Menu : Control
     [Export] private Button _visualizationButton;
     [Export] private Button _exitButton;
     [Export] private Label _errorLabel;
+    [Export] private CheckBox _fullscreenButton;
 
     public override void _Ready()
     {
@@ -18,6 +20,7 @@ public partial class Menu : Control
         _simulationButton.Pressed += OnSimulationButtonPress;
         _visualizationButton.Pressed += OnVisualizationButtonPress;
         _exitButton.Pressed += OnExitButtonPress;
+        _fullscreenButton.Toggled += OnFullscreenButtonPress;
         SceneManager.Initialize(this, GetTree().Root);
     }
 
@@ -34,10 +37,18 @@ public partial class Menu : Control
             var temp = BinReader.CurrentTickNumber;
             SceneManager.ChangeToScene(SceneType.Visualization);
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             _errorLabel.Visible = true;
         }
+    }
+
+    private void OnFullscreenButtonPress(bool toggledOn)
+    {
+        if (toggledOn)
+            DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+        else
+            DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
     }
 
     private void OnExitButtonPress()

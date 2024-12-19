@@ -5,7 +5,7 @@
 [sub_resource type="LabelSettings" id="LabelSettings_n5lwp"]
 font_color = Color(0.973108, 0, 0.128914, 1)
 
-[node name="Menu" type="Control" node_paths=PackedStringArray("_simulationButton", "_visualizationButton", "_exitButton", "_errorLabel")]
+[node name="Menu" type="Control" node_paths=PackedStringArray("_simulationButton", "_visualizationButton", "_exitButton", "_errorLabel", "_fullscreenButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,6 +17,7 @@ _simulationButton = NodePath("BoxContainer/SimulationButton")
 _visualizationButton = NodePath("BoxContainer/VisualizationButton")
 _exitButton = NodePath("BoxContainer/ExitButton")
 _errorLabel = NodePath("ErrorLabel")
+_fullscreenButton = NodePath("FullscreenCheckBox")
 
 [node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 1
@@ -66,3 +67,18 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Najpierw przeprowadź symulację lub dodaj plik wynikowy."
 label_settings = SubResource("LabelSettings_n5lwp")
+
+[node name="FullscreenCheckBox" type="CheckBox" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = -61.0
+offset_right = 122.0
+offset_bottom = -30.0
+grow_vertical = 0
+scale = Vector2(1.5, 1.5)
+text = "Pełny ekran
+"
+alignment = 1
