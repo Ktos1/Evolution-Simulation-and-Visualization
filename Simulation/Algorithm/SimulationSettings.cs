@@ -22,7 +22,7 @@
         /// <summary>
         /// The percentage of a gene possible range on which the standard deviation of the mutation is set.
         /// </summary>
-        public static float MutationStdDev = 0.05F;
+        public static float MutationStdDev = 0.05f;
 
         public static int EatingDuration = 10;
 

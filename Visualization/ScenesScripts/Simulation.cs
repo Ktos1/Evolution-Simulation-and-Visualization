@@ -42,8 +42,12 @@ namespace ProjectEvolution.Visualization
         [Export] private ProgressBar _progressBar;
         private Label _successLabel;
 
+        [Export] private HBoxContainer _buttonsContainer;
         [Export] private Button _startButton;
+        [Export] private Button _defaultSettBtn;
         [Export] private Button _backButton;
+        
+
         [Export] private Button _abortButton;
 
         private List<SpinBox> _spinBoxs = new List<SpinBox>();
@@ -56,6 +60,7 @@ namespace ProjectEvolution.Visualization
         private CancellationTokenSource _cancelTokSource;
 
         public event Action NewSimulation;
+        public event Action ResetToDefault;
 
         private bool IsSimulating
         {
@@ -64,8 +69,7 @@ namespace ProjectEvolution.Visualization
             {
                 if (value)
                 {
-                    _startButton.Visible = false;
-                    _backButton.Visible = false;
+                    _buttonsContainer.Visible = false;
                     _abortButton.Visible = true;
                     _progressBar.Visible = true;
                     _successLabel.Visible = false;
@@ -73,8 +77,7 @@ namespace ProjectEvolution.Visualization
                 }
                 else
                 {
-                    _startButton.Visible = true;
-                    _backButton.Visible = true;
+                    _buttonsContainer.Visible = true;
                     _abortButton.Visible = false;
                     _progressBar.Visible = false;
                     ChangeEditableForSpinBoxs(true);
@@ -88,6 +91,7 @@ namespace ProjectEvolution.Visualization
             _startButton.Pressed += OnStartButtonPress;
             _backButton.Pressed += OnBackButtonPress;
             _abortButton.Pressed += OnAbortButtonPress;
+            _defaultSettBtn.Pressed += OnDefaultSettBtnPress;
             _successLabel = GetNode<Label>("Panel/SuccessLabel");
             GetSpinBoxReferences();
         }
@@ -177,6 +181,11 @@ namespace ProjectEvolution.Visualization
             {
                 IsSimulating = false;
             }
+        }
+
+        private void OnDefaultSettBtnPress()
+        {
+            ResetToDefault.Invoke();
         }
 
         private void OnBackButtonPress()

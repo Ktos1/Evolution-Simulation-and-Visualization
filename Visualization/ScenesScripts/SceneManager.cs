@@ -32,6 +32,7 @@ namespace ProjectEvolution.Visualization.ScenesScripts
                     {
                         _simulScene = Scenes.SimulationScene.Instantiate() as Simulation;
                         _simulScene.NewSimulation += OnNewSimulation;
+                        _simulScene.ResetToDefault += OnSimulViewReset;
                         newSceneNode = _simulScene;
                     }
                     break;
@@ -55,7 +56,6 @@ namespace ProjectEvolution.Visualization.ScenesScripts
             _visualScene = null;
         }
 
-        // use to future reset simulation feature
         private static void OnSimulViewReset()
         {
             _simulScene = null;
