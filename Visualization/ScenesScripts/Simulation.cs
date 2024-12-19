@@ -15,17 +15,29 @@ namespace ProjectEvolution.Visualization
         [Export] private TabContainer _tabContainer;
 
         // common
-        [Export] private VBoxContainer _commonContainer;
-        [Export] private SpinBox _creturesNum;
         [Export] private SpinBox _xMapSize;
         [Export] private SpinBox _yMapSize;
         [Export] private SpinBox _simulationDuration;
 
+        // creatures
+        [Export] private SpinBox _creturesNum;
+        [Export] private SpinBox _reproductionDuration;
+        [Export] private SpinBox _reproductionCost;
+        [Export] private SpinBox _crossoverChance;
+        [Export] private SpinBox _mutationChance;
+        [Export] private SpinBox _mutationStdDev;
+        [Export] private SpinBox _eatingDuration;
+        [Export] private SpinBox _energyFromPlantPart;
+
         // plants
-        [Export] private VBoxContainer _plantsContainer;
         [Export] private SpinBox _clustersDensity;
         [Export] private SpinBox _clusterSize;
         [Export] private SpinBox _clusterDensity;
+        [Export] private SpinBox _timeToPlantGrow;
+        [Export] private SpinBox _timeToClusterResp;
+        [Export] private SpinBox _plantsNumInRespCluster;
+        [Export] private SpinBox _maxPlantsNumToResp;
+
 
         [Export] private ProgressBar _progressBar;
         private Label _successLabel;
@@ -108,9 +120,25 @@ namespace ProjectEvolution.Visualization
 
         private void SubmitSettings()
         {
-            SimulationSettings.CreaturesNumber = (int)_creturesNum.Value;
-            SimulationSettings.SimulDurationInYears = (int)_simulationDuration.Value;
+            // general
             SimulationSettings.Map = new Map((int)_xMapSize.Value, (int)_yMapSize.Value);
+            SimulationSettings.SimulDurationInYears = (int)_simulationDuration.Value;
+            
+            // creatures
+            SimulationSettings.CreaturesNumber = (int)_creturesNum.Value;
+            SimulationSettings.ReproductionDuration = (int)(_reproductionDuration.Value * 30);
+            SimulationSettings.ReproductionCost = (float)_reproductionCost.Value;
+            SimulationSettings.CrossoverChance = (float)_crossoverChance.Value;
+            SimulationSettings.MutationChance = (float)_mutationChance.Value;
+            SimulationSettings.MutationStdDev = (float)_mutationStdDev.Value;
+            SimulationSettings.EatingDuration = (int)(_eatingDuration.Value * 30);
+            SimulationSettings.EnergyFromPlantPart = (float)_energyFromPlantPart.Value;
+
+            // plants
+            SimulationSettings.TimeToPlantGrow = (int)(_timeToPlantGrow.Value * 30);
+            SimulationSettings.TimeToClusterRespawn = (int)(_timeToClusterResp.Value * 30);
+            SimulationSettings.PlantsNumberInRespawnedCluster = (int)_plantsNumInRespCluster.Value;
+            SimulationSettings.MaxPlantsNumberToRespawn = (int)_maxPlantsNumToResp.Value;
         }
 
         private void Simulate(CancellationToken cancellationToken)

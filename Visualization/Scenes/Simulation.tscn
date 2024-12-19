@@ -9,28 +9,33 @@ font_size = 30
 font_size = 20
 font_color = Color(0.0972, 0.81, 0.23976, 1)
 
-[node name="Simulation" type="Control" node_paths=PackedStringArray("_tabContainer", "_commonContainer", "_creturesNum", "_xMapSize", "_yMapSize", "_simulationDuration", "_plantsContainer", "_clustersDensity", "_clusterSize", "_clusterDensity", "_progressBar", "_startButton", "_backButton", "_abortButton")]
+[node name="Simulation" type="Control" node_paths=PackedStringArray("_tabContainer", "_xMapSize", "_yMapSize", "_simulationDuration", "_creturesNum", "_reproductionDuration", "_reproductionCost", "_crossoverChance", "_mutationChance", "_mutationStdDev", "_eatingDuration", "_energyFromPlantPart", "_clustersDensity", "_clusterSize", "_clusterDensity", "_timeToPlantGrow", "_timeToClusterResp", "_plantsNumInRespCluster", "_maxPlantsNumToResp", "_progressBar", "_startButton", "_backButton", "_abortButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -26.0
-offset_top = -23.0
-offset_right = -26.0
-offset_bottom = -23.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6ij0f")
 _tabContainer = NodePath("Panel/TabContainer")
-_commonContainer = NodePath("Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox")
-_creturesNum = NodePath("Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow1/CreatureNumSpinBox")
-_xMapSize = NodePath("Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow2/MapSize/XMapSizeSpinBox")
-_yMapSize = NodePath("Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow2/MapSize/YMapSizeSpinBox")
-_simulationDuration = NodePath("Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow3/SimDurationSpinBox")
-_plantsContainer = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox")
-_clustersDensity = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow1/ClustersDenSpinBox")
-_clusterSize = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow2/ClusterSizeSpinBox")
-_clusterDensity = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow3/ClusterDenSpinBox")
+_xMapSize = NodePath("Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/MapSizeRow/MapSize/XMapSizeSpinBox")
+_yMapSize = NodePath("Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/MapSizeRow/MapSize/YMapSizeSpinBox")
+_simulationDuration = NodePath("Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/SimDurationRow/SimDurationSpinBox")
+_creturesNum = NodePath("Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CreatureNumRow/CreatureNumSpinBox")
+_reproductionDuration = NodePath("Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/ReprodDuratRow/ReprodDuratSpinBox")
+_reproductionCost = NodePath("Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/ReproductionCostRow/ReproductionCostSpinBox")
+_crossoverChance = NodePath("Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CrossoverChanceRow/CrossoverChanceSpinBox")
+_mutationChance = NodePath("Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/MutationChanceRow/MutationChanceSpinBox")
+_mutationStdDev = NodePath("Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/MutationStdDevRow/MutationStdDevSpinBox")
+_eatingDuration = NodePath("Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/EatingDurationRow/EatingDurationSpinBox")
+_energyFromPlantPart = NodePath("Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/EnrgFromPlantPartRow/EnrgFromPlantPartSpinBox")
+_clustersDensity = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClustersDenRow/ClustersDenSpinBox")
+_clusterSize = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClusterSizeRow/ClusterSizeSpinBox")
+_clusterDensity = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClusterDenRow/ClusterDenSpinBox")
+_timeToPlantGrow = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/TimeToGrowRow/TimeToGrowSpinBox")
+_timeToClusterResp = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/TimeToClstrRespawnRow/TimeToClstrRespawnSpinBox")
+_plantsNumInRespCluster = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/NumInRespClstrRow/NumInRespClstrSpinBox")
+_maxPlantsNumToResp = NodePath("Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/maxPlantsRespRow/maxPlantsRespSpinBox")
 _progressBar = NodePath("Panel/ProgressBar")
 _startButton = NodePath("Panel/ButtonsBoxContainer/StartButton")
 _backButton = NodePath("Panel/ButtonsBoxContainer/BackButton")
@@ -43,39 +48,41 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -401.5
-offset_top = -221.0
-offset_right = 401.5
-offset_bottom = 221.0
+offset_left = -477.0
+offset_top = -262.5
+offset_right = 477.0
+offset_bottom = 262.5
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TitleLabel" type="Label" parent="Panel"]
-layout_mode = 2
-offset_left = 73.0
-offset_top = 23.0
-offset_right = 744.0
-offset_bottom = 46.0
-text = "Wybierz parametry startowe symulacji"
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -335.5
+offset_top = 18.0
+offset_right = 335.5
+offset_bottom = 60.0
+grow_horizontal = 2
+text = "Wybierz parametry symulacji"
 label_settings = SubResource("LabelSettings_x0rx7")
 horizontal_alignment = 1
 
 [node name="TabContainer" type="TabContainer" parent="Panel"]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -249.5
-offset_top = -142.0
-offset_right = 250.5
-offset_bottom = 74.0
+offset_left = -282.5
+offset_top = 84.5
+offset_right = 282.5
+offset_bottom = 365.5
 grow_horizontal = 2
-grow_vertical = 2
-current_tab = 0
+current_tab = 2
 
 [node name="Ogólne" type="MarginContainer" parent="Panel/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
@@ -84,7 +91,6 @@ theme_override_constants/margin_bottom = 8
 metadata/_tab_index = 0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/TabContainer/Ogólne"]
-clip_contents = false
 layout_mode = 2
 
 [node name="OgolneVBox" type="VBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer"]
@@ -92,37 +98,18 @@ layout_mode = 2
 size_flags_horizontal = 3
 metadata/_edit_group_ = true
 
-[node name="PropertyRow1" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox"]
-layout_mode = 2
-tooltip_text = "Początkowa wielkość populacji."
-
-[node name="CreatureNumLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow1"]
-layout_mode = 2
-text = "Liczba osobników: "
-
-[node name="CreatureNumSpinBox" type="SpinBox" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow1"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 10
-tooltip_text = "Początkowa wielkość populacji."
-min_value = 2.0
-max_value = 60.0
-value = 20.0
-rounded = true
-alignment = 1
-
-[node name="PropertyRow2" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox"]
+[node name="MapSizeRow" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox"]
 layout_mode = 2
 
-[node name="MapSizeLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow2"]
+[node name="MapSizeLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/MapSizeRow"]
 layout_mode = 2
 text = "Rozmiar mapy:"
 
-[node name="MapSize" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow2"]
+[node name="MapSize" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/MapSizeRow"]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="XMapSizeSpinBox" type="SpinBox" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow2/MapSize"]
+[node name="XMapSizeSpinBox" type="SpinBox" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/MapSizeRow/MapSize"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -133,11 +120,11 @@ value = 25.0
 rounded = true
 alignment = 1
 
-[node name="XLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow2/MapSize"]
+[node name="XLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/MapSizeRow/MapSize"]
 layout_mode = 2
 text = "X"
 
-[node name="YMapSizeSpinBox" type="SpinBox" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow2/MapSize"]
+[node name="YMapSizeSpinBox" type="SpinBox" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/MapSizeRow/MapSize"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -148,15 +135,15 @@ value = 25.0
 rounded = true
 alignment = 1
 
-[node name="PropertyRow3" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox"]
+[node name="SimDurationRow" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox"]
 layout_mode = 2
 tooltip_text = "Długość symulacji w latach."
 
-[node name="MapSizeLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow3"]
+[node name="SimDurationLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/SimDurationRow"]
 layout_mode = 2
 text = "Długość symulacji:"
 
-[node name="SimDurationSpinBox" type="SpinBox" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/PropertyRow3"]
+[node name="SimDurationSpinBox" type="SpinBox" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/SimDurationRow"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -166,7 +153,7 @@ value = 20.0
 rounded = true
 alignment = 1
 
-[node name="Rośliny" type="MarginContainer" parent="Panel/TabContainer"]
+[node name="Stworzenia" type="MarginContainer" parent="Panel/TabContainer"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 8
@@ -175,8 +162,170 @@ theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 metadata/_tab_index = 1
 
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/TabContainer/Stworzenia"]
+layout_mode = 2
+
+[node name="StworzeniaVBox" type="VBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_edit_group_ = true
+
+[node name="CreatureNumRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
+layout_mode = 2
+tooltip_text = "Początkowa wielkość populacji."
+
+[node name="CreatureNumLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CreatureNumRow"]
+layout_mode = 2
+text = "Liczba osobników: "
+
+[node name="CreatureNumSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CreatureNumRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+tooltip_text = "Początkowa wielkość populacji."
+min_value = 2.0
+max_value = 60.0
+value = 20.0
+rounded = true
+alignment = 1
+
+[node name="ReprodDuratRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
+layout_mode = 2
+tooltip_text = "Czas trwania reprodukcji stworzeń w sekundach."
+
+[node name="ReprodDuratLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/ReprodDuratRow"]
+layout_mode = 2
+text = "Czas trwania reprodukcji:"
+
+[node name="ReprodDuratSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/ReprodDuratRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 0.5
+max_value = 20.0
+step = 0.1
+value = 2.0
+alignment = 1
+
+[node name="ReproductionCostRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
+layout_mode = 2
+
+[node name="ReproductionCostLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/ReproductionCostRow"]
+layout_mode = 2
+text = "Koszt energetyczny reprodukcji:"
+
+[node name="ReproductionCostSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/ReproductionCostRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+tooltip_text = "Początkowa wielkość populacji."
+min_value = 1.0
+value = 25.0
+alignment = 1
+
+[node name="CrossoverChanceRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
+layout_mode = 2
+tooltip_text = "Szansa na zadziałanie operatora genetycznego krzyżowania podczas rozmnażania."
+
+[node name="CrossoverChanceLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CrossoverChanceRow"]
+layout_mode = 2
+text = "Szansa na krzyżowanie genów:"
+
+[node name="CrossoverChanceSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CrossoverChanceRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+tooltip_text = "Początkowa wielkość populacji."
+min_value = 0.01
+max_value = 1.0
+step = 0.01
+value = 0.8
+alignment = 1
+
+[node name="MutationChanceRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
+layout_mode = 2
+tooltip_text = "Szansa na zadziałanie operatora genetycznego mutacji podczas rozmnażania na pojedyńczy gen 
+potomka."
+
+[node name="MutationChanceLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/MutationChanceRow"]
+layout_mode = 2
+text = "Szansa na mutację genu:"
+
+[node name="MutationChanceSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/MutationChanceRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 0.001
+max_value = 1.0
+step = 0.001
+value = 0.01
+alignment = 1
+
+[node name="MutationStdDevRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
+layout_mode = 2
+tooltip_text = "Procent zakresu genu, który jest ustalany jako odchylenie standardowe rozkładu normalnego z
+którego jest losowana zmiana genu w mutacji."
+
+[node name="MutationStdDevLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/MutationStdDevRow"]
+layout_mode = 2
+text = "Odchylenie standardowe mutacji:"
+
+[node name="MutationStdDevSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/MutationStdDevRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 0.001
+max_value = 0.8
+step = 0.001
+value = 0.05
+alignment = 1
+
+[node name="EatingDurationRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
+layout_mode = 2
+tooltip_text = "Czas jedzenia pojedyńczej części rośliny w sekundach."
+
+[node name="EatingDurationLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/EatingDurationRow"]
+layout_mode = 2
+text = "Czas jedzenia roślin:"
+
+[node name="EatingDurationSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/EatingDurationRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+tooltip_text = "Początkowa wielkość populacji."
+min_value = 0.1
+max_value = 20.0
+step = 0.1
+value = 0.3
+alignment = 1
+
+[node name="EnrgFromPlantPartRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
+layout_mode = 2
+tooltip_text = "Ilość energii z zjedzenia jednej części rośliny."
+
+[node name="EnrgFromPlantPartLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/EnrgFromPlantPartRow"]
+layout_mode = 2
+text = "Ilość energii z jedzenia roślin:"
+
+[node name="EnrgFromPlantPartSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/EnrgFromPlantPartRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+tooltip_text = "Początkowa wielkość populacji."
+min_value = 1.0
+max_value = 90.0
+value = 5.0
+alignment = 1
+
+[node name="Rośliny" type="MarginContainer" parent="Panel/TabContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+metadata/_tab_index = 2
+
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/TabContainer/Rośliny"]
-clip_contents = false
 layout_mode = 2
 
 [node name="RoslinyVBox" type="VBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer"]
@@ -184,15 +333,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 metadata/_edit_group_ = true
 
-[node name="PropertyRow1" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
+[node name="ClustersDenRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
 layout_mode = 2
 tooltip_text = "Liczba skupisk roślin na jednostkę powierzchni."
 
-[node name="ClustersDenLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow1"]
+[node name="ClustersDenLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClustersDenRow"]
 layout_mode = 2
 text = "Gęstość skupisk:"
 
-[node name="ClustersDenSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow1"]
+[node name="ClustersDenSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClustersDenRow"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -202,15 +351,15 @@ step = 0.01
 value = 0.1
 alignment = 1
 
-[node name="PropertyRow2" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
+[node name="ClusterSizeRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
 layout_mode = 2
 tooltip_text = "Rozmiar skupisk roślin."
 
-[node name="ClusterSizeLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow2"]
+[node name="ClusterSizeLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClusterSizeRow"]
 layout_mode = 2
 text = "Rozmiar skupiska:"
 
-[node name="ClusterSizeSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow2"]
+[node name="ClusterSizeSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClusterSizeRow"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -221,15 +370,15 @@ step = 0.1
 value = 3.0
 alignment = 1
 
-[node name="PropertyRow3" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
+[node name="ClusterDenRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
 layout_mode = 2
 tooltip_text = "Liczba roślin na jednostkę powierzchni wewnątrz skupiska."
 
-[node name="ClusterDenLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow3"]
+[node name="ClusterDenLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClusterDenRow"]
 layout_mode = 2
 text = "Gęstość skupiska:"
 
-[node name="ClusterDenSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/PropertyRow3"]
+[node name="ClusterDenSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClusterDenRow"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -239,20 +388,93 @@ step = 0.01
 value = 1.0
 alignment = 1
 
+[node name="TimeToGrowRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
+layout_mode = 2
+tooltip_text = "Czas od ostatniego odrośnięcia lub bycia jedzoną, po którym roślina uzyskuje dodatkowy 
+owoc lub jeśli ma już trzy owoce spróbuje stworzyć koło siebie kolejną roślinę. "
+
+[node name="TimeToGrowLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/TimeToGrowRow"]
+layout_mode = 2
+text = "Czas odrośnięcia rośliny:"
+
+[node name="TimeToGrowSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/TimeToGrowRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 1.0
+max_value = 20.0
+step = 0.1
+value = 6.0
+alignment = 1
+
+[node name="TimeToClstrRespawnRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
+layout_mode = 2
+tooltip_text = "Czas po którym zjedzone w całości skupisko odnowi się."
+
+[node name="TimeToClstrRespawnLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/TimeToClstrRespawnRow"]
+layout_mode = 2
+text = "Czas odnowienia skupiska:"
+
+[node name="TimeToClstrRespawnSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/TimeToClstrRespawnRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 1.0
+max_value = 20.0
+step = 0.1
+value = 6.0
+alignment = 1
+
+[node name="NumInRespClstrRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
+layout_mode = 2
+tooltip_text = "Liczba roślin która pojawi się w odnowionym skupisku."
+
+[node name="NumInRespClstrLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/NumInRespClstrRow"]
+layout_mode = 2
+text = "Liczba roślin w odnowionym skupisku:"
+
+[node name="NumInRespClstrSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/NumInRespClstrRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 1.0
+max_value = 20.0
+value = 4.0
+alignment = 1
+
+[node name="maxPlantsRespRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
+layout_mode = 2
+tooltip_text = "Maksymalna liczba roślin które mogą się odnawiać.
+
+UWAGA! Zwiększenie tej liczby może znacząco wpłynąć na czas symulacji i rozmiar pliku zapisu."
+
+[node name="maxPlantsRespLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/maxPlantsRespRow"]
+layout_mode = 2
+text = "Maksymalna liczba odnawiających się roślin:"
+
+[node name="maxPlantsRespSpinBox" type="SpinBox" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/maxPlantsRespRow"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 1.0
+max_value = 300.0
+value = 160.0
+alignment = 1
+
 [node name="SuccessLabel" type="Label" parent="Panel"]
 visible = false
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -249.5
-offset_top = 96.0
-offset_right = 260.5
-offset_bottom = 131.0
+anchor_bottom = 1.0
+offset_left = -255.0
+offset_top = -131.5
+offset_right = 255.0
+offset_bottom = -96.5
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 text = "Symulacja się udała! Wynik zapisał się do result.bin!"
 label_settings = SubResource("LabelSettings_ytfvw")
 horizontal_alignment = 1
@@ -266,9 +488,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -175.0
-offset_top = -129.0
+offset_top = -135.5
 offset_right = 175.0
-offset_bottom = -86.0
+offset_bottom = -92.5
 grow_horizontal = 2
 grow_vertical = 0
 max_value = 1.0
@@ -276,17 +498,17 @@ step = 0.0
 
 [node name="ButtonsBoxContainer" type="HBoxContainer" parent="Panel"]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
+anchor_bottom = 1.0
 offset_left = -144.0
-offset_top = 151.0
+offset_top = -70.0
 offset_right = 144.0
-offset_bottom = 191.0
+offset_bottom = -30.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 
 [node name="StartButton" type="Button" parent="Panel/ButtonsBoxContainer"]
 custom_minimum_size = Vector2(130, 0)

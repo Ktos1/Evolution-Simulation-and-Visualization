@@ -142,7 +142,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private void Respawn()
         {
             Position = _sPlantManager.GetNewClusterPosition();
-            for (int i = 0; i < SimulationSettings.plantsNumberInRespawnedCluster; i++)
+            for (int i = 0; i < SimulationSettings.PlantsNumberInRespawnedCluster; i++)
             {
                 TrySpawnPlant(Position, 2, 0.5f, 5, 4, false);
             }

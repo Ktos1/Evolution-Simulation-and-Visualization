@@ -131,10 +131,10 @@ namespace ProjectEvolution.Simulation.Algorithm
                 var position = GetNewClusterPosition(cancelToken);
                 if (respawnable)
                 {
-                    if (respawnablePlantsSum > SimulationSettings.maxPlantsNumberToRespawn)
+                    if (respawnablePlantsSum > SimulationSettings.MaxPlantsNumberToRespawn)
                         respawnable = false;
                     else
-                        respawnablePlantsSum += SimulationSettings.plantsNumberInRespawnedCluster;
+                        respawnablePlantsSum += SimulationSettings.PlantsNumberInRespawnedCluster;
                 }
                 
                 var newCluster = new Cluster (position, clusterSize, clusterDensity, this, _controller)

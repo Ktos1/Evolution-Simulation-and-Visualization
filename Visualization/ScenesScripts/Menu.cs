@@ -14,7 +14,7 @@ public partial class Menu : Control
 
     public override void _Ready()
     {
-        // adding a listener to get a debug output in VS (Trace share listeners to Debug)
+        // adding a listener to get a debug output in VS (Trace share listeners with Debug)
         Trace.Listeners.Add(new DefaultTraceListener());
 
         _simulationButton.Pressed += OnSimulationButtonPress;

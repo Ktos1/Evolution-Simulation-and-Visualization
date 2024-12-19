@@ -14,7 +14,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         public void Mutate()
         {
             var range = MaxValue - MinValue;
-            var stddev = range * SimulationSettings.MutationStdDev * 0.01;
+            var stddev = range * SimulationSettings.MutationStdDev;
             var diff = (float)Normal.Sample(_randGen, 0, stddev);
             Value += diff;
             if (Value > MaxValue) Value = MaxValue;
