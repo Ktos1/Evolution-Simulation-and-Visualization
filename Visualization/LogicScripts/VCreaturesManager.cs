@@ -1,12 +1,11 @@
 ﻿using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Utility.BinarySerialization;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ProjectEvolution.Visualization.LogicScripts
 {
-    internal class VCreaturesManager
+    public class VCreaturesManager
     {
         private Visualization _visualization;
 
@@ -141,10 +140,10 @@ namespace ProjectEvolution.Visualization.LogicScripts
         private void AddNewCreature(CreatureTickData creatureData)
         {
             var creature = new VCreature(creatureData, this);
-            creature.ClickedOn += _visualization.GenesWindow.OnClickedOnCreature;
+            creature.ClickedOn += _visualization.GenesWindow.OnClickOnCreature;
             creature.Deleted += OnCreatureDeletion;
             _creatures.Add(creature);
-            _visualization.CallDeferred("add_child", _creatures.Last().StaticBody);
+            _visualization.CallDeferred("add_child", creature.StaticBody);
         }
 
         private float[] CalculateAverageGenesValues(VChromosome[] chromosomes)
@@ -165,9 +164,9 @@ namespace ProjectEvolution.Visualization.LogicScripts
             return result;
         }
 
-        private void OnCreatureDeletion(object creature, EventArgs e)
+        private void OnCreatureDeletion(VCreature creature)
         {
-            _deadCreatures.Add(creature as VCreature);
+            _deadCreatures.Add(creature);
         }
     }
 }

@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://birdpk8ymh3dc"]
+[gd_scene load_steps=14 format=3 uid="uid://birdpk8ymh3dc"]
 
 [ext_resource type="Script" path="res://Visualization/ScenesScripts/Visualization.cs" id="1_8ml5k"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/Camera3d.cs" id="2_qh4s7"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/TimeSliderPanel.cs" id="3_wfpa5"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/MenuPanel.cs" id="4_oy4js"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/GenesWindow.cs" id="5_i1j78"]
+[ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/GenesScrollContainer.cs" id="6_pnfmp"]
 [ext_resource type="PackedScene" uid="uid://cc0xbbpeoy2ig" path="res://Visualization/SubScenes/GeneInfoRow.tscn" id="6_x4371"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pjdl"]
@@ -159,7 +160,7 @@ layout_mode = 2
 size_flags_vertical = 3
 text = "Wyjdź do pulpitu"
 
-[node name="GenesWindow" type="PanelContainer" parent="." node_paths=PackedStringArray("_genesVBox")]
+[node name="GenesWindow" type="PanelContainer" parent="." node_paths=PackedStringArray("_genesVBox", "_scrollContainer")]
 visible = false
 anchors_preset = 1
 anchor_left = 1.0
@@ -168,7 +169,8 @@ offset_left = -320.0
 offset_bottom = 400.0
 grow_horizontal = 0
 script = ExtResource("5_i1j78")
-_genesVBox = NodePath("VBoxContainer/ScrollContainer/MarginContainer/GeneVBox")
+_genesVBox = NodePath("VBoxContainer/GenesScrollContainer/MarginContainer/GeneVBox")
+_scrollContainer = NodePath("VBoxContainer/GenesScrollContainer")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GenesWindow"]
 layout_mode = 2
@@ -180,11 +182,12 @@ label_settings = SubResource("LabelSettings_uoer2")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="GenesWindow/VBoxContainer"]
+[node name="GenesScrollContainer" type="ScrollContainer" parent="GenesWindow/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("6_pnfmp")
 
-[node name="MarginContainer" type="MarginContainer" parent="GenesWindow/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="GenesWindow/VBoxContainer/GenesScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
@@ -192,12 +195,12 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="GeneVBox" type="VBoxContainer" parent="GenesWindow/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="GeneVBox" type="VBoxContainer" parent="GenesWindow/VBoxContainer/GenesScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="GeneInfoRow" parent="GenesWindow/VBoxContainer/ScrollContainer/MarginContainer/GeneVBox" instance=ExtResource("6_x4371")]
+[node name="GeneInfoRow" parent="GenesWindow/VBoxContainer/GenesScrollContainer/MarginContainer/GeneVBox" instance=ExtResource("6_x4371")]
 layout_mode = 2
 
 [node name="PlotsButton" type="Button" parent="."]

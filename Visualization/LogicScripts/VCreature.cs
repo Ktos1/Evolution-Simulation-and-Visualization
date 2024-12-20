@@ -1,11 +1,10 @@
 ﻿using Godot;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Visualization.LogicScripts;
-using System;
 
 namespace ProjectEvolution.Visualization
 {
-    internal class VCreature
+    public class VCreature
     {
         private VCreaturesManager _creaturesManager;
         private StaticBody3D _staticBody;
@@ -14,11 +13,32 @@ namespace ProjectEvolution.Visualization
         private Vector2 _nextPosition;
         private CreatureStates _state;
         private bool _isDead = false;
+        private bool _isChecked;
+
+        private bool IsChecked
+        {
+            get => _isChecked;
+            set
+            {
+                if (value)
+                {
+                    if (_isDead) ChangeColor(new Color(0.75f, 0.75f, 0.75f));
+                    else ChangeColor(new Color("#ff828c"));
+                }
+                else
+                {
+                    if (_isDead) ChangeColor(new Color(0.5f, 0.5f, 0.5f));
+                    else ChangeColor(new Color("#de4040"));
+                }
+                _isChecked = value;
+            }
+        }
 
         public VChromosome Chromosome { get; private set; }
 
-        public event EventHandler ClickedOn;
-        public event EventHandler Deleted;
+        public delegate void CreatureReturnEventHandler(VCreature creature);
+        public event CreatureReturnEventHandler ClickedOn;
+        public event CreatureReturnEventHandler Deleted;
 
         public StaticBody3D StaticBody => _staticBody;
 
@@ -33,7 +53,6 @@ namespace ProjectEvolution.Visualization
             MoveTo(spawnPosition);
             _staticBody.InputEvent += OnInputEvent;
             _creaturesManager = vCreaturesManager;
-
         }
 
         public void Process(float deltaCount)
@@ -70,19 +89,19 @@ namespace ProjectEvolution.Visualization
 
         public void Uncheck()
         {
-            if(_isDead) ChangeColor(new Color(0.5f, 0.5f, 0.5f));
-            else ChangeColor(new Color("#de4040"));
+            IsChecked = false;
         }
 
         public void Delete()
         {
             _staticBody.QueueFree();
-            Deleted.Invoke(this, null);
+            Deleted.Invoke(this);
         }
 
         private void Die()
         {
-            ChangeColor(new Color(0.5f, 0.5f, 0.5f));
+            if (IsChecked) ChangeColor(new Color(0.75f, 0.75f, 0.75f));
+            else ChangeColor(new Color(0.5f, 0.5f, 0.5f));
             _isDead = true;
         }
 
@@ -117,10 +136,8 @@ namespace ProjectEvolution.Visualization
         {
             if (@event.IsActionPressed("pick_object"))
             {
-                if (_isDead) ChangeColor(new Color(0.75f, 0.75f, 0.75f));
-                else ChangeColor(new Color("#ff828c"));
-
-                ClickedOn(this, null);
+                IsChecked = true;
+                ClickedOn.Invoke(this);
             }
         }
     }

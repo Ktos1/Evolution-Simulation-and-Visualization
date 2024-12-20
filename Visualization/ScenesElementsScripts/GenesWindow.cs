@@ -1,19 +1,24 @@
 using Godot;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Visualization;
-using System;
 
 public partial class GenesWindow : PanelContainer
 {
     [Export] private VBoxContainer _genesVBox;
 
+    private VCreature _displayedCreature;
+
     public float[] AverageStartGenesValues { get; set; }
 
-    public void OnClickedOnCreature(object sender, EventArgs e)
+    public void OnClickOnCreature(VCreature creature)
     {
+        if (_displayedCreature != null) 
+            _displayedCreature.Deleted -= OnCreatureDeletion;
+        _displayedCreature = creature;
+        _displayedCreature.Deleted += OnCreatureDeletion;
+
         Visible = true;
         Clear();
-        var creature = (VCreature)sender;
         var propertiesInfo = creature.Chromosome.GetType().GetProperties();
         int index = 0;
         for (int i = 0; i < propertiesInfo.Length; i++)
@@ -38,5 +43,10 @@ public partial class GenesWindow : PanelContainer
         {
             child.QueueFree();
         }
+    }
+
+    private void OnCreatureDeletion(VCreature creature)
+    {
+        Visible = false;
     }
 }
