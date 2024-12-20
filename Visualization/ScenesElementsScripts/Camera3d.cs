@@ -7,6 +7,8 @@ public partial class Camera3d : Camera3D
     [Export] private float _cameraMotionSensivity = 5f;
     [Export] private float _cameraRotationSensivity = 10f;
 
+    private float _sprintMultiplier = 4;
+
     private Vector3 _direction = Vector3.Zero;
     private Vector3 _toGlobalDirection = Vector3.Zero;
     private Vector2 _mouseInput = Vector2.Zero;
@@ -16,6 +18,8 @@ public partial class Camera3d : Camera3D
     private bool _isCameraOnFloor = false;
     private bool _isCameraOnCeiling = false;
     private bool _isRotationModeOn = false;
+    private bool _isSprintPressed = false;
+
 
     public override void _Ready()
     {
@@ -101,6 +105,10 @@ public partial class Camera3d : Camera3D
             {
                 _toGlobalDirection += Vector3.Forward;
             }
+            if (@event.IsActionPressed("faster_move"))
+            {
+                _isSprintPressed = true;
+            }
         }
         else
         {
@@ -120,16 +128,21 @@ public partial class Camera3d : Camera3D
             {
                 _toGlobalDirection -= Vector3.Forward;
             }
+            if (@event.IsActionReleased("faster_move"))
+            {
+                _isSprintPressed = false;
+            }
         }
     }
 
     public override void _Process(double delta)
     {
-        bool positionChanged = false;
+        var positionChanged = false;
+        var targetSpeed = _cameraMotionSensivity * (_isSprintPressed ? _sprintMultiplier : 1);
 
         if (_direction != Vector3.Zero)
         {
-            TranslateObjectLocal(_direction.Normalized() * (float)delta * _cameraMotionSensivity);
+            TranslateObjectLocal(_direction.Normalized() * (float)delta * targetSpeed);
             positionChanged = true;
         }
         if (_toGlobalDirection != Vector3.Zero)
@@ -137,7 +150,7 @@ public partial class Camera3d : Camera3D
             var globalDirection = Transform.Basis * _toGlobalDirection;
             globalDirection.Y = 0;
             Transform = Transform.Translated(globalDirection.Normalized()
-                * (float)delta * _cameraMotionSensivity);
+                * (float)delta * targetSpeed);
             positionChanged = true;
         }
 
