@@ -64,7 +64,8 @@ namespace ProjectEvolution.Utility
                             {
                                 var geneClass = auxChromosome.Genes[j];
                                 var geneRange = geneClass.MaxValue - geneClass.MinValue;
-                                var scaledCreatureGene = creature.Genes[j] * (100f / geneRange);
+                                var shiftedGeneValue = creature.Genes[j] - geneClass.MinValue;
+                                var scaledCreatureGene = shiftedGeneValue * (100f / geneRange);
                                 scaledCreaturesGenes[j].Add(scaledCreatureGene);
                             }
                         }

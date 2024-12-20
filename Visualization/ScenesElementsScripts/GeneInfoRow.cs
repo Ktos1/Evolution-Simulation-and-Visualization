@@ -21,7 +21,6 @@ public partial class GeneInfoRow : PanelContainer
         var geneRange = geneMaxValue - geneMinValue;
         var shiftedGeneValue = geneValue - geneMinValue;
         var sliderFillness = shiftedGeneValue / geneRange;
-        
 
         _geneNameLabel.Text = name;
         _geneValueSlider.MinValue = geneMinValue;

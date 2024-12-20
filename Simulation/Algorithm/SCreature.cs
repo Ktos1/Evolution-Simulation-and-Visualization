@@ -154,7 +154,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             var (mapSizeX, mapSizeY) = controller.Map.Size;
 
             _lifeDuration = _randGen.Next(1000, 1250);
-            _energy = 30;
+            _energy = 20;
 
             if (chromosome != null) _chromosome = chromosome;
             else _chromosome = new SChromosome();
@@ -162,7 +162,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             _sightRange = _chromosome.SightGene.Value;
             _speed = _chromosome.SpeedGene.Value;
 
-            var isSearchingForFood = _energy <= _chromosome.EnrgAmntToStrtFdSrchGene.Value;
+            var isSearchingForFood = _energy <= GetBorderForFoodSearch();
             _state = _newState = isSearchingForFood ? new SeekingForFoodState(this) : new SeekingForPartnerState(this);
 
             _newBorn = true;
@@ -176,6 +176,18 @@ namespace ProjectEvolution.Simulation.Algorithm
                 );
             _movementDirection = new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1).Normalized();
             _movementLimitations = new Tuple<float, float>(mapSizeX / 2f, mapSizeY / 2f);
+        }
+
+        private float GetBorderForFoodSearch()
+        {
+            return _chromosome.EnrgAmntToStrtFdSrchGene.Value * 0.01f *
+                    _chromosome.MaxEnergyAmountGene.Value;
+        }
+
+        private float GetBorderForPartnerSearch()
+        {
+            return _chromosome.EnrgAmntToStrtPrtnrSrchGene.Value * 0.01f *
+                    _chromosome.MaxEnergyAmountGene.Value;
         }
     }
 }

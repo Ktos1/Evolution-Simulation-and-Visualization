@@ -19,6 +19,7 @@ namespace ProjectEvolution.Simulation.Algorithm
 
                 gene.Value = _randGen.NextSingle() * range + gene.MinValue;
             }
+            CheckDependencies();
         }
 
         private SChromosome(SGene[] genes)
@@ -59,6 +60,7 @@ namespace ProjectEvolution.Simulation.Algorithm
                     _genes[i].Mutate();
                 }
             }
+            CheckDependencies();
         }
 
         private SChromosome Crossover(SChromosome partnerChromosome)
@@ -68,6 +70,25 @@ namespace ProjectEvolution.Simulation.Algorithm
             var partnerPart = partnerChromosome.Genes.Skip(cutPlace);
 
             return new SChromosome(thisPart.Concat(partnerPart).ToArray()) ;
+        }
+
+        private void CheckDependencies()
+        {
+            var toStartFoodSearch = EnrgAmntToStrtFdSrchGene.Value * 0.01;
+            var toStartPartnerSearch = EnrgAmntToStrtPrtnrSrchGene.Value * 0.01;
+            var energyAmount = MaxEnergyAmountGene.Value;
+
+            if (toStartFoodSearch * energyAmount < SimulationSettings.ReproductionCost)
+            {
+                EnrgAmntToStrtFdSrchGene.Value = 
+                    SimulationSettings.ReproductionCost / energyAmount * 100;
+            }
+
+            if (toStartPartnerSearch * energyAmount < SimulationSettings.ReproductionCost)
+            {
+                EnrgAmntToStrtPrtnrSrchGene.Value =
+                    SimulationSettings.ReproductionCost / energyAmount * 100;
+            }
         }
     }
 }

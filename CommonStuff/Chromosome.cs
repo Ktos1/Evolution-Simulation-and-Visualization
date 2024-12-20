@@ -47,9 +47,15 @@ namespace ProjectEvolution.CommonStuff
             protected set => _genes[5] = value;
         }
 
+        public T MaxEnergyAmountGene
+        {
+            get => _genes[6];
+            protected set => _genes[6] = value;
+        }
+
         protected Chromosome()
         {
-            _genes = new T[6];
+            _genes = new T[7];
             if (typeof(T) == typeof(SGene))
             {
                 for (var i = 0; i < _genes.Length; i++)
@@ -71,10 +77,11 @@ namespace ProjectEvolution.CommonStuff
         {
             TurningFrequencyGene.SetLimitations(0, 100);
             TurningAngleGene.SetLimitations(0, 180);
-            EnrgAmntToStrtPrtnrSrchGene.SetLimitations(SimulationSettings.ReproductionCost, 100);
-            EnrgAmntToStrtFdSrchGene.SetLimitations(SimulationSettings.ReproductionCost, 100);
+            EnrgAmntToStrtPrtnrSrchGene.SetLimitations(0, 100);
+            EnrgAmntToStrtFdSrchGene.SetLimitations(0, 100);
             SightGene.SetLimitations(0, 10);
             SpeedGene.SetLimitations(0, 6);
+            MaxEnergyAmountGene.SetLimitations(SimulationSettings.ReproductionCost, 300);
         }
     }
 }
