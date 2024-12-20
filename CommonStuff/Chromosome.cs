@@ -71,8 +71,8 @@ namespace ProjectEvolution.CommonStuff
         {
             TurningFrequencyGene.SetLimitations(0, 100);
             TurningAngleGene.SetLimitations(0, 180);
-            EnrgAmntToStrtPrtnrSrchGene.SetLimitations(0, 100);
-            EnrgAmntToStrtFdSrchGene.SetLimitations(0, 100);
+            EnrgAmntToStrtPrtnrSrchGene.SetLimitations(SimulationSettings.ReproductionCost, 100);
+            EnrgAmntToStrtFdSrchGene.SetLimitations(SimulationSettings.ReproductionCost, 100);
             SightGene.SetLimitations(0, 10);
             SpeedGene.SetLimitations(0, 6);
         }

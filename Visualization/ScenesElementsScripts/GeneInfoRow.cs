@@ -16,11 +16,15 @@ public partial class GeneInfoRow : PanelContainer
         // editor is related to the top-left corner.
         var geneValue = gene.Value;
         var geneMaxValue = gene.MaxValue;
+        var geneMinValue = gene.MinValue;
         var sliderWidth = _geneValueSlider.Size.X - 16;
-        var sliderFillness = geneValue / geneMaxValue;
+        var geneRange = geneMaxValue - geneMinValue;
+        var shiftedGeneValue = geneValue - geneMinValue;
+        var sliderFillness = shiftedGeneValue / geneRange;
+        
 
         _geneNameLabel.Text = name;
-        _geneValueSlider.MinValue = gene.MinValue;
+        _geneValueSlider.MinValue = geneMinValue;
         _geneValueSlider.MaxValue = geneMaxValue;
         _geneValueSlider.Value = geneValue;
         _geneValueLabel.Text = geneValue.ToString("F2");
@@ -32,15 +36,16 @@ public partial class GeneInfoRow : PanelContainer
         _geneValueLabel.Position += new Vector2(sliderWidth * sliderFillness, 0);
 
         // Setting a ColorRect from the average start value to the gene value
+        var shiftedAverage = averageStartValue - geneMinValue;
         if (geneValue > averageStartValue)
         {
-            _diffRect.Position = new Vector2((averageStartValue - geneMaxValue / 2) / geneMaxValue * sliderWidth, -4);
-            _diffRect.Size += new Vector2((geneValue - averageStartValue) / geneMaxValue * sliderWidth, 0);
+            _diffRect.Position = new Vector2((shiftedAverage - geneRange / 2) / geneRange * sliderWidth, -4);
+            _diffRect.Size += new Vector2((shiftedGeneValue - shiftedAverage) / geneRange * sliderWidth, 0);
         }
         else
         {
-            _diffRect.Position = new Vector2((geneValue - geneMaxValue / 2) / geneMaxValue * sliderWidth, -4);
-            _diffRect.Size += new Vector2((averageStartValue - geneValue) / geneMaxValue * sliderWidth, 0);
+            _diffRect.Position = new Vector2((shiftedGeneValue - geneRange / 2) / geneRange * sliderWidth, -4);
+            _diffRect.Size += new Vector2((shiftedAverage - shiftedGeneValue) / geneRange * sliderWidth, 0);
         }
     }
 }
