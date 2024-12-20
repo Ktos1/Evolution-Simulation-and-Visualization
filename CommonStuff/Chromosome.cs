@@ -59,9 +59,15 @@ namespace ProjectEvolution.CommonStuff
             protected set => _genes[7] = value;
         }
 
+        public T LifeDurationGene
+        {
+            get => _genes[8];
+            protected set => _genes[8] = value;
+        }
+
         protected Chromosome()
         {
-            _genes = new T[8];
+            _genes = new T[9];
             if (typeof(T) == typeof(SGene))
             {
                 for (var i = 0; i < _genes.Length; i++)
@@ -89,6 +95,7 @@ namespace ProjectEvolution.CommonStuff
             SpeedGene.SetLimitations(0, 6);
             MaxEnergyAmountGene.SetLimitations(SimulationSettings.ReproductionCost, 300);
             AdditEnrgyForChldGene.SetLimitations(0, 250);
+            LifeDurationGene.SetLimitations(200, 2000);
         }
     }
 }

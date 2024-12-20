@@ -27,6 +27,7 @@ namespace ProjectEvolution.Simulation.Algorithm
         private float _energy;
         private float _sightRange;
         private float _energyCostPerTick;
+        private float _lifeTimeCost;
         private float _movementEnergyCostPerUnit;
 
         private int _lifeDuration;
@@ -51,7 +52,7 @@ namespace ProjectEvolution.Simulation.Algorithm
             {
                 _controller.OnCreatureDeath(this);
                 return;
-            }  
+            }
 
             if (_state is not DiedState)
             {
@@ -59,7 +60,8 @@ namespace ProjectEvolution.Simulation.Algorithm
                     _newState = new DiedState(this);
             }
             _state.Process();
-            _energy -= _energyCostPerTick;
+            CalculateLifeTimeCost();
+            _energy -= _energyCostPerTick + _lifeTimeCost;
             _lifeTime++;
         }
 
@@ -88,14 +90,6 @@ namespace ProjectEvolution.Simulation.Algorithm
         public static void ResetIds()
         {
             _idCounter = 0;
-        }
-
-        private void CalculateEnergyCosts()
-        {
-            var sightCost = Mathf.Pow(_chromosome.SightGene.Value, 2) * (1 / 800f);
-            _energyCostPerTick += sightCost;
-
-            _movementEnergyCostPerUnit = Mathf.Pow(_chromosome.SpeedGene.Value, 2) * (1 / 95f);
         }
 
         private void GiveBirth(SCreature partner)
@@ -155,12 +149,12 @@ namespace ProjectEvolution.Simulation.Algorithm
             _controller = controller;
             var (mapSizeX, mapSizeY) = controller.Map.Size;
 
-            _lifeDuration = _randGen.Next(1000, 1250);
             _energy = 20;
 
             if (chromosome != null) _chromosome = chromosome;
             else _chromosome = new SChromosome();
             CalculateEnergyCosts();
+            _lifeDuration = Mathf.RoundToInt(_chromosome.LifeDurationGene.Value);
             _sightRange = _chromosome.SightGene.Value;
             _speed = _chromosome.SpeedGene.Value;
 
@@ -178,6 +172,19 @@ namespace ProjectEvolution.Simulation.Algorithm
                 );
             _movementDirection = new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1).Normalized();
             _movementLimitations = new Tuple<float, float>(mapSizeX / 2f, mapSizeY / 2f);
+        }
+
+        private void CalculateEnergyCosts()
+        {
+            var sightCost = Mathf.Pow(_chromosome.SightGene.Value, 2) * (1 / 800f);
+            _energyCostPerTick += sightCost;
+
+            _movementEnergyCostPerUnit = Mathf.Pow(_chromosome.SpeedGene.Value, 2) * (1 / 95f);
+        }
+
+        private void CalculateLifeTimeCost()
+        {
+            _lifeTimeCost = Mathf.Pow(_lifeTime, 2) * (1 / 20000000f);
         }
 
         private float GetAdditEnergyForChild()

@@ -23,7 +23,6 @@ public partial class Camera3d : Camera3D
 
     public override void _Ready()
     {
-        Input.MouseMode = Input.MouseModeEnum.Confined;
         _cameraRotation = Rotation;
         var mapSize = BinReader.SimulationInfo.MapSize;
         _cameraLimitations = (mapSize.x / 2f + 5, mapSize.y / 2f + 5);
@@ -79,7 +78,7 @@ public partial class Camera3d : Camera3D
             }
             if (@event.IsActionReleased("rotation_mode"))
             {
-                Input.MouseMode = Input.MouseModeEnum.Confined;
+                Input.MouseMode = Input.MouseModeEnum.Visible;
                 _isRotationModeOn = false;
             }
         }
