@@ -102,7 +102,9 @@ namespace ProjectEvolution.Simulation.Algorithm
         {
             var childPosition = (partner.Position - _position) / 2 + _position;
             var childChromosome = _chromosome.GetChildChromosome(partner._chromosome);
-            _controller.OnCreatureBirth(new SCreature(childPosition, childChromosome, _controller));
+            var child = new SCreature(childPosition, childChromosome, _controller);
+            child._energy += GetAdditEnergyForChild() + partner.GetAdditEnergyForChild();
+            _controller.OnCreatureBirth(child);
         }
 
         private float MoveToFocusedObject()
@@ -176,6 +178,23 @@ namespace ProjectEvolution.Simulation.Algorithm
                 );
             _movementDirection = new Vector2(_randGen.NextSingle() * 2 - 1, _randGen.NextSingle() * 2 - 1).Normalized();
             _movementLimitations = new Tuple<float, float>(mapSizeX / 2f, mapSizeY / 2f);
+        }
+
+        private float GetAdditEnergyForChild()
+        {
+            var valueFromGene = _chromosome.AdditEnrgyForChldGene.Value;
+            float outValue = 0;
+            if (valueFromGene > _energy)
+            {
+                outValue = _energy;
+                _energy = 0;
+            }
+            else
+            {
+                outValue = valueFromGene;
+                _energy -= outValue;
+            }
+            return outValue;
         }
 
         private float GetBorderForFoodSearch()

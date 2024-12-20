@@ -53,9 +53,15 @@ namespace ProjectEvolution.CommonStuff
             protected set => _genes[6] = value;
         }
 
+        public T AdditEnrgyForChldGene
+        {
+            get => _genes[7];
+            protected set => _genes[7] = value;
+        }
+
         protected Chromosome()
         {
-            _genes = new T[7];
+            _genes = new T[8];
             if (typeof(T) == typeof(SGene))
             {
                 for (var i = 0; i < _genes.Length; i++)
@@ -82,6 +88,7 @@ namespace ProjectEvolution.CommonStuff
             SightGene.SetLimitations(0, 10);
             SpeedGene.SetLimitations(0, 6);
             MaxEnergyAmountGene.SetLimitations(SimulationSettings.ReproductionCost, 300);
+            AdditEnrgyForChldGene.SetLimitations(0, 250);
         }
     }
 }
