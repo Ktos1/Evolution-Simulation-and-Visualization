@@ -108,7 +108,8 @@ namespace ProjectEvolution.Visualization
             _isTimeSliderDragging = false;
             _timeSlider.ValueChanged -= OnTimeSliderValueChanged;
             _timeSliderPanel.IsRunning = true;
-            _isOnEnd = false;
+            if (BinReader.CurrentTickNumber != BinReader.TotalTicksNumber - 1)
+                _isOnEnd = false;
         }
 
         private void OnTimeSliderValueChanged(double value)

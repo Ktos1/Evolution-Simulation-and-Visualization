@@ -118,8 +118,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Pierwszy wymiar mapy."
 min_value = 10.0
-max_value = 50.0
-value = 25.0
+value = 35.0
 rounded = true
 alignment = 1
 
@@ -133,8 +132,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Drugi wymiar mapy."
 min_value = 10.0
-max_value = 50.0
-value = 25.0
+value = 35.0
 rounded = true
 alignment = 1
 
@@ -153,7 +151,8 @@ layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Długość symulacji w latach."
 min_value = 10.0
-value = 20.0
+max_value = 500.0
+value = 100.0
 rounded = true
 alignment = 1
 
@@ -189,8 +188,8 @@ layout_mode = 2
 size_flags_horizontal = 10
 tooltip_text = "Początkowa wielkość populacji."
 min_value = 2.0
-max_value = 60.0
-value = 20.0
+max_value = 150.0
+value = 75.0
 rounded = true
 alignment = 1
 
@@ -287,7 +286,7 @@ size_flags_horizontal = 10
 min_value = 0.001
 max_value = 0.8
 step = 0.001
-value = 0.05
+value = 0.1
 alignment = 1
 
 [node name="EatingDurationRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
@@ -362,7 +361,7 @@ size_flags_horizontal = 10
 min_value = 0.02
 max_value = 0.4
 step = 0.01
-value = 0.1
+value = 0.14
 alignment = 1
 
 [node name="ClusterSizeRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
