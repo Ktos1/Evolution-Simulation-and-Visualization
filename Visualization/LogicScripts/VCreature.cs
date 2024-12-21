@@ -7,7 +7,7 @@ namespace ProjectEvolution.Visualization
     public class VCreature
     {
         private VCreaturesManager _creaturesManager;
-        private StaticBody3D _staticBody;
+        private CreatureStaticBody _staticBody;
         private uint _id;
         private Vector2 _previousPosition;
         private Vector2 _nextPosition;
@@ -84,7 +84,6 @@ namespace ProjectEvolution.Visualization
             {
                 Delete();
             }
-            
         }
 
         public void Uncheck()
@@ -119,12 +118,16 @@ namespace ProjectEvolution.Visualization
             var movementVector = newPosition - oldPosition2D;
 
             Rotate(movementVector.Angle());
-            _staticBody.Position = new Vector3(newPosition.X, 0.75f, newPosition.Y);
+            _staticBody.Position += new Vector3(movementVector.X, 0, movementVector.Y);
         }
 
         private void InitializeStaticBodyNode()
         {
-            _staticBody = Prefabs.Creature.Instantiate() as StaticBody3D;
+            _staticBody = Prefabs.Creature.Instantiate() as CreatureStaticBody;
+            var maxEnergyGene = Chromosome.MaxEnergyAmountGene;
+            var maxEnergyRange = maxEnergyGene.MaxValue - maxEnergyGene.MinValue;
+            var heightFillness = (maxEnergyGene.Value - maxEnergyGene.MinValue) / maxEnergyRange;
+            _staticBody.SetHeight(heightFillness);
         }
 
         private void Rotate(float angle)
