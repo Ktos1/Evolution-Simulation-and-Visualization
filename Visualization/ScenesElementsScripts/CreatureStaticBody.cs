@@ -15,9 +15,16 @@ public partial class CreatureStaticBody : StaticBody3D
         var heightRange = 2;
         var height = 0.5f + heightFillness * heightRange;
         var scaleFactor = height / 1.5f;
-        _mesh3D.Scale = new Vector3(1, scaleFactor, 1);
+        _mesh3D.Scale *= new Vector3(1, scaleFactor, 1);
         
         Position += new Vector3(0, height / 2f, 0);
+    }
+
+    public void SetWidth(float widthFillness)
+    {
+        var widthRange = 1.1;
+        var scaleFactor = 0.5f + widthFillness * widthRange;
+        _mesh3D.Scale *= new Vector3(1, 1, (float)scaleFactor);
     }
 
     public void SetColorSaturation(float saturation)

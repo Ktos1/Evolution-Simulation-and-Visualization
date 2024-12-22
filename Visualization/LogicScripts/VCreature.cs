@@ -106,6 +106,10 @@ namespace ProjectEvolution.Visualization
             var sightGene = Chromosome.SightGene;
             var saturation = sightGene.Value/ sightGene.MaxValue;
             _staticBody.SetColorSaturation(saturation);
+
+            var angleGene = Chromosome.TurningAngleGene;
+            var widthFillness = angleGene.Value / angleGene.MaxValue;
+            _staticBody.SetWidth(widthFillness);
         }
 
         private void OnInputEvent(Node camera, InputEvent @event, Vector3 eventPosition, Vector3 normal, long shapeIdx)
