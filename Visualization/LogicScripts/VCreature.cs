@@ -20,16 +20,7 @@ namespace ProjectEvolution.Visualization
             get => _isChecked;
             set
             {
-                if (value)
-                {
-                    if (_isDead) ChangeColor(new Color(0.75f, 0.75f, 0.75f));
-                    else ChangeColor(new Color("#ff828c"));
-                }
-                else
-                {
-                    if (_isDead) ChangeColor(new Color(0.5f, 0.5f, 0.5f));
-                    else ChangeColor(new Color("#de4040"));
-                }
+                _staticBody.ChangeColorBasedOnSelection(value);
                 _isChecked = value;
             }
         }
@@ -50,7 +41,7 @@ namespace ProjectEvolution.Visualization
             Chromosome = chromosome;
             _previousPosition = _nextPosition = spawnPosition;
             InitializeStaticBodyNode();
-            MoveTo(spawnPosition);
+            _staticBody.MoveTo(spawnPosition);
             _staticBody.InputEvent += OnInputEvent;
             _creaturesManager = vCreaturesManager;
         }
@@ -59,7 +50,8 @@ namespace ProjectEvolution.Visualization
         {
             if (_previousPosition != _nextPosition && !_isDead)
             {
-                MoveTo(_previousPosition.Lerp(_nextPosition, deltaCount / CommonSettings.TICK_DURATION));
+                _staticBody.MoveTo(_previousPosition.Lerp(
+                    _nextPosition, deltaCount / CommonSettings.TICK_DURATION));
             }
         }
 
@@ -99,26 +91,8 @@ namespace ProjectEvolution.Visualization
 
         private void Die()
         {
-            if (IsChecked) ChangeColor(new Color(0.75f, 0.75f, 0.75f));
-            else ChangeColor(new Color(0.5f, 0.5f, 0.5f));
+            _staticBody.ChangeToDeathColor();
             _isDead = true;
-        }
-
-        private void ChangeColor(Color color)
-        {
-            var material = new StandardMaterial3D();
-            material.AlbedoColor = color;
-            _staticBody.GetNode<MeshInstance3D>("MeshInstance3D").SetSurfaceOverrideMaterial(0, material);
-        }
-
-        private void MoveTo (Vector2 newPosition)
-        {
-            var oldPosition3D = _staticBody.Position;
-            var oldPosition2D = new Vector2(oldPosition3D.X, oldPosition3D.Z);
-            var movementVector = newPosition - oldPosition2D;
-
-            Rotate(movementVector.Angle());
-            _staticBody.Position += new Vector3(movementVector.X, 0, movementVector.Y);
         }
 
         private void InitializeStaticBodyNode()
@@ -128,11 +102,10 @@ namespace ProjectEvolution.Visualization
             var maxEnergyRange = maxEnergyGene.MaxValue - maxEnergyGene.MinValue;
             var heightFillness = (maxEnergyGene.Value - maxEnergyGene.MinValue) / maxEnergyRange;
             _staticBody.SetHeight(heightFillness);
-        }
 
-        private void Rotate(float angle)
-        {
-            _staticBody.Rotation = new Vector3(0, -angle, 0);
+            var sightGene = Chromosome.SightGene;
+            var saturation = sightGene.Value/ sightGene.MaxValue;
+            _staticBody.SetColorSaturation(saturation);
         }
 
         private void OnInputEvent(Node camera, InputEvent @event, Vector3 eventPosition, Vector3 normal, long shapeIdx)

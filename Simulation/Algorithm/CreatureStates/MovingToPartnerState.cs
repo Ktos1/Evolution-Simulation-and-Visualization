@@ -15,7 +15,7 @@
                 {
                     if (_creature.GetDistanceToFocusObject() > _creature._sightRange)
                         ChooseWhatToDo();
-                    else if (_creature.MoveToFocusedObject() < 0.3f)
+                    else if (_creature.MoveToFocusedObject() < 0.7f)
                         _creature._newState = new ReproducingState(_creature);
                     else if (_creature._energy <= _creature._chromosome.EnrgAmntToStrtFdSrchGene.Value)
                         _creature._newState = new SeekingForFoodState(_creature);
