@@ -12,14 +12,15 @@
 [ext_resource type="Texture2D" uid="uid://55vhsom4lxnr" path="res://Resources/Icons/plots.png" id="10_aaru6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pjdl"]
-albedo_color = Color(0.47, 1, 0.505333, 1)
+albedo_color = Color(0.423, 0.9, 0.4548, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_vc10d"]
 material = SubResource("StandardMaterial3D_2pjdl")
 size = Vector3(10, 0.5, 10)
 
 [sub_resource type="Environment" id="Environment_ehc82"]
-ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.703808, 0.703808, 0.703808, 1)
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1t4oh"]
 
