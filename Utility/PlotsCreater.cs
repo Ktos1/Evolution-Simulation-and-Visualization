@@ -151,20 +151,15 @@ namespace ProjectEvolution.Utility
             ExportPlotToSVG("populationsPlot.svg", populationsPlot);
 
             // plots for specified genes
-            var propertiesInfo = typeof(Chromosome<SGene>).GetProperties();
-            var geneNames = new List<string>();
-            for (int i = 0; i < propertiesInfo.Length; i++)
-            {
-                if (propertiesInfo[i].PropertyType == typeof(SGene))
-                    geneNames.Add(propertiesInfo[i].Name);
-            }
+            var genesNames = Chromosome<SGene>.GetGenesNames();
             for (int i = 0; i < genesNumber; i++)
             {
-                var geneName = geneNames[i];
+                var geneName = genesNames[i];
+                var polishGeneName = Gene.TranslateNameToPolish(geneName);
                 // name here should be from translation to polish function.
-                var diffsPlot = CreateLinePlot($"{geneName} - zmiany średniej z całej populacji",
+                var diffsPlot = CreateLinePlot($"{polishGeneName} - zmiany średniej z całej populacji",
                     "Lata", "Procent", diffPoints[i]);
-                var stdDevPlot = CreateLinePlot($"{geneName} - odchylenie standardowe",
+                var stdDevPlot = CreateLinePlot($"{polishGeneName} - odchylenie standardowe",
                     "Lata", "Odchylenie", stdDevPoints[i]);
 
                 ExportPlotToSVG($"{geneName}Diffs.svg", diffsPlot);

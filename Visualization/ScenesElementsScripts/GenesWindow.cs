@@ -28,7 +28,7 @@ public partial class GenesWindow : PanelContainer
                 var geneRow = Prefabs.GeneInfoRow.Instantiate() as GeneInfoRow;
                 _genesVBox.CallDeferred("add_child", geneRow);
                 geneRow.SetGeneData(
-                    propertiesInfo[i].Name, 
+                    Gene.TranslateNameToPolish(propertiesInfo[i].Name), 
                     propertiesInfo[i].GetValue(creature.Chromosome) as Gene, 
                     AverageStartGenesValues[index]
                     );

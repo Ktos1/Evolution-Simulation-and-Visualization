@@ -1,6 +1,7 @@
 ﻿using ProjectEvolution.Simulation.Algorithm;
 using ProjectEvolution.Visualization;
 using System;
+using System.Collections.Generic;
 
 namespace ProjectEvolution.CommonStuff
 {
@@ -96,6 +97,18 @@ namespace ProjectEvolution.CommonStuff
             MaxEnergyAmountGene.SetLimitations(SimulationSettings.ReproductionCost, 300);
             AdditEnrgyForChldGene.SetLimitations(0, 250);
             LifeDurationGene.SetLimitations(200, 2000);
+        }
+
+        public static string[] GetGenesNames()
+        {
+            var propertiesInfo = typeof(Chromosome<SGene>).GetProperties();
+            var genesNames = new List<string>();
+            for (int i = 0; i < propertiesInfo.Length; i++)
+            {
+                if (propertiesInfo[i].PropertyType == typeof(SGene))
+                    genesNames.Add(propertiesInfo[i].Name);
+            }
+            return genesNames.ToArray();
         }
     }
 }

@@ -5,7 +5,6 @@ using Svg.Skia;
 using ProjectEvolution.Visualization;
 using ProjectEvolution.CommonStuff;
 using ProjectEvolution.Simulation.Algorithm;
-using System.Collections.Generic;
 using ProjectEvolution.Utility;
 using ProjectEvolution.Utility.BinarySerialization;
 
@@ -51,32 +50,27 @@ public partial class PlotsScene : Control
             Name = "Populacje"
         });
 
-        var propertiesInfo = typeof(Chromosome<SGene>).GetProperties();
-        var geneNames = new List<string>();
-        for (int i = 0; i < propertiesInfo.Length; i++)
+        var genesNames = Chromosome<SGene>.GetGenesNames();
+        for (int i = 0; i < genesNames.Length; i++)
         {
-            if (propertiesInfo[i].PropertyType == typeof(SGene))
-                geneNames.Add(propertiesInfo[i].Name);
-        }
-
-        for (int i = 0; i < geneNames.Count; i++)
-        {
-            var geneName = geneNames[i];
+            var geneName = genesNames[i];
             ScaleSVG($"{geneName}Diffs");
             ScaleSVG($"{geneName}StdDev");
             var diffImage = Image.LoadFromFile($"Plots/{geneName}Diffs.png");
             var stdDevImage = Image.LoadFromFile($"Plots/{geneName}StdDev.png");
+
+            var polishGeneName = Gene.TranslateNameToPolish(geneName);
             _diffsTabContainer.AddChild(new TextureRect()
             {
                 Texture = ImageTexture.CreateFromImage(diffImage),
                 ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
-                Name = $"{geneName}"
+                Name = $"{polishGeneName}"
             });
             _stdDevTabContainer.AddChild(new TextureRect()
             {
                 Texture = ImageTexture.CreateFromImage(stdDevImage),
                 ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
-                Name = $"{geneName}"
+                Name = $"{polishGeneName}"
             });
         }
     }

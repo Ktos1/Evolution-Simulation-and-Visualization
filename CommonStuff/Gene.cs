@@ -30,5 +30,32 @@ namespace ProjectEvolution.CommonStuff
             MinValue = minValue;
             MaxValue = maxValue;
         }
+
+        public static string TranslateNameToPolish(string englishName)
+        {
+            switch (englishName)
+            {
+                case "TurningFrequencyGene":
+                    return "Gen częstotliwości obracania się";
+                case "TurningAngleGene":
+                    return "Gen kątu obracania się";
+                case "EnrgAmntToStrtPrtnrSrchGene":
+                    return "Gen energii do szukania partnera";
+                case "EnrgAmntToStrtFdSrchGene":
+                    return "Gen energii do szukania jedzenia";
+                case "SightGene":
+                    return "Gen zasięgu wzroku";
+                case "SpeedGene":
+                    return "Gen szybkości";
+                case "MaxEnergyAmountGene":
+                    return "Gen maksymalnej ilości energii";
+                case "AdditEnrgyForChldGene":
+                    return "Gen dodatkowej energii dla dziecka";
+                case "LifeDurationGene":
+                    return "Gen długości życia";
+                default: 
+                    return "";
+            }
+        }
     }
 }
