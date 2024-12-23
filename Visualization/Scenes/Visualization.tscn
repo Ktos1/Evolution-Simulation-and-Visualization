@@ -1,12 +1,15 @@
-[gd_scene load_steps=14 format=3 uid="uid://birdpk8ymh3dc"]
+[gd_scene load_steps=19 format=3 uid="uid://birdpk8ymh3dc"]
 
 [ext_resource type="Script" path="res://Visualization/ScenesScripts/Visualization.cs" id="1_8ml5k"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/Camera3d.cs" id="2_qh4s7"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/TimeSliderPanel.cs" id="3_wfpa5"]
+[ext_resource type="Texture2D" uid="uid://bttwu5glr36cl" path="res://Resources/Icons/clock.png" id="4_35kr6"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/MenuPanel.cs" id="4_oy4js"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/GenesWindow.cs" id="5_i1j78"]
+[ext_resource type="Texture2D" uid="uid://5tsu0crhx2bj" path="res://Resources/Icons/menu.png" id="5_t67dm"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/GenesScrollContainer.cs" id="6_pnfmp"]
 [ext_resource type="PackedScene" uid="uid://cc0xbbpeoy2ig" path="res://Visualization/SubScenes/GeneInfoRow.tscn" id="6_x4371"]
+[ext_resource type="Texture2D" uid="uid://55vhsom4lxnr" path="res://Resources/Icons/plots.png" id="10_aaru6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pjdl"]
 albedo_color = Color(0.47, 1, 0.505333, 1)
@@ -20,11 +23,18 @@ ambient_light_color = Color(0.585062, 0.585062, 0.585062, 1)
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1t4oh"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_0itqi"]
+font_color = Color(0.87451, 0.87451, 0.87451, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_m1jgm"]
+font_color = Color(0.87451, 0.87451, 0.87451, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_uoer2"]
 font_size = 24
 
 [sub_resource type="LabelSettings" id="LabelSettings_6q2cy"]
 font_size = 24
+font_color = Color(0.87451, 0.87451, 0.87451, 1)
 
 [node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "GenesWindow", "_plotsButton", "_floorMesh", "_yearLabel")]
 script = ExtResource("1_8ml5k")
@@ -80,6 +90,8 @@ offset_top = -47.0
 offset_right = 110.0
 offset_bottom = 3.0
 toggle_mode = true
+icon = ExtResource("4_35kr6")
+expand_icon = true
 
 [node name="MarginContainer" type="MarginContainer" parent="TimeSliderPanel"]
 layout_mode = 1
@@ -107,6 +119,7 @@ toggle_mode = true
 [node name="ActualTimeLabel" type="Label" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "00:00:00"
+label_settings = SubResource("LabelSettings_0itqi")
 
 [node name="TimeSlider" type="HSlider" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -117,6 +130,7 @@ scrollable = false
 [node name="TotalTimeLabel" type="Label" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "00:00:00"
+label_settings = SubResource("LabelSettings_m1jgm")
 
 [node name="MenuPanel" type="Panel" parent="." node_paths=PackedStringArray("_menuButton", "_exitButton", "_slidingButton")]
 offset_left = -310.0
@@ -134,6 +148,9 @@ offset_top = 18.0
 offset_right = 356.0
 offset_bottom = 68.0
 toggle_mode = true
+icon = ExtResource("5_t67dm")
+icon_alignment = 2
+expand_icon = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MenuPanel"]
 layout_mode = 1
@@ -214,6 +231,8 @@ offset_right = -15.0
 offset_bottom = -15.0
 grow_horizontal = 0
 grow_vertical = 0
+icon = ExtResource("10_aaru6")
+expand_icon = true
 
 [node name="Panel" type="Panel" parent="."]
 offset_left = 15.0

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cgb2h85f8c5fw"]
 
 [ext_resource type="Script" path="res://Visualization/ScenesScripts/Simulation.cs" id="1_6ij0f"]
-[ext_resource type="Theme" uid="uid://dghehcmcp6ew3" path="res://Resources/PropertyRowTheme.tres" id="2_go3mf"]
+[ext_resource type="Theme" uid="uid://dghehcmcp6ew3" path="res://Resources/Themes/PropertyRowTheme.tres" id="2_0fddw"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_x0rx7"]
 font_size = 30
@@ -102,7 +102,7 @@ metadata/_edit_group_ = true
 
 [node name="MapSizeRow" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox"]
 layout_mode = 2
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="MapSizeLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/MapSizeRow"]
 layout_mode = 2
@@ -139,7 +139,7 @@ alignment = 1
 [node name="SimDurationRow" type="HBoxContainer" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox"]
 layout_mode = 2
 tooltip_text = "Długość symulacji w latach."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="SimDurationLabel" type="Label" parent="Panel/TabContainer/Ogólne/ScrollContainer/OgolneVBox/SimDurationRow"]
 layout_mode = 2
@@ -176,7 +176,7 @@ metadata/_edit_group_ = true
 [node name="CreatureNumRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
 layout_mode = 2
 tooltip_text = "Początkowa wielkość populacji."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="CreatureNumLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CreatureNumRow"]
 layout_mode = 2
@@ -196,7 +196,7 @@ alignment = 1
 [node name="ReprodDuratRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
 layout_mode = 2
 tooltip_text = "Czas trwania reprodukcji stworzeń w sekundach."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="ReprodDuratLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/ReprodDuratRow"]
 layout_mode = 2
@@ -214,7 +214,7 @@ alignment = 1
 
 [node name="ReproductionCostRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
 layout_mode = 2
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="ReproductionCostLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/ReproductionCostRow"]
 layout_mode = 2
@@ -232,7 +232,7 @@ alignment = 1
 [node name="CrossoverChanceRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
 layout_mode = 2
 tooltip_text = "Szansa na zadziałanie operatora genetycznego krzyżowania podczas rozmnażania."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="CrossoverChanceLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CrossoverChanceRow"]
 layout_mode = 2
@@ -253,7 +253,7 @@ alignment = 1
 layout_mode = 2
 tooltip_text = "Szansa na zadziałanie operatora genetycznego mutacji podczas rozmnażania na pojedyńczy gen 
 potomka."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="MutationChanceLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/MutationChanceRow"]
 layout_mode = 2
@@ -273,7 +273,7 @@ alignment = 1
 layout_mode = 2
 tooltip_text = "Procent zakresu genu, który jest ustalany jako odchylenie standardowe rozkładu normalnego z
 którego jest losowana zmiana genu w mutacji."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="MutationStdDevLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/MutationStdDevRow"]
 layout_mode = 2
@@ -292,7 +292,7 @@ alignment = 1
 [node name="EatingDurationRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
 layout_mode = 2
 tooltip_text = "Czas jedzenia pojedyńczej części rośliny w sekundach."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="EatingDurationLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/EatingDurationRow"]
 layout_mode = 2
@@ -312,7 +312,7 @@ alignment = 1
 [node name="EnrgFromPlantPartRow" type="HBoxContainer" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox"]
 layout_mode = 2
 tooltip_text = "Ilość energii z zjedzenia jednej części rośliny."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="EnrgFromPlantPartLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/EnrgFromPlantPartRow"]
 layout_mode = 2
@@ -348,7 +348,7 @@ metadata/_edit_group_ = true
 [node name="ClustersDenRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
 layout_mode = 2
 tooltip_text = "Liczba skupisk roślin na jednostkę powierzchni."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="ClustersDenLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClustersDenRow"]
 layout_mode = 2
@@ -367,7 +367,7 @@ alignment = 1
 [node name="ClusterSizeRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
 layout_mode = 2
 tooltip_text = "Rozmiar skupisk roślin."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="ClusterSizeLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClusterSizeRow"]
 layout_mode = 2
@@ -387,7 +387,7 @@ alignment = 1
 [node name="ClusterDenRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
 layout_mode = 2
 tooltip_text = "Liczba roślin na jednostkę powierzchni wewnątrz skupiska."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="ClusterDenLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/ClusterDenRow"]
 layout_mode = 2
@@ -407,7 +407,7 @@ alignment = 1
 layout_mode = 2
 tooltip_text = "Czas od ostatniego odrośnięcia lub bycia jedzoną, po którym roślina uzyskuje dodatkowy 
 owoc lub jeśli ma już trzy owoce spróbuje stworzyć koło siebie kolejną roślinę. "
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="TimeToGrowLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/TimeToGrowRow"]
 layout_mode = 2
@@ -426,7 +426,7 @@ alignment = 1
 [node name="TimeToClstrRespawnRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
 layout_mode = 2
 tooltip_text = "Czas po którym zjedzone w całości skupisko odnowi się."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="TimeToClstrRespawnLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/TimeToClstrRespawnRow"]
 layout_mode = 2
@@ -445,7 +445,7 @@ alignment = 1
 [node name="NumInRespClstrRow" type="HBoxContainer" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox"]
 layout_mode = 2
 tooltip_text = "Liczba roślin która pojawi się w odnowionym skupisku."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="NumInRespClstrLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/NumInRespClstrRow"]
 layout_mode = 2
@@ -465,7 +465,7 @@ layout_mode = 2
 tooltip_text = "Maksymalna liczba roślin które mogą się odnawiać.
 
 UWAGA! Zwiększenie tej liczby może znacząco wpłynąć na czas symulacji i rozmiar pliku zapisu."
-theme = ExtResource("2_go3mf")
+theme = ExtResource("2_0fddw")
 
 [node name="maxPlantsRespLabel" type="Label" parent="Panel/TabContainer/Rośliny/ScrollContainer/RoslinyVBox/maxPlantsRespRow"]
 layout_mode = 2
