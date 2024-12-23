@@ -1,10 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckn642ovajni"]
+[gd_scene load_steps=6 format=3 uid="uid://ckn642ovajni"]
 
 [ext_resource type="Script" path="res://Visualization/ScenesScripts/PlotsScene.cs" id="1_3akb2"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_km44r"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1elex"]
 
-[node name="PlotsScene" type="Control" node_paths=PackedStringArray("_plotDisplay", "_plotsTabBar", "_backButton")]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_85h14"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ft0iv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_psw25"]
+
+[node name="PlotsScene" type="Control" node_paths=PackedStringArray("_commonTabContainer", "_diffsTabContainer", "_stdDevTabContainer", "_backButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,51 +18,56 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_3akb2")
-_plotDisplay = NodePath("PlotDisplay")
-_plotsTabBar = NodePath("PlotDisplay/PlotsTabBar")
+_commonTabContainer = NodePath("TabContainer/Ogólne")
+_diffsTabContainer = NodePath("TabContainer/Zmiany")
+_stdDevTabContainer = NodePath("TabContainer/Odchylenia")
 _backButton = NodePath("BackButton")
 
-[node name="PlotDisplay" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -515.5
-offset_right = 515.5
-offset_bottom = 580.0
-grow_horizontal = 2
-texture = SubResource("PlaceholderTexture2D_km44r")
-
-[node name="PlotsTabBar" type="TabBar" parent="PlotDisplay"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -416.0
-offset_right = -135.0
-offset_bottom = 35.0
-grow_horizontal = 2
-grow_vertical = 0
-current_tab = 0
-scrolling_enabled = false
-tab_count = 3
-tab_0/title = "Zmiany"
-tab_1/title = "Odchylenie"
-tab_2/title = "Populacje"
-
 [node name="BackButton" type="Button" parent="."]
+top_level = true
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -129.0
-offset_top = -52.0
-offset_right = -15.0
-offset_bottom = -10.0
+offset_left = -121.0
+offset_top = -46.0
+offset_right = -7.0
+offset_bottom = -4.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "Powrót"
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -515.5
+offset_right = 515.5
+offset_bottom = 642.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1elex")
+current_tab = 0
+tabs_position = 1
+
+[node name="Ogólne" type="TabContainer" parent="TabContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_85h14")
+tabs_position = 1
+metadata/_tab_index = 0
+
+[node name="Zmiany" type="TabContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ft0iv")
+tabs_position = 1
+metadata/_tab_index = 1
+
+[node name="Odchylenia" type="TabContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_psw25")
+tabs_position = 1
+metadata/_tab_index = 2

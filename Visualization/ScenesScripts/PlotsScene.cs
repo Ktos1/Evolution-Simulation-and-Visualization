@@ -1,13 +1,20 @@
-using Godot;
+﻿using Godot;
 using SkiaSharp;
 using System.IO;
 using Svg.Skia;
 using ProjectEvolution.Visualization;
+using ProjectEvolution.CommonStuff;
+using ProjectEvolution.Simulation.Algorithm;
+using System.Collections.Generic;
+using ProjectEvolution.Utility;
+using ProjectEvolution.Utility.BinarySerialization;
 
 public partial class PlotsScene : Control
 {
-    [Export] private TextureRect _plotDisplay;
-    [Export] private TabBar _plotsTabBar;
+    [Export] private TabContainer _commonTabContainer;
+    [Export] private TabContainer _diffsTabContainer;
+    [Export] private TabContainer _stdDevTabContainer;
+
     [Export] private Button _backButton;
 
     private Visualization _visualScene;
@@ -15,14 +22,63 @@ public partial class PlotsScene : Control
     public void Initialize(Visualization visualizationScene)
     {
         _visualScene = visualizationScene;
-        _plotsTabBar.TabChanged += OnPlotChange;
         _backButton.Pressed += OnBackButtonPress;
 
-        ScaleSVG("diffsPlot");
+        if (!Directory.Exists("Plots")) PlotsCreater.CreatePlots(BinReader.TickDTOs);
+        ScaleSVG("diffsSumPlot");
+        ScaleSVG("stdDevSumPlot");
         ScaleSVG("populationsPlot");
-        ScaleSVG("stdDevPlot");
-        var image = Image.LoadFromFile($"Plots/diffsPlot.png");
-        _plotDisplay.Texture = ImageTexture.CreateFromImage(image);
+
+        var image = Image.LoadFromFile($"Plots/diffsSumPlot.png");
+        _commonTabContainer.AddChild(new TextureRect() 
+        { 
+            Texture = ImageTexture.CreateFromImage(image),
+            ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+            Name = "Suma zmian uśrednionych genów"
+        });
+        image = Image.LoadFromFile($"Plots/stdDevSumPlot.png");
+        _commonTabContainer.AddChild(new TextureRect()
+        {
+            Texture = ImageTexture.CreateFromImage(image),
+            ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+            Name = "Suma odchyleń standardowych poszczególnych genów"
+        });
+        image = Image.LoadFromFile($"Plots/populationsPlot.png");
+        _commonTabContainer.AddChild(new TextureRect()
+        {
+            Texture = ImageTexture.CreateFromImage(image),
+            ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+            Name = "Populacje"
+        });
+
+        var propertiesInfo = typeof(Chromosome<SGene>).GetProperties();
+        var geneNames = new List<string>();
+        for (int i = 0; i < propertiesInfo.Length; i++)
+        {
+            if (propertiesInfo[i].PropertyType == typeof(SGene))
+                geneNames.Add(propertiesInfo[i].Name);
+        }
+
+        for (int i = 0; i < geneNames.Count; i++)
+        {
+            var geneName = geneNames[i];
+            ScaleSVG($"{geneName}Diffs");
+            ScaleSVG($"{geneName}StdDev");
+            var diffImage = Image.LoadFromFile($"Plots/{geneName}Diffs.png");
+            var stdDevImage = Image.LoadFromFile($"Plots/{geneName}StdDev.png");
+            _diffsTabContainer.AddChild(new TextureRect()
+            {
+                Texture = ImageTexture.CreateFromImage(diffImage),
+                ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+                Name = $"{geneName}"
+            });
+            _stdDevTabContainer.AddChild(new TextureRect()
+            {
+                Texture = ImageTexture.CreateFromImage(stdDevImage),
+                ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+                Name = $"{geneName}"
+            });
+        }
     }
 
     private void ScaleSVG(string filename)
@@ -31,7 +87,7 @@ public partial class PlotsScene : Control
         var svg = new SKSvg();
         svg.Load(stream);
 
-        float scaleFactor = _plotDisplay.Size.X / 800f;
+        float scaleFactor = _visualScene.GetTree().Root.Size.X / 1152f;
 
         var originalSize = svg.Picture.CullRect.Size;
         var scaledWidth = (int)(originalSize.Width * scaleFactor);
@@ -46,24 +102,6 @@ public partial class PlotsScene : Control
         using var image = surface.Snapshot();
         using var data = image.Encode(SKEncodedImageFormat.Png, 100);
         File.WriteAllBytes($"Plots/{filename}.png", data.ToArray());
-    }
-
-    private void OnPlotChange(long tab)
-    {
-        Image image = null;
-        switch (tab)
-        {
-            case 0:
-                image = Image.LoadFromFile($"Plots/diffsPlot.png");
-                break;
-            case 1:
-                image = Image.LoadFromFile($"Plots/stdDevPlot.png");
-                break;
-            case 2:
-                image = Image.LoadFromFile($"Plots/populationsPlot.png");
-                break;
-        }
-        _plotDisplay.Texture = ImageTexture.CreateFromImage(image);
     }
 
     private void OnBackButtonPress()

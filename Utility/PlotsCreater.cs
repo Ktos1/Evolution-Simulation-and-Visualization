@@ -13,30 +13,32 @@ using OxyPlot.Legends;
 
 namespace ProjectEvolution.Utility
 {
-    internal class PlotsCreater
+    internal static class PlotsCreater
     {
-        private TickDTO[] _ticksDTOs;
-
-        public PlotsCreater(TickDTO[] ticksDTO)
+        public static void CreatePlots(TickDTO[] ticksDTOs)
         {
-            _ticksDTOs = ticksDTO;
-        }
+            var genesNumber = ticksDTOs[0].CreaturesData[0].Genes.Length;
+            var diffSumPoints = new List<DataPoint>();
+            var diffPoints = new List<DataPoint>[genesNumber];
+            var stdDevSumPoints = new List<DataPoint>();
+            var stdDevPoints = new List<DataPoint>[genesNumber];
+            for (int i = 0; i < genesNumber; i++)
+            {
+                diffPoints[i] = new List<DataPoint>();
+                stdDevPoints[i] = new List<DataPoint>();
+            }
 
-        public void CreatePlots()
-        {
-            var diffPoints = new List<DataPoint>();
-            var stdDevPoints = new List<DataPoint>();
             var creaturesPopulPoints = new List<DataPoint>();
             var plantsPopulPoints = new List<DataPoint>();
             int year = 0;
             var creaturesData = new List<CreatureDTO>();
-            var genesNumber = _ticksDTOs[0].CreaturesData[0].Genes.Length;
             var oldGeneValues = new float[genesNumber];
             var avgGeneValues = new float[genesNumber];
             var stdDevValues = new float[genesNumber];
-            for (int i = 0; i < _ticksDTOs.Length; i++)
+
+            for (int i = 0; i < ticksDTOs.Length; i++)
             {
-                foreach (var creatureData in _ticksDTOs[i].CreaturesData)
+                foreach (var creatureData in ticksDTOs[i].CreaturesData)
                 {
                     if (creatureData.Genes != null) creaturesData.Add(creatureData);
                     else if (creatureData.CurrentState == CreatureStates.ToDelete)
@@ -81,9 +83,11 @@ namespace ProjectEvolution.Utility
                             var diffsSum = 0f;
                             for (var j = 0; j < genesNumber; j++)
                             {
-                                diffsSum += Mathf.Abs(avgGeneValues[j] - oldGeneValues[j]);
+                                var geneDiff = Mathf.Abs(avgGeneValues[j] - oldGeneValues[j]);
+                                diffPoints[j].Add(new DataPoint(year, geneDiff));
+                                diffsSum += geneDiff;
                             }
-                            diffPoints.Add(new DataPoint(year, diffsSum));
+                            diffSumPoints.Add(new DataPoint(year, diffsSum));
                         }
                         for (var j = 0; j < genesNumber; j++)
                         {
@@ -94,34 +98,41 @@ namespace ProjectEvolution.Utility
                         var stdDevSum = 0f;
                         for (var j = 0; j < genesNumber; j++)
                         {
+                            stdDevPoints[j].Add(new DataPoint(year, stdDevValues[j]));
                             stdDevSum += stdDevValues[j];
                         }
-                        stdDevPoints.Add(new DataPoint(year, stdDevSum));
+                        stdDevSumPoints.Add(new DataPoint(year, stdDevSum));
                     }
                     else
                     {
-                        diffPoints.Add(new DataPoint(year, 0));
-                        stdDevPoints.Add(new DataPoint(year, 0));
+                        diffSumPoints.Add(new DataPoint(year, 0));
+                        stdDevSumPoints.Add(new DataPoint(year, 0));
+                        for (var j = 0; j < genesNumber; j++)
+                        {
+                            diffPoints[j].Add(new DataPoint(year, 0));
+                            stdDevPoints[j].Add(new DataPoint(year, 0));
+                        }
                     }
 
                     // population plot stuff
                     creaturesPopulPoints.Add(new DataPoint(year, creaturesData.Count));
-                    plantsPopulPoints.Add(new DataPoint(year, _ticksDTOs[i].PlantsNumber));
+                    plantsPopulPoints.Add(new DataPoint(year, ticksDTOs[i].PlantsNumber));
 
                     year++;
                 }
             }
 
+            // common plots
             var title = "Suma zmian uśrednionych genów w stosunku do poprzedniego roku";
-            var diffsplot = CreateLinePlot(title, "Lata", "Suma", diffPoints.ToArray());
+            var diffsSumPlot = CreateLinePlot(title, "Lata", "Suma", diffSumPoints);
 
-            title = "Suma odchyleń standardowych genów";
-            var stdDevPlot = CreateLinePlot(title, "Lata", "Suma", stdDevPoints.ToArray());
+            title = "Suma odchyleń standardowych poszczególnych genów";
+            var stdDevSumPlot = CreateLinePlot(title, "Lata", "Suma", stdDevSumPoints);
 
             title = "Liczebność populacji stworzeń i roślin";
             var seriesTitles = new string[] { "Stworzenia      ", "Rośliny" };
             var populationsPlot = CreateLinePlot(title, "Lata", "Liczebność",
-                new DataPoint[][] { creaturesPopulPoints.ToArray(), plantsPopulPoints.ToArray() }, 
+                new List<List<DataPoint>> { creaturesPopulPoints, plantsPopulPoints }, 
                 seriesTitles);
             var legend = new Legend
             {
@@ -134,25 +145,47 @@ namespace ProjectEvolution.Utility
             };
             populationsPlot.Legends.Add(legend);
 
-            ExportPlotToSVG("diffsPlot.svg", diffsplot);
-            ExportPlotToSVG("stdDevPlot.svg", stdDevPlot);
+            if (!Directory.Exists("Plots")) Directory.CreateDirectory("Plots");
+            ExportPlotToSVG("diffsSumPlot.svg", diffsSumPlot);
+            ExportPlotToSVG("stdDevSumPlot.svg", stdDevSumPlot);
             ExportPlotToSVG("populationsPlot.svg", populationsPlot);
+
+            // plots for specified genes
+            var propertiesInfo = typeof(Chromosome<SGene>).GetProperties();
+            var geneNames = new List<string>();
+            for (int i = 0; i < propertiesInfo.Length; i++)
+            {
+                if (propertiesInfo[i].PropertyType == typeof(SGene))
+                    geneNames.Add(propertiesInfo[i].Name);
+            }
+            for (int i = 0; i < genesNumber; i++)
+            {
+                var geneName = geneNames[i];
+                // name here should be from translation to polish function.
+                var diffsPlot = CreateLinePlot($"{geneName} - zmiany średniej z całej populacji",
+                    "Lata", "Procent", diffPoints[i]);
+                var stdDevPlot = CreateLinePlot($"{geneName} - odchylenie standardowe",
+                    "Lata", "Odchylenie", stdDevPoints[i]);
+
+                ExportPlotToSVG($"{geneName}Diffs.svg", diffsPlot);
+                ExportPlotToSVG($"{geneName}StdDev.svg", stdDevPlot);
+            }
         }
 
-        private PlotModel CreateLinePlot(
+        private static PlotModel CreateLinePlot(
             string title,
             string xTitle,
             string yTitle,
-            DataPoint[] dataSeries)
+            List<DataPoint> dataSeries)
         {
-            return CreateLinePlot(title, xTitle, yTitle, new DataPoint[1][] { dataSeries });
+            return CreateLinePlot(title, xTitle, yTitle, new List<List<DataPoint>> { dataSeries });
         }
 
-        private PlotModel CreateLinePlot(
+        private static PlotModel CreateLinePlot(
             string title,
             string xTitle,
             string yTitle,
-            DataPoint[][] dataSeries,
+            List<List<DataPoint>> dataSeries,
             string[] dataSeriesTitles = null)
         {
             var plotModel = new PlotModel
@@ -186,9 +219,9 @@ namespace ProjectEvolution.Utility
                 IntervalLength = 25,
             });
 
-            for (int i = 0; i < dataSeries.Length; i++)
+            for (int i = 0; i < dataSeries.Count; i++)
             {
-                DataPoint[] dataSerie = dataSeries[i];
+                var dataSerie = dataSeries[i];
                 var lineSerie = new LineSeries {
                     ItemsSource = dataSerie,
                     Title = (dataSeriesTitles != null) ? dataSeriesTitles[i] : null,
@@ -198,7 +231,7 @@ namespace ProjectEvolution.Utility
             return plotModel;
         }
 
-        private void ExportPlotToSVG(string fileName, PlotModel plotModel)
+        private static void ExportPlotToSVG(string fileName, PlotModel plotModel)
         {
             using (var memoryStream = new MemoryStream())
             {

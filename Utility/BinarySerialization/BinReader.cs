@@ -17,6 +17,8 @@ namespace ProjectEvolution.Utility.BinarySerialization
 
         public static event Action DataEnd;
 
+        public static TickDTO[] TickDTOs => _ticksDTOs;
+
         public static SimulationInfoDTO SimulationInfo { get; private set; }
 
         public static int TotalTicksNumber { get; private set; }
