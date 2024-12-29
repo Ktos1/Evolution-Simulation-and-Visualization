@@ -15,13 +15,23 @@ namespace ProjectEvolution.Utility.BinarySerialization
         /// <summary>
         /// The simulation info data transfer object.
         /// </summary>
-        [Key(0)]
-        public SimulationInfoDTO SimulationInfo { get; private set; }
+        private SimulationInfoDTO _simulationInfo;
         /// <summary>
         /// The array of the ticks data transfer objects.
         /// </summary>
+        private TickDTO[] _ticksData;
+
+
+        /// <summary>
+        /// Gets the simulation info data transfer object.
+        /// </summary>
+        [Key(0)]
+        public SimulationInfoDTO SimulationInfo => _simulationInfo;
+        /// <summary>
+        /// Gets the array of the ticks data transfer objects.
+        /// </summary>
         [Key(1)]
-        public TickDTO[] TicksData { get; private set; }
+        public TickDTO[] TicksData => _ticksData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainDTO"/> class.
@@ -34,8 +44,8 @@ namespace ProjectEvolution.Utility.BinarySerialization
         /// </param>
         public MainDTO(SimulationInfoDTO simulationInfo, TickDTO[] ticksData)
         {
-            SimulationInfo = simulationInfo;
-            TicksData = ticksData;
+            _simulationInfo = simulationInfo;
+            _ticksData = ticksData;
         }
     }
 }

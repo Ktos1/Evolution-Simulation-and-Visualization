@@ -9,20 +9,29 @@ namespace ProjectEvolution.Utility.BinarySerialization
     public class TickDTO
     {
         /// <summary>
+        /// The array of the data transfer objects for all plants in the tick.
+        /// </summary>
+        private PlantDTO[] _plantsData;
+        /// <summary>
+        /// The array of the data transfer objects for all creatures in the tick.
+        /// </summary>
+        private CreatureDTO[] _creaturesData;
+
+        /// <summary>
         /// The number of the plants in the tick.
         /// </summary>
         [Key(0)]
         public int PlantsNumber { get; private set; }
         /// <summary>
-        /// The array of the data transfer objects for all plants in the tick.
+        /// Gets the array of the data transfer objects for all plants in the tick.
         /// </summary>
         [Key(1)]
-        public PlantDTO[] PlantsData { get; private set; }
+        public PlantDTO[] PlantsData => _plantsData;
         /// <summary>
-        /// The array of the data transfer objects for all creatures in the tick.
+        /// Gets the array of the data transfer objects for all creatures in the tick.
         /// </summary>
         [Key(2)]
-        public CreatureDTO[] CreaturesData { get; private set; }
+        public CreatureDTO[] CreaturesData => _creaturesData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TickDTO"/> class.
@@ -39,8 +48,8 @@ namespace ProjectEvolution.Utility.BinarySerialization
         public TickDTO(int plantsNumber, PlantDTO[] plantsData, CreatureDTO[] creatureData)
         {
             PlantsNumber = plantsNumber;
-            PlantsData = plantsData;
-            CreaturesData = creatureData;
+            _plantsData = plantsData;
+            _creaturesData = creatureData;
         }
     }
 }
