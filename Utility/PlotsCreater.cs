@@ -2,7 +2,6 @@
 using OxyPlot.Series;
 using OxyPlot;
 using ProjectEvolution.CommonStuff;
-using ProjectEvolution.Simulation.Algorithm;
 using ProjectEvolution.Utility.BinarySerialization;
 using System.Collections.Generic;
 using System.IO;
@@ -10,11 +9,24 @@ using Godot;
 using System.Linq;
 using MathNet.Numerics.Statistics;
 using OxyPlot.Legends;
+using ProjectEvolution.Simulation;
 
+/// <summary>
+/// Contains the classes provided some utility functions.
+/// </summary>
 namespace ProjectEvolution.Utility
 {
+    /// <summary>
+    /// Represents the class used to create the plots.
+    /// </summary>
     internal static class PlotsCreater
     {
+        /// <summary>
+        /// Creates all the needed plots based on the ticks data transfer objects.
+        /// </summary>
+        /// <param name="ticksDTOs">
+        /// The array of the all ticks data transfer objects for the simulation.
+        /// </param>
         public static void CreatePlots(TickDTO[] ticksDTOs)
         {
             var genesNumber = ticksDTOs[0].CreaturesData[0].Genes.Length;
@@ -41,7 +53,7 @@ namespace ProjectEvolution.Utility
                 foreach (var creatureData in ticksDTOs[i].CreaturesData)
                 {
                     if (creatureData.Genes != null) creaturesData.Add(creatureData);
-                    else if (creatureData.CurrentState == CreatureStates.ToDelete)
+                    else if (creatureData.State == CreatureStates.ToDelete)
                     {
                         var creatureToDelete = creaturesData.Find(
                             creature => creature.ID == creatureData.ID);
@@ -167,6 +179,24 @@ namespace ProjectEvolution.Utility
             }
         }
 
+        /// <summary>
+        /// Creates the line plot with the specified parameters for one data series.
+        /// </summary>
+        /// <param name="title">
+        /// The title of the plot.
+        /// </param>
+        /// <param name="xTitle">
+        /// The title of the x-axis.
+        /// </param>
+        /// <param name="yTitle">
+        /// The title of the y-axis.
+        /// </param>
+        /// <param name="dataSeries">
+        /// The data series for the plot to display.
+        /// </param>
+        /// <returns>
+        /// The created plot model.
+        /// </returns>
         private static PlotModel CreateLinePlot(
             string title,
             string xTitle,
@@ -176,6 +206,27 @@ namespace ProjectEvolution.Utility
             return CreateLinePlot(title, xTitle, yTitle, new List<List<DataPoint>> { dataSeries });
         }
 
+        /// <summary>
+        /// Creates the line plot with the specified parameters for multiple data series.
+        /// </summary>
+        /// <param name="title">
+        /// The title of the plot.
+        /// </param>
+        /// <param name="xTitle">
+        /// The title of the x-axis.
+        /// </param>
+        /// <param name="yTitle">
+        /// The title of the y-axis.
+        /// </param>
+        /// <param name="dataSeries">
+        /// The data series for the plot to display.
+        /// </param>
+        /// <param name="dataSeriesTitles">
+        /// The titles of the data series. Used for the legend.
+        /// </param>
+        /// <returns>
+        /// The created plot model.
+        /// </returns>
         private static PlotModel CreateLinePlot(
             string title,
             string xTitle,
@@ -226,6 +277,15 @@ namespace ProjectEvolution.Utility
             return plotModel;
         }
 
+        /// <summary>
+        /// Exports the plot model to the SVG file.
+        /// </summary>
+        /// <param name="fileName">
+        /// The name of the file to save the plot.
+        /// </param>
+        /// <param name="plotModel">
+        /// The plot model to save.
+        /// </param>
         private static void ExportPlotToSVG(string fileName, PlotModel plotModel)
         {
             using (var memoryStream = new MemoryStream())

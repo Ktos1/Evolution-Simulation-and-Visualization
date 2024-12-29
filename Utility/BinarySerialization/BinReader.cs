@@ -1,31 +1,58 @@
 ﻿using Godot;
 using MessagePack;
 using ProjectEvolution.CommonStuff;
-using ProjectEvolution.Visualization;
 using ProjectEvolution.Visualization.LogicScripts;
 using System;
 using System.IO;
-    
+
+/// <summary>
+/// Contains the classes used in the binary serialization and in saving the simulation data.
+/// </summary>
 namespace ProjectEvolution.Utility.BinarySerialization
 {
+    /// <summary>
+    /// Represents the binary reader used to read the simulation data from the file.
+    /// </summary>
     internal static class BinReader
     {
+        /// <summary>
+        /// The main data transfer object.
+        /// </summary>
         private static MainDTO _mainDTO;
+        /// <summary>
+        /// The array of the ticks data transfer objects.
+        /// </summary>
         private static TickDTO[] _ticksDTOs;
 
+        /// <summary>
+        /// The current tick number.
+        /// </summary>
         private static int _currentTickNumber = 0;
 
+        /// <summary>
+        /// The event invoked when the bin reader reaches the end of the data in 
+        /// the save file.
+        /// </summary>
         public static event Action DataEnd;
 
+        /// <summary>
+        /// Gets the array of the ticks data transfer objects.
+        /// </summary>
         public static TickDTO[] TickDTOs => _ticksDTOs;
 
+        /// <summary>
+        /// Gets and privately sets the simulation info data transfer object.
+        /// </summary>
         public static SimulationInfoDTO SimulationInfo { get; private set; }
 
+        /// <summary>
+        /// Gets and privately sets the total number of the ticks.
+        /// </summary>
         public static int TotalTicksNumber { get; private set; }
 
-        public static int YearsNumber => 
-            Mathf.CeilToInt(TotalTicksNumber / (float)CommonSettings.YEAR_DURATION);
-
+        /// <summary>
+        /// Gets and sets the current tick number.
+        /// </summary>
         public static int CurrentTickNumber
         {
             get { return _currentTickNumber; }
@@ -41,6 +68,12 @@ namespace ProjectEvolution.Utility.BinarySerialization
             }
         }
 
+        /// <summary>
+        /// Gets the creatures data for the current tick.
+        /// </summary>
+        /// <returns>
+        /// The array of the creatures data.
+        /// </returns>
         public static CreatureTickData[] GetCreaturesTickData()
         {
             var creaturesDTOs = _ticksDTOs[_currentTickNumber].CreaturesData;
@@ -53,7 +86,14 @@ namespace ProjectEvolution.Utility.BinarySerialization
             return creaturesData;
         }
 
-        public static (int plantsNumber, PlantTickData[] plantsData) GetPlantTickData()
+        /// <summary>
+        /// Gets the plants data for the current tick.
+        /// </summary>
+        /// <returns>
+        /// The tuple of the number of the plants and the array of 
+        /// the plants data.
+        /// </returns>
+        public static (int plantsNumber, PlantTickData[] plantsData) GetPlantsTickData()
         {
             var tickDTO = _ticksDTOs[_currentTickNumber];
             var plantsDTOs = tickDTO.PlantsData;
@@ -67,16 +107,29 @@ namespace ProjectEvolution.Utility.BinarySerialization
             return (plantsNumber, plantsData);
         }
 
+        /// <summary>
+        /// Loads the new file with the simulation data.
+        /// </summary>
         public static void LoadNewFile()
         {
             byte[] blob = File.ReadAllBytes("result.bin");
             _mainDTO = MessagePackSerializer.Deserialize<MainDTO>(blob);
             SimulationInfo = _mainDTO.SimulationInfo;
             _ticksDTOs = _mainDTO.TicksData;
+            PlotsCreater.CreatePlots(_ticksDTOs);
             TotalTicksNumber = _ticksDTOs.Length;
             _currentTickNumber = 0;
         }
 
+        /// <summary>
+        /// Gets the creature data from the creature data transfer object.
+        /// </summary>
+        /// <param name="creatureDTO">
+        /// The creature data transfer object.
+        /// </param>
+        /// <returns>
+        /// The creature data formatted as the <see cref="CreatureTickData"/> object.
+        /// </returns>
         private static CreatureTickData GetCreaturesDataFromDTO(CreatureDTO creatureDTO)
         {
             var position = creatureDTO.Position;
@@ -86,9 +139,18 @@ namespace ProjectEvolution.Utility.BinarySerialization
             {
                 chromosome = new VChromosome(creatureDTO.Genes);
             }
-            return new CreatureTickData(creatureDTO.ID, positionVector, creatureDTO.CurrentState, chromosome);
+            return new CreatureTickData(creatureDTO.ID, positionVector, creatureDTO.State, chromosome);
         }
 
+        /// <summary>
+        /// Gets the plant data from the plant data transfer object.
+        /// </summary>
+        /// <param name="plantDTO">
+        /// The plant data transfer object.
+        /// </param>
+        /// <returns>
+        /// The plant data formatted as the <see cref="PlantTickData"/> object.
+        /// </returns>
         private static PlantTickData GetPlantDataFromDTO(PlantDTO plantDTO)
         {
             var id = plantDTO.ID;

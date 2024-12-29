@@ -1,58 +1,111 @@
 using Godot;
 using ProjectEvolution.Utility.BinarySerialization;
-using ProjectEvolution.Visualization.ScenesScripts;
 using System;
 using System.Diagnostics;
 
-public partial class Menu : Control
+/// <summary>
+/// Contains the scripts attached to the scenes.
+/// </summary>
+namespace ProjectEvolution.Visualization.ScenesScripts
 {
-    [Export] private Button _simulationButton;
-    [Export] private Button _visualizationButton;
-    [Export] private Button _exitButton;
-    [Export] private Label _errorLabel;
-    [Export] private CheckBox _fullscreenButton;
-
-    public override void _Ready()
+    /// <summary>
+    /// Represents the menu scene.
+    /// </summary>
+    public partial class Menu : Control
     {
-        // adding a listener to get a debug output in VS (Trace share listeners with Debug)
-        Trace.Listeners.Add(new DefaultTraceListener());
+        /// <summary>
+        /// The button to change to the simulation scene.
+        /// </summary>
+        [Export] private Button _simulationButton;
+        /// <summary>
+        /// The button to change to the visualization scene.
+        /// </summary>
+        [Export] private Button _visualizationButton;
+        /// <summary>
+        /// The button to exit the application.
+        /// </summary>
+        [Export] private Button _exitButton;
+        /// <summary>
+        /// The label to display the error message.
+        /// </summary>
+        /// <remarks>
+        /// The error message is displayed when the visualization button is pressed and 
+        /// there is no simulation save file.
+        /// </remarks>
+        [Export] private Label _errorLabel;
+        /// <summary>
+        /// The checkbox to toggle fullscreen mode.
+        /// </summary>
+        [Export] private CheckBox _fullscreenButton;
 
-        _simulationButton.Pressed += OnSimulationButtonPress;
-        _visualizationButton.Pressed += OnVisualizationButtonPress;
-        _exitButton.Pressed += OnExitButtonPress;
-        _fullscreenButton.Toggled += OnFullscreenButtonPress;
-        SceneManager.Initialize(this, GetTree().Root);
-    }
-
-    private void OnSimulationButtonPress()
-    {
-        _errorLabel.Visible = false;
-        SceneManager.ChangeToScene(SceneType.Simulation);
-    }
-
-    private void OnVisualizationButtonPress()
-    {
-        try
+        /// <inheritdoc/>
+        public override void _Ready()
         {
-            var temp = BinReader.CurrentTickNumber;
-            SceneManager.ChangeToScene(SceneType.Visualization);
+            // adding a listener to get a debug output in VS (Trace share listeners with
+            // Debug)
+            Trace.Listeners.Add(new DefaultTraceListener());
+
+            _simulationButton.Pressed += OnSimulationButtonPress;
+            _visualizationButton.Pressed += OnVisualizationButtonPress;
+            _exitButton.Pressed += OnExitButtonPress;
+            _fullscreenButton.Toggled += OnFullscreenButtonPress;
+            SceneManager.Initialize(this, GetTree().Root);
         }
-        catch (Exception)
+
+        /// <summary>
+        /// Handles the Simulation button press.
+        /// </summary>
+        /// <remarks>
+        /// Changes to the simulation scene.
+        /// </remarks>
+        private void OnSimulationButtonPress()
         {
-            _errorLabel.Visible = true;
+            _errorLabel.Visible = false;
+            SceneManager.ChangeToScene(SceneType.Simulation);
         }
-    }
 
-    private void OnFullscreenButtonPress(bool toggledOn)
-    {
-        if (toggledOn)
-            DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
-        else
-            DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
-    }
+        /// <summary>
+        /// Handles the Visualization button press.
+        /// </summary>
+        /// <remarks>
+        /// Changes to the visualization scene.
+        /// </remarks>
+        private void OnVisualizationButtonPress()
+        {
+            try
+            {
+                var temp = BinReader.CurrentTickNumber;
+                SceneManager.ChangeToScene(SceneType.Visualization);
+            }
+            catch (Exception)
+            {
+                _errorLabel.Visible = true;
+            }
+        }
 
-    private void OnExitButtonPress()
-    {
-        GetTree().Quit();
+        /// <summary>
+        /// Handles the Fullscreen button press.
+        /// </summary>
+        /// <remarks>
+        /// Toggles fullscreen mode.
+        /// </remarks>
+        private void OnFullscreenButtonPress(bool toggledOn)
+        {
+            if (toggledOn)
+                DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+            else
+                DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+        }
+
+        /// <summary>
+        /// Handles the Exit button press.
+        /// </summary>
+        /// <remarks>
+        /// Exits the application.
+        /// </remarks>
+        private void OnExitButtonPress()
+        {
+            GetTree().Quit();
+        }
     }
 }

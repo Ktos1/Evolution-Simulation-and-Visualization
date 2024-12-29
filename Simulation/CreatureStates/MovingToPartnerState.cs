@@ -1,11 +1,23 @@
-﻿namespace ProjectEvolution.Simulation.Algorithm
+﻿namespace ProjectEvolution.Simulation
 {
     public partial class SCreature
     {
+        /// <summary>
+        /// Represents the moving to partner state of a creature.
+        /// </summary>
         private class MovingToPartnerState : State
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="MovingToPartnerState"/> class.
+            /// </summary>
+            /// <param name="sCreature">
+            /// <inheritdoc/>
+            /// </param>
             public MovingToPartnerState(SCreature sCreature) : base(sCreature) { }
 
+            /// <summary>
+            /// <inheritdoc/>
+            /// </summary>
             public override void Process()
             {
                 var partner = (SCreature)_creature._focusObject;
@@ -26,6 +38,9 @@
                 }
             }
 
+            /// <summary>
+            /// Determines the creature's behavior when it cannot reach its partner.
+            /// </summary>
             private void ChooseWhatToDo()
             {
                 if (_creature._energy < _creature.GetBorderForFoodSearch())

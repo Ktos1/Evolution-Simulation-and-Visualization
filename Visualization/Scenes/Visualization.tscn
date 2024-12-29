@@ -1,12 +1,13 @@
-[gd_scene load_steps=19 format=3 uid="uid://birdpk8ymh3dc"]
+[gd_scene load_steps=20 format=3 uid="uid://birdpk8ymh3dc"]
 
-[ext_resource type="Script" path="res://Visualization/ScenesScripts/Visualization.cs" id="1_8ml5k"]
-[ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/Camera3d.cs" id="2_qh4s7"]
+[ext_resource type="Script" path="res://Visualization/ScenesScripts/VisualizationScene.cs" id="1_uamol"]
+[ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/Camera.cs" id="2_i4d15"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/TimeSliderPanel.cs" id="3_wfpa5"]
 [ext_resource type="Texture2D" uid="uid://bttwu5glr36cl" path="res://Resources/Icons/clock.png" id="4_35kr6"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/MenuPanel.cs" id="4_oy4js"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/GenesWindow.cs" id="5_i1j78"]
 [ext_resource type="Texture2D" uid="uid://5tsu0crhx2bj" path="res://Resources/Icons/menu.png" id="5_t67dm"]
+[ext_resource type="Texture2D" uid="uid://cyscco3i855kk" path="res://Resources/Icons/stop.png" id="5_trlw8"]
 [ext_resource type="Script" path="res://Visualization/ScenesElementsScripts/GenesScrollContainer.cs" id="6_pnfmp"]
 [ext_resource type="PackedScene" uid="uid://cc0xbbpeoy2ig" path="res://Visualization/SubScenes/GeneInfoRow.tscn" id="6_x4371"]
 [ext_resource type="Texture2D" uid="uid://55vhsom4lxnr" path="res://Resources/Icons/plots.png" id="10_aaru6"]
@@ -38,7 +39,7 @@ font_size = 24
 font_color = Color(0.87451, 0.87451, 0.87451, 1)
 
 [node name="Visualization" type="Node3D" node_paths=PackedStringArray("_timeSliderPanel", "_timeSlider", "_startStopButton", "GenesWindow", "_plotsButton", "_floorMesh", "_yearLabel")]
-script = ExtResource("1_8ml5k")
+script = ExtResource("1_uamol")
 _timeSliderPanel = NodePath("TimeSliderPanel")
 _timeSlider = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/TimeSlider")
 _startStopButton = NodePath("TimeSliderPanel/MarginContainer/HBoxContainer/StartStopButton")
@@ -59,12 +60,13 @@ camera_attributes = SubResource("CameraAttributesPractical_1t4oh")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.882332, 0.470627, 0, -0.470627, 0.882332, 0, 4.18326, 10.1856)
+light_energy = 0.7
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.851489, 0.524372, 0, -0.524372, 0.851489, 0, 3.99806, 5.3482)
+transform = Transform3D(1, 0, 0, 0, 0.789416, 0.613858, 0, -0.613858, 0.789416, 0, 12.0439, 20.0605)
 fov = 80.0
 size = 18.4915
-script = ExtResource("2_qh4s7")
+script = ExtResource("2_i4d15")
 
 [node name="TimeSliderPanel" type="Panel" parent="." node_paths=PackedStringArray("_slidingButton", "_actualTimeLabel", "_totalTimeLabel", "_timeSlider")]
 anchors_preset = -1
@@ -116,6 +118,8 @@ alignment = 1
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 toggle_mode = true
+icon = ExtResource("5_trlw8")
+expand_icon = true
 
 [node name="ActualTimeLabel" type="Label" parent="TimeSliderPanel/MarginContainer/HBoxContainer"]
 layout_mode = 2

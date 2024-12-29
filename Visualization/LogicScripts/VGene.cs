@@ -1,14 +1,15 @@
 ﻿using ProjectEvolution.CommonStuff;
 
-namespace ProjectEvolution.Visualization
+namespace ProjectEvolution.Visualization.LogicScripts
 {
+    /// <summary>
+    /// Represents a gene in the visualization part.
+    /// </summary>
     public class VGene : Gene
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VGene"/> class.
+        /// </summary>
         public VGene() { }
-
-        public VGene(float value) : base(value) { }
-
-        public VGene(float minValue, float maxValue, float value)
-            : base(minValue, maxValue, value) { }
     }
 }

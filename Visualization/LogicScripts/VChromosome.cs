@@ -1,11 +1,18 @@
 ﻿using ProjectEvolution.CommonStuff;
 
-namespace ProjectEvolution.Visualization
+namespace ProjectEvolution.Visualization.LogicScripts
 {
-    // być może ta klasa nie jest potrzebna, może dałoby się trzymać geny po prostu w tablicy, zamiast
-    // oddzielnej klasy całej. Usuń ją, jak nie znajdzie się dla niej zastosowania.
+    /// <summary>
+    /// Represents a chromosome in the visualization part.
+    /// </summary>
     public class VChromosome : Chromosome<VGene>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VChromosome"/> class.
+        /// </summary>
+        /// <param name="genesValues">
+        /// The values of the genes to initialize the chromosome with.
+        /// </param>
         public VChromosome(float[] genesValues) : base()
         {
             for (int i = 0; i < _genes.Length; i++)

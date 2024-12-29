@@ -2,106 +2,145 @@
 using SkiaSharp;
 using System.IO;
 using Svg.Skia;
-using ProjectEvolution.Visualization;
 using ProjectEvolution.CommonStuff;
-using ProjectEvolution.Simulation.Algorithm;
-using ProjectEvolution.Utility;
-using ProjectEvolution.Utility.BinarySerialization;
+using ProjectEvolution.Simulation;
 
-public partial class PlotsScene : Control
+
+namespace ProjectEvolution.Visualization.ScenesScripts
 {
-    [Export] private TabContainer _commonTabContainer;
-    [Export] private TabContainer _diffsTabContainer;
-    [Export] private TabContainer _stdDevTabContainer;
-
-    [Export] private Button _backButton;
-
-    private Visualization _visualScene;
-
-    public void Initialize(Visualization visualizationScene)
+    /// <summary>
+    /// Represents the plots scene.
+    /// </summary>
+    public partial class PlotsScene : Control
     {
-        _visualScene = visualizationScene;
-        _backButton.Pressed += OnBackButtonPress;
+        /// <summary>
+        /// The tab container for the common plots.
+        /// </summary>
+        [Export] private TabContainer _commonTabContainer;
+        /// <summary>
+        /// The tab container for the differents plots.
+        /// </summary>
+        [Export] private TabContainer _diffsTabContainer;
+        /// <summary>
+        /// The tab container for the std dev plots.
+        /// </summary>
+        [Export] private TabContainer _stdDevTabContainer;
+        /// <summary>
+        /// The button to back to the visualization scene.
+        /// </summary>
+        [Export] private Button _backButton;
 
-        if (!Directory.Exists("Plots")) PlotsCreater.CreatePlots(BinReader.TickDTOs);
-        ScaleSVG("diffsSumPlot");
-        ScaleSVG("stdDevSumPlot");
-        ScaleSVG("populationsPlot");
+        /// <summary>
+        /// The visualization scene.
+        /// </summary>
+        private VisualizationScene _visualScene;
 
-        var image = Image.LoadFromFile($"Plots/diffsSumPlot.png");
-        _commonTabContainer.AddChild(new TextureRect() 
-        { 
-            Texture = ImageTexture.CreateFromImage(image),
-            ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
-            Name = "Suma zmian uśrednionych genów"
-        });
-        image = Image.LoadFromFile($"Plots/stdDevSumPlot.png");
-        _commonTabContainer.AddChild(new TextureRect()
+        /// <summary>
+        /// Initializes the plots scene.
+        /// </summary>
+        /// <remarks>
+        /// Firstly scales the svg plots and converts them to png.
+        /// Then loads them into the tab containers.
+        /// </remarks>
+        /// <param name="visualizationScene">
+        /// The visualization scene.
+        /// </param>
+        public void Initialize(VisualizationScene visualizationScene)
         {
-            Texture = ImageTexture.CreateFromImage(image),
-            ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
-            Name = "Suma odchyleń standardowych poszczególnych genów"
-        });
-        image = Image.LoadFromFile($"Plots/populationsPlot.png");
-        _commonTabContainer.AddChild(new TextureRect()
-        {
-            Texture = ImageTexture.CreateFromImage(image),
-            ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
-            Name = "Populacje"
-        });
+            _visualScene = visualizationScene;
+            _backButton.Pressed += OnBackButtonPress;
 
-        var genesNames = Chromosome<SGene>.GetGenesNames();
-        for (int i = 0; i < genesNames.Length; i++)
-        {
-            var geneName = genesNames[i];
-            ScaleSVG($"{geneName}Diffs");
-            ScaleSVG($"{geneName}StdDev");
-            var diffImage = Image.LoadFromFile($"Plots/{geneName}Diffs.png");
-            var stdDevImage = Image.LoadFromFile($"Plots/{geneName}StdDev.png");
+            ScaleSVG("diffsSumPlot");
+            ScaleSVG("stdDevSumPlot");
+            ScaleSVG("populationsPlot");
 
-            var polishGeneName = Gene.TranslateNameToPolish(geneName);
-            _diffsTabContainer.AddChild(new TextureRect()
+            var image = Image.LoadFromFile($"Plots/diffsSumPlot.png");
+            _commonTabContainer.AddChild(new TextureRect()
             {
-                Texture = ImageTexture.CreateFromImage(diffImage),
+                Texture = ImageTexture.CreateFromImage(image),
                 ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
-                Name = $"{polishGeneName}"
+                Name = "Suma zmian uśrednionych genów"
             });
-            _stdDevTabContainer.AddChild(new TextureRect()
+            image = Image.LoadFromFile($"Plots/stdDevSumPlot.png");
+            _commonTabContainer.AddChild(new TextureRect()
             {
-                Texture = ImageTexture.CreateFromImage(stdDevImage),
+                Texture = ImageTexture.CreateFromImage(image),
                 ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
-                Name = $"{polishGeneName}"
+                Name = "Suma odchyleń standardowych poszczególnych genów"
             });
+            image = Image.LoadFromFile($"Plots/populationsPlot.png");
+            _commonTabContainer.AddChild(new TextureRect()
+            {
+                Texture = ImageTexture.CreateFromImage(image),
+                ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+                Name = "Populacje"
+            });
+
+            var genesNames = Chromosome<SGene>.GetGenesNames();
+            for (int i = 0; i < genesNames.Length; i++)
+            {
+                var geneName = genesNames[i];
+                ScaleSVG($"{geneName}Diffs");
+                ScaleSVG($"{geneName}StdDev");
+                var diffImage = Image.LoadFromFile($"Plots/{geneName}Diffs.png");
+                var stdDevImage = Image.LoadFromFile($"Plots/{geneName}StdDev.png");
+
+                var polishGeneName = Gene.TranslateNameToPolish(geneName);
+                _diffsTabContainer.AddChild(new TextureRect()
+                {
+                    Texture = ImageTexture.CreateFromImage(diffImage),
+                    ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+                    Name = $"{polishGeneName}"
+                });
+                _stdDevTabContainer.AddChild(new TextureRect()
+                {
+                    Texture = ImageTexture.CreateFromImage(stdDevImage),
+                    ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+                    Name = $"{polishGeneName}"
+                });
+            }
         }
-    }
 
-    private void ScaleSVG(string filename)
-    {
-        using var stream = File.OpenRead($"Plots/{filename}.svg");
-        var svg = new SKSvg();
-        svg.Load(stream);
+        /// <summary>
+        /// Scales the svg plot and converts it to png.
+        /// </summary>
+        /// <param name="filename">
+        /// The filename of the svg plot without the extension.
+        /// </param>
+        private void ScaleSVG(string filename)
+        {
+            using var stream = File.OpenRead($"Plots/{filename}.svg");
+            var svg = new SKSvg();
+            svg.Load(stream);
 
-        float scaleFactor = _visualScene.GetTree().Root.Size.X / 1152f;
+            float scaleFactor = _visualScene.GetTree().Root.Size.X / 1152f;
 
-        var originalSize = svg.Picture.CullRect.Size;
-        var scaledWidth = (int)(originalSize.Width * scaleFactor);
-        var scaledHeight = (int)(originalSize.Height * scaleFactor);
+            var originalSize = svg.Picture.CullRect.Size;
+            var scaledWidth = (int)(originalSize.Width * scaleFactor);
+            var scaledHeight = (int)(originalSize.Height * scaleFactor);
 
-        using var surface = SKSurface.Create(new SKImageInfo(scaledWidth, scaledHeight));
-        var canvas = surface.Canvas;
-        canvas.Scale(scaleFactor);
-        canvas.DrawPicture(svg.Picture);
-        canvas.Flush();
+            using var surface = SKSurface.Create(new SKImageInfo(scaledWidth, scaledHeight));
+            var canvas = surface.Canvas;
+            canvas.Scale(scaleFactor);
+            canvas.DrawPicture(svg.Picture);
+            canvas.Flush();
 
-        using var image = surface.Snapshot();
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-        File.WriteAllBytes($"Plots/{filename}.png", data.ToArray());
-    }
+            using var image = surface.Snapshot();
+            using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+            File.WriteAllBytes($"Plots/{filename}.png", data.ToArray());
+        }
 
-    private void OnBackButtonPress()
-    {
-        var root = GetTree().Root;
-        root.RemoveChild(this);
-        root.AddChild(_visualScene);
+        /// <summary>
+        /// Handles the Back button press.
+        /// </summary>
+        /// <remarks>
+        /// Changes the scene to the visualization scene.
+        /// </remarks>
+        private void OnBackButtonPress()
+        {
+            var root = GetTree().Root;
+            root.RemoveChild(this);
+            root.AddChild(_visualScene);
+        }
     }
 }

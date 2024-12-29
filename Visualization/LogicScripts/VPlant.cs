@@ -2,66 +2,127 @@
 using Godot.Collections;
 using MathNet.Numerics.Random;
 using System;
+using ProjectEvolution.Visualization.ScenesStorages;
+using ProjectEvolution.Visualization.ScenesElementsScripts;
 
 namespace ProjectEvolution.Visualization.LogicScripts
 {
+    /// <summary>
+    /// Represents a plant in the visualization part.
+    /// </summary>
     internal class VPlant
     {
+        /// <summary>
+        /// The ID of the plant.
+        /// </summary>
         private uint _id;
+        /// <summary>
+        /// The position of the plant.
+        /// </summary>
         private Vector2 _position;
+        /// <summary>
+        /// The number of parts of the plant.
+        /// </summary>
         private int _partsNumber;
+        /// <summary>
+        /// The random generator shared by all instances of the <see cref="VPlant"/> 
+        /// class.
+        /// </summary>
         private static Random _randGen = new Random();
 
-        private PlantSceneObject _plantSceneObject;
-        private static Dictionary<uint, Vector3[]> fruitsPositions = 
+        /// <summary>
+        /// The Godot node directly representing the plant object on the scene.
+        /// </summary>
+        private PlantStaticBody _plantStaticBody;
+        /// <summary>
+        /// The dictionary containing the fruits positions for each plant.
+        /// </summary>
+        private static Dictionary<uint, Vector3[]> _fruitsPositions = 
             new Dictionary<uint, Vector3[]>();
 
-        private VPlantManager _plantManager;
+        /// <summary>
+        /// Delegate for events returning a plant.
+        /// </summary>
+        public delegate void PlantReturnEventHandler(VPlant creature);
+        /// <summary>
+        /// The event that is invoked when the plant is deleted.
+        /// </summary>
+        public event PlantReturnEventHandler Deleted;
 
-        public event EventHandler Deleted;
-
+        /// <summary>
+        /// Gets the ID of the plant.
+        /// </summary>
         public uint ID => _id;
-        public PlantSceneObject PlantSceneObject => _plantSceneObject;
+        /// <summary>
+        /// Gets the Godot node directly representing the plant object on the scene.
+        /// </summary>
+        public PlantStaticBody PlantStaticBody => _plantStaticBody;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VPlant"/> class.
+        /// </summary>
+        /// <param name="plantTickData">
+        /// The data of the plant.
+        /// </param>
+        /// <param name="vPlantManager">
+        /// A manager of the plants containing this plant.
+        /// </param>
         public VPlant(PlantTickData plantTickData, VPlantManager vPlantManager)
         {
             _id = plantTickData.Id;
             var(x, y) = plantTickData.Position.Value;
             _position = new Vector2(x, y);
             _partsNumber = plantTickData.PartsNumber;
-            if (!fruitsPositions.ContainsKey(_id))
+            if (!_fruitsPositions.ContainsKey(_id))
             {
-                fruitsPositions.Add(_id, PickFruitsPosition());
+                _fruitsPositions.Add(_id, PickFruitsPosition());
             }
-            InitializeStaticBodyNode();
-            _plantManager = vPlantManager;
+            InitializePlantStaticBody();
         }
 
+        /// <summary>
+        /// Updates the plant with the new tick data.
+        /// </summary>
+        /// <param name="plantTickData">
+        /// The tick data of the plant.
+        /// </param>
         public void Update(PlantTickData plantTickData)
         {
             if (plantTickData.PartsNumber == 0) Delete();
             else
             {
-                var temp = _partsNumber;
+                var oldPartsNumber = _partsNumber;
                 _partsNumber = plantTickData.PartsNumber;
-                if (temp > _partsNumber) _plantSceneObject.SubstractFruit();
-                else _plantSceneObject.AddFruit();
+                if (oldPartsNumber > _partsNumber) _plantStaticBody.SubstractFruit();
+                else _plantStaticBody.AddFruit();
             }
         }
 
+        /// <summary>
+        /// Deletes the plant.
+        /// </summary>
         public void Delete()
         {
-            _plantSceneObject.QueueFree();
-            Deleted.Invoke(this, null);
+            _plantStaticBody.QueueFree();
+            Deleted.Invoke(this);
         }
 
-        private void InitializeStaticBodyNode()
+        /// <summary>
+        /// Initializes the plant static body.
+        /// </summary>
+        private void InitializePlantStaticBody()
         {
-            _plantSceneObject = Prefabs.Plant.Instantiate() as PlantSceneObject;
-            _plantSceneObject.Initialize(_partsNumber - 1, fruitsPositions[_id]);
-            _plantSceneObject.Position = new Vector3(_position.X, 0, _position.Y);
+            _plantStaticBody = Prefabs.Plant.Instantiate() as PlantStaticBody;
+            _plantStaticBody.Initialize(_partsNumber - 1, _fruitsPositions[_id]);
+            _plantStaticBody.Position = new Vector3(_position.X, 0, _position.Y);
         }
 
+        /// <summary>
+        /// Picks the random fruits positions for a plant.
+        /// </summary>
+        /// <returns>
+        /// The fruits positions.
+        /// </returns>
         private Vector3[] PickFruitsPosition()
         {
             var result = new Vector3[3];
