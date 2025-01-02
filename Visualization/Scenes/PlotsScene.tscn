@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ckn642ovajni"]
+[gd_scene load_steps=7 format=3 uid="uid://ckn642ovajni"]
 
 [ext_resource type="Script" path="res://Visualization/ScenesScripts/PlotsScene.cs" id="1_3akb2"]
 
@@ -6,11 +6,13 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_85h14"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c66vy"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ft0iv"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_psw25"]
 
-[node name="PlotsScene" type="Control" node_paths=PackedStringArray("_commonTabContainer", "_diffsTabContainer", "_stdDevTabContainer", "_backButton")]
+[node name="PlotsScene" type="Control" node_paths=PackedStringArray("_commonTabContainer", "_diffsTabContainer", "_stdDevTabContainer", "_avgsTabContainer", "_backButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,6 +23,7 @@ script = ExtResource("1_3akb2")
 _commonTabContainer = NodePath("TabContainer/Ogólne")
 _diffsTabContainer = NodePath("TabContainer/Zmiany")
 _stdDevTabContainer = NodePath("TabContainer/Odchylenia")
+_avgsTabContainer = NodePath("TabContainer/Średnie")
 _backButton = NodePath("BackButton")
 
 [node name="BackButton" type="Button" parent="."]
@@ -58,16 +61,23 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_85h14")
 tabs_position = 1
 metadata/_tab_index = 0
 
+[node name="Średnie" type="TabContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_c66vy")
+tabs_position = 1
+metadata/_tab_index = 1
+
 [node name="Zmiany" type="TabContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ft0iv")
 tabs_position = 1
-metadata/_tab_index = 1
+metadata/_tab_index = 2
 
 [node name="Odchylenia" type="TabContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_psw25")
 tabs_position = 1
-metadata/_tab_index = 2
+metadata/_tab_index = 3

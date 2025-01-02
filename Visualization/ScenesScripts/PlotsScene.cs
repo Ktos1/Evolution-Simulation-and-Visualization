@@ -26,6 +26,10 @@ namespace ProjectEvolution.Visualization.ScenesScripts
         /// </summary>
         [Export] private TabContainer _stdDevTabContainer;
         /// <summary>
+        /// The tab container for the averages values plots.
+        /// </summary>
+        [Export] private TabContainer _avgsTabContainer;
+        /// <summary>
         /// The button to back to the visualization scene.
         /// </summary>
         [Export] private Button _backButton;
@@ -82,8 +86,10 @@ namespace ProjectEvolution.Visualization.ScenesScripts
                 var geneName = genesNames[i];
                 ScaleSVG($"{geneName}Diffs");
                 ScaleSVG($"{geneName}StdDev");
+                ScaleSVG($"{geneName}Avgs");
                 var diffImage = Image.LoadFromFile($"Plots/{geneName}Diffs.png");
                 var stdDevImage = Image.LoadFromFile($"Plots/{geneName}StdDev.png");
+                var avgsImage = Image.LoadFromFile($"Plots/{geneName}Avgs.png");
 
                 var polishGeneName = Gene.TranslateNameToPolish(geneName);
                 _diffsTabContainer.AddChild(new TextureRect()
@@ -95,6 +101,12 @@ namespace ProjectEvolution.Visualization.ScenesScripts
                 _stdDevTabContainer.AddChild(new TextureRect()
                 {
                     Texture = ImageTexture.CreateFromImage(stdDevImage),
+                    ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
+                    Name = $"{polishGeneName}"
+                });
+                _avgsTabContainer.AddChild(new TextureRect()
+                {
+                    Texture = ImageTexture.CreateFromImage(avgsImage),
                     ExpandMode = TextureRect.ExpandModeEnum.FitWidth,
                     Name = $"{polishGeneName}"
                 });

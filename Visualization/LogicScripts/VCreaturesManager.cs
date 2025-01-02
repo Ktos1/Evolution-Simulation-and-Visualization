@@ -128,7 +128,9 @@ namespace ProjectEvolution.Visualization.LogicScripts
                             if (idsWithoutChromosome[j] == id)
                             {
                                 creaturesData[j] = creaturesData[j] with { Chromosome = chromosome };
+                                idsWithoutChromosome.RemoveAt(j);
                                 missingChromosomeCounter--;
+                                break;
                             }
                         }
                     }

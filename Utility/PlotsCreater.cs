@@ -34,10 +34,12 @@ namespace ProjectEvolution.Utility
             var diffPoints = new List<DataPoint>[genesNumber];
             var stdDevSumPoints = new List<DataPoint>();
             var stdDevPoints = new List<DataPoint>[genesNumber];
+            var avgsPoints = new List<DataPoint>[genesNumber];
             for (int i = 0; i < genesNumber; i++)
             {
                 diffPoints[i] = new List<DataPoint>();
                 stdDevPoints[i] = new List<DataPoint>();
+                avgsPoints[i] = new List<DataPoint>();
             }
 
             var creaturesPopulPoints = new List<DataPoint>();
@@ -66,16 +68,20 @@ namespace ProjectEvolution.Utility
                     if (creaturesData.Any())
                     {
                         var creaturesNumber = creaturesData.Count;
+                        var creaturesGenes = new List<float>[genesNumber];
                         var scaledCreaturesGenes = new List<float>[genesNumber];
                         for (var j = 0; j < genesNumber; j++)
                         {
                             scaledCreaturesGenes[j] = new List<float>();
+                            creaturesGenes[j] = new List<float>();
                         }
                         var auxChromosome = new SChromosome();
                         foreach (var creature in creaturesData)
                         {
                             for (var j = 0; j < genesNumber; j++)
                             {
+                                creaturesGenes[j].Add(creature.Genes[j]);
+
                                 var geneClass = auxChromosome.Genes[j];
                                 var geneRange = geneClass.MaxValue - geneClass.MinValue;
                                 var shiftedGeneValue = creature.Genes[j] - geneClass.MinValue;
@@ -85,11 +91,14 @@ namespace ProjectEvolution.Utility
                         }
                         for (var j = 0; j < genesNumber; j++)
                         {
-                            avgGeneValues[j] = scaledCreaturesGenes[j].Average();
+                            // avgs plots stuff
+                            avgsPoints[j].Add(new DataPoint(year, creaturesGenes[j].Average()));
+
+                            avgGeneValues[j] = scaledCreaturesGenes[j].Average(); 
                             stdDevValues[j] = (float)scaledCreaturesGenes[j].PopulationStandardDeviation();
                         }
 
-                        // diffs plot stuff
+                        // diffs plots stuff
                         if (i != 0)
                         {
                             var diffsSum = 0f;
@@ -106,7 +115,7 @@ namespace ProjectEvolution.Utility
                             oldGeneValues[j] = avgGeneValues[j];
                         }
 
-                        // standard deviation plot stuff
+                        // standard deviation plots stuff
                         var stdDevSum = 0f;
                         for (var j = 0; j < genesNumber; j++)
                         {
@@ -173,9 +182,12 @@ namespace ProjectEvolution.Utility
                     "Lata", "Procent", diffPoints[i]);
                 var stdDevPlot = CreateLinePlot($"{polishGeneName} - odchylenie standardowe",
                     "Lata", "Odchylenie", stdDevPoints[i]);
+                var avgsPlot = CreateLinePlot($"{polishGeneName} - średnia wartość populacji",
+                    "Lata", "Średnia wartość", avgsPoints[i]);
 
                 ExportPlotToSVG($"{geneName}Diffs.svg", diffsPlot);
-                ExportPlotToSVG($"{geneName}StdDev.svg", stdDevPlot);
+                ExportPlotToSVG($"{geneName}StdDevs.svg", stdDevPlot);
+                ExportPlotToSVG($"{geneName}Avgs.svg", avgsPlot);
             }
         }
 
