@@ -85,10 +85,10 @@ namespace ProjectEvolution.Visualization.ScenesScripts
             {
                 var geneName = genesNames[i];
                 ScaleSVG($"{geneName}Diffs");
-                ScaleSVG($"{geneName}StdDev");
+                ScaleSVG($"{geneName}StdDevs");
                 ScaleSVG($"{geneName}Avgs");
                 var diffImage = Image.LoadFromFile($"Plots/{geneName}Diffs.png");
-                var stdDevImage = Image.LoadFromFile($"Plots/{geneName}StdDev.png");
+                var stdDevImage = Image.LoadFromFile($"Plots/{geneName}StdDevs.png");
                 var avgsImage = Image.LoadFromFile($"Plots/{geneName}Avgs.png");
 
                 var polishGeneName = Gene.TranslateNameToPolish(geneName);
