@@ -53,11 +53,8 @@ namespace ProjectEvolution.Visualization.ScenesElementsScripts
         /// </remarks>
         public override void _Process(double delta)
         {
-            if (IsRunning)
-            {
-                _actualTimeLabel.Text = $"{GetTimeFromTicks(_currentTickNumber)}";
-                _timeSlider.Value = _currentTickNumber;
-            }
+            _actualTimeLabel.Text = $"{GetTimeFromTicks(_currentTickNumber)}";
+            if (IsRunning) _timeSlider.Value = _currentTickNumber;
         }
 
         /// <summary>

@@ -236,7 +236,7 @@ theme = ExtResource("2_0fddw")
 
 [node name="CrossoverChanceLabel" type="Label" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CrossoverChanceRow"]
 layout_mode = 2
-text = "Szansa na krzyżowanie genów:"
+text = "Szansa na krzyżowanie chromosomów:"
 
 [node name="CrossoverChanceSpinBox" type="SpinBox" parent="Panel/TabContainer/Stworzenia/ScrollContainer/StworzeniaVBox/CrossoverChanceRow"]
 custom_minimum_size = Vector2(100, 0)
