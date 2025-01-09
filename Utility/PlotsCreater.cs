@@ -264,6 +264,8 @@ namespace ProjectEvolution.Utility
                 MinimumPadding = 0.01,
                 IntervalLength = 25,
                 AxisTickToLabelDistance = -0,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
             });
 
             plotModel.Axes.Add(new LinearAxis
@@ -275,6 +277,8 @@ namespace ProjectEvolution.Utility
                 AxisTitleDistance = 15,
                 MaximumPadding = 0.01,
                 IntervalLength = 25,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
             });
 
             for (int i = 0; i < dataSeries.Count; i++)
